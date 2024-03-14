@@ -1,0 +1,25 @@
+/* 隐藏浏览器默认的滚动条 */
+::-webkit-scrollbar {
+  // display: none;
+}
+
+/* 设置自定义滚动条的样式 */
+/* 注意：这个样式只适用于 WebKit 浏览器（如 Chrome 和 Safari） */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 滚动条轨道的背景色 */
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #dad8d8; /* 滚动条滑块的背景色 */
+}
+
+/* 当鼠标悬停在滑块上时，滑块的样式 */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 滑块的背景色 */
+}
