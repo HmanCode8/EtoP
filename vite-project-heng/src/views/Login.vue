@@ -1,28 +1,42 @@
 <script setup>
 import { ref, reactive } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import request from '@/untils/request';
 // import type { FormProps } from 'element-plus'
 
 const labelPosition = ref('right')
 const router = useRouter()
+const store = useStore()
 
-const formLabelAlign = reactive({
-  name: 'shiheng he',
+
+const form = reactive({
+  username: 'shiheng he',
   email: '11@email.com',
   password: '123',
 })
 
-const login = () => {
-  router.push('/email')
-}
 const register = async () => {
-  const res = await request.post('/register', {
-    name: formLabelAlign.name,
-    email: formLabelAlign.email,
-    password: formLabelAlign.password
+  const res = await request.post('/api/register', {
+    username: form.username,
+    email: form.email,
+    password: form.password
   })
-  console.log(res);
+}
+const login = async () => {
+  const res = await request.post('/api/login', {
+    username: form.username,
+    email: form.email,
+    password: form.password
+  })
+  if(res.code === 200){
+    store.commit('setUserInfo', res.data.existingUser)
+    localStorage.setItem('user', JSON.stringify(res.data.existingUser))
+    router.push('/email')
+  }else{
+  console.log('login',res)
+  }
+  console.log('login',res);
 }
 </script>
 
@@ -45,15 +59,15 @@ const register = async () => {
         <div class="text-sm text-[#c2c6c9] p-3">注册账号标识同意协议说明</div>
         <div class="icons"></div>
         <div class="forms w-2/3 p-3">
-          <el-form :label-position="labelPosition" label-width="auto" :model="formLabelAlign">
+          <el-form :label-position="labelPosition" label-width="auto" :model="form">
             <el-form-item>
-              <el-input class="custom-input" placeholder="Name" v-model="formLabelAlign.name" />
+              <el-input class="custom-input" placeholder="Name" v-model="form.username" />
             </el-form-item>
             <el-form-item>
-              <el-input class="custom-input" placeholder="Email" v-model="formLabelAlign.email" />
+              <el-input class="custom-input" placeholder="Email" v-model="form.email" />
             </el-form-item>
             <el-form-item>
-              <el-input class="custom-input" placeholder="Password" v-model="formLabelAlign.password" />
+              <el-input class="custom-input" placeholder="Password" v-model="form.password" />
             </el-form-item>
           </el-form>
         </div>

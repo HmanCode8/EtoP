@@ -16,7 +16,8 @@
     "vue": "^3.4.19",
     "vue-hooks-plus": "^1.8.8",
     "vue-quill-editor": "^3.0.6",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

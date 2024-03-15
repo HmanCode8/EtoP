@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 // 定义 message 数据模式
 const registerSchema = new mongoose.Schema({
-  name: String,
+  username: String,
   email: String,
   password: String,
 })

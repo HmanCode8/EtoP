@@ -3,6 +3,8 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Email from '../views/Email.vue';
+import _ from 'lodash';
+import store from '../store/index.js' // 导入 Vuex store
 
 const routes = [
   {
@@ -18,7 +20,7 @@ const routes = [
     meta: { requiresAuth: true } // 标记需要认证的路由
   },
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -35,12 +37,11 @@ router.beforeEach((to, from, next) => {
   // 检查路由是否需要认证
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 检查用户是否已登录，这里假设有一个名为 isAuthenticated 的全局变量表示用户登录状态
-      // 检查用户是否已登录，从本地存储中获取 user 属性进行模拟
-      const isAuthenticated = localStorage.getItem('user') !== null;
-    if (!isAuthenticated) {
+    const isAuthenticated =  _.isEmpty(localStorage.getItem('user') || store.state?.userInfo?.username)
+    if (isAuthenticated) {
       // 用户未登录，重定向到登录页面
       next({
-        path: '/',
+        path: '/login',
         query: { redirect: to.fullPath } // 将跳转前的路由路径作为参数传递给登录页面
       });
     } else {

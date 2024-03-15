@@ -1,4 +1,4 @@
-import { ElLoading } from 'element-plus';
+import { ElLoading,ElNotification } from 'element-plus';
 
 const BASE_URL: string = 'http://localhost:3000'; // 基础 URL
 
@@ -47,9 +47,9 @@ async function request(url: string, options: any = {}): Promise<any> {
     for (const interceptor of interceptors.request) {
       options = await interceptor(options);
     }
-
+    const showLoading = options.showLoading || true;
     // 显示loading
-    if (options.showLoading) {
+    if (showLoading) {
       loadingInstance = ElLoading.service({
         fullscreen: true, lock: true,
         text: '请求加载中...',
@@ -57,10 +57,10 @@ async function request(url: string, options: any = {}): Promise<any> {
       });
     }
 
-    const response: Response = await fetch(url, options);
+    let response: Response = await fetch(url, options);
 
     // 隐藏loading
-    if (options.showLoading) {
+    if (showLoading) {
       loadingInstance.close();
     }
 
@@ -68,15 +68,29 @@ async function request(url: string, options: any = {}): Promise<any> {
     for (const interceptor of interceptors.response) {
       response = await interceptor(response);
     }
+    const data: any = await response.json();
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      return ElNotification({
+        title: 'Error',
+        message: data.message || response.statusText + '',
+        type: 'warning',
+      })
+      // throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    const data: any = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(`Request failed: ${error.message}`);
+    const { status,ok, } = response
+    return {
+      code:status,
+      status:ok,
+      data
+    };
+  } catch (error:any) {
+    ElNotification({
+      title: 'Error',
+      message: error.message,
+      type: 'error',
+    })
+    // throw new Error(`Request failed: ${error.message}`);
   }
 }
 
@@ -89,7 +103,6 @@ export function get(url: string, params: any = {}): Promise<any> {
 
 // 定义POST请求方法
 export function post(url: string, data: any = {}): Promise<any> {
-  console.log('data',data)
   return request(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

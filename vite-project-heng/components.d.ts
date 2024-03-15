@@ -10,11 +10,15 @@ declare module 'vue' {
     CenterEchart: typeof import('./src/components/Home/centerEchart.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElOption: typeof import('element-plus/es')['ElOption']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElSelect: typeof import('element-plus/es')['ElSelect']
+    EmailPanel: typeof import('./src/components/Email/EmailPanel.vue')['default']
     LeftEchart: typeof import('./src/components/Home/leftEchart.vue')['default']
     LeftEchartBottom: typeof import('./src/components/Home/leftEchartBottom.vue')['default']
     MapEchart: typeof import('./src/components/Home/mapEchart.vue')['default']
@@ -25,5 +29,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDiv: typeof import('./src/components/Until/ScrollDiv.vue')['default']
+    SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
   }
 }
