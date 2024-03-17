@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CenterEchart: typeof import('./src/components/Home/centerEchart.vue')['default']
+    Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
@@ -30,5 +31,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDiv: typeof import('./src/components/Until/ScrollDiv.vue')['default']
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
+    UserCenter: typeof import('./src/components/Email/UserCenter.vue')['default']
   }
 }
