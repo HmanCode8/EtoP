@@ -9,7 +9,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     CenterEchart: typeof import('./src/components/Home/centerEchart.vue')['default']
     Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']

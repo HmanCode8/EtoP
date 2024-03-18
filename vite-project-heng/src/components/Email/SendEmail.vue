@@ -13,6 +13,7 @@ const emailContentBlock = ref("");
 const code = ref("");
 const highlightedCode = ref("");
 const serderValue = ref("");
+const themContet = ref("");
 const senderOptions = [
   {
     value: "Option1",
@@ -171,19 +172,7 @@ watch(
     </div>
     <div class="flex items-center">
       <div class="label w-20">主题：</div>
-      <el-select
-        class="pt-3 pb-3 w-full"
-        v-model="serderValue"
-        clearable
-        placeholder="请输入"
-      >
-        <el-option
-          v-for="item in props.users"
-          :key="item._id"
-          :label="item.username"
-          :value="item._id"
-        />
-      </el-select>
+      <el-input placeholder="请输入" v-model="themContet"></el-input>
     </div>
     <div class="label pb-4 w-20">正文：</div>
     <div ref="editorContainer" class="h-5/6"></div>

@@ -20,7 +20,7 @@ import SendEmail from "@/components/Email/SendEmail.vue";
 import UserCenter from "@/components/Email/UserCenter.vue";
 import Drafts from "@/components/Email/Drafts.vue";
 
-const menuActive = ref("usercenter");
+const menuActive = ref("drafts");
 
 const menus = reactive([
   { label: "个人中心", id: "usercenter", icon: "Edit" },
