@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive,onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import request from "@/untils/request";
@@ -13,11 +13,13 @@ const router = useRouter();
 const store = useStore();
 
 const form = reactive({
-  username: "",
-  email: "",
-  password: "",
+  username: "shiheng he",
+  email: "11@email.com",
+  password: "123",
 });
-
+onMounted(()=>{
+  console.log(window)
+})
 const register = async () => {
   const { username, email, password } = form;
   const res = await request.post("/api/register", {

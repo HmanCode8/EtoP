@@ -39,6 +39,8 @@ export function addResponseInterceptor(callback: Function): void {
  * @returns {Promise} 返回一个Promise对象，用于处理请求的结果
  */
 async function request(url: string, options: any = {}): Promise<any> {
+  const showLoading = options.showLoading || true;
+
   try {
     // 合并URL
     url = `${BASE_URL}${url}`;
@@ -47,7 +49,6 @@ async function request(url: string, options: any = {}): Promise<any> {
     for (const interceptor of interceptors.request) {
       options = await interceptor(options);
     }
-    const showLoading = options.showLoading || true;
     // 显示loading
     if (showLoading) {
       loadingInstance = ElLoading.service({
@@ -90,6 +91,11 @@ async function request(url: string, options: any = {}): Promise<any> {
       message: error.message,
       type: 'error',
     })
+      // 隐藏loading
+      if (showLoading) {
+        loadingInstance.close();
+      }
+  
     // throw new Error(`Request failed: ${error.message}`);
   }
 }

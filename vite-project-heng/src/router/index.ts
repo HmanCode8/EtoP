@@ -8,6 +8,11 @@ import store from '../store/index.js' // 导入 Vuex store
 
 const routes = [
   {
+    path: '/',
+    name: 'login',
+    component: Login,
+  },
+  {
     path: '/home',
     name: 'Home',
     component: Home,

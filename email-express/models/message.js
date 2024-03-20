@@ -11,6 +11,8 @@ const messageSchema = new mongoose.Schema({
   // 状态
   status: String,
   // 收件人
+  recipientName: String,
+  // 收件人id
   recipient: String,
   // 时间戳
   timestamp: String,
