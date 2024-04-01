@@ -1,18 +1,59 @@
-# Vue 3 + TypeScript + Vite
+# 技术栈
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+vite + vue3 + typescript + pinia + antdv + axios + less
 
-## Recommended IDE Setup
+# 项目运行
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+npm install
 
-## Type Support For `.vue` Imports in TS
+# 开发模式运行
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+npm run dev
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+# 项目打包
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+npm run build
+
+项目目录详解
+├── public // 静态资源
+│ ├── favicon.ico // favicon 图标
+│ └── index.html // html 模板
+├── src // 源代码
+│ ├── services // 所有请求
+│ ├── assets // 主题 字体等静态资源
+│ ├── components // 全局公用组件
+│ ├── directive // 全局指令
+│ ├── enums // 全局常量、枚举
+│ ├── filters // 全局过滤器
+│ ├── hooks // 全局 hooks
+│ ├── icons // 项目所有 svg icons
+│ ├── lang // 国际化 language
+│ ├── layout // 全局 layout
+│ ├── router // 路由
+│ ├── store // 全局 store 管理
+│ ├── styles // 全局样式
+│ ├── utils // 全局公用方法
+│ ├── views // views 所有页面
+│ ├── App.vue // 入口页面
+│ ├── main.ts // 入口文件 加载组件 初始化等
+│ └── shims-tsx.d.ts // tsx 支持
+├── .env.development // 开发环境变量
+├── .env.production // 生产环境变量
+├── .env.test // 测试环境变量
+├── .eslintrc.js // eslint 配置项
+├── .gitignore // git 忽略项
+├── babel.config.js // babel-loader 配置
+├── jest.config.js // jest 单元测试配置
+├── package.json // package.json
+├── README.md // README.md
+├── postcss.config.js // postcss 配置
+├── vue.config.js // vue-cli 配置
+└── yarn.lock // yarn 锁文件
+
+```
+## 项目运行
+```
+
+# 克隆项目
+
+git clone https://github.com/lin-xin/vue-admin-template.git
