@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, computed } from "vue";
+import { reactive, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import _ from "lodash";
 import moment from "moment";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
-
+import { getAvatar } from "@/services/userService";
 const store = useStore();
 const info = JSON.parse((localStorage as any).getItem("user"));
 const userInfo = reactive(info || store.state.userInfo);
@@ -16,6 +16,13 @@ const timePeriods = [
   { name: "晚上", startTime: "18:00", endTime: "24:00" },
 ];
 
+const handlegetAvatar = async () => {
+  const result = await getAvatar({ userId: userInfo._id });
+  console.log("handlegetAvatar", result);
+};
+onMounted(() => {
+  handlegetAvatar();
+});
 const computers = computed(() => {
   return {
     nowTime: moment(new Date()).format("YYYY-MM-DD"),
