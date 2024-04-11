@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const emailController = require("./controllers/emailController");
 const registerController = require("./controllers/registerController");
+const draftsController = require("./controllers/draftsController");
+const uploadController = require("./controllers/uploadController");
 
 const bodyParser = require("body-parser");
 
@@ -30,6 +32,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use("/api", emailController);
 app.use("/api", registerController);
+app.use("/api", draftsController);
+app.use("/api", uploadController);
 
 // 启动服务器
 const PORT = process.env.PORT || 3000;

@@ -1,6 +1,6 @@
-import { ElLoading,ElNotification } from 'element-plus';
+import { ElLoading, ElNotification } from "element-plus";
 
-const BASE_URL: string = 'http://localhost:3000'; // 基础 URL
+const BASE_URL: string = "http://localhost:3000"; // 基础 URL
 
 // 加载loading
 let loadingInstance: any = null; // 修改为合适的类型
@@ -13,7 +13,7 @@ interface Interceptors {
 
 const interceptors: Interceptors = {
   request: [],
-  response: []
+  response: [],
 };
 
 /**
@@ -52,12 +52,12 @@ async function request(url: string, options: any = {}): Promise<any> {
     // 显示loading
     if (showLoading) {
       loadingInstance = ElLoading.service({
-        fullscreen: true, lock: true,
-        text: '请求加载中...',
-        background: 'rgba(0, 0, 0, 0.7)',
+        fullscreen: true,
+        lock: true,
+        text: "请求加载中...",
+        background: "rgba(0, 0, 0, 0.7)",
       });
     }
-
     let response: Response = await fetch(url, options);
 
     // 隐藏loading
@@ -73,29 +73,29 @@ async function request(url: string, options: any = {}): Promise<any> {
 
     if (!response.ok) {
       return ElNotification({
-        title: 'Error',
-        message: data.message || response.statusText + '',
-        type: 'warning',
-      })
+        title: "Error",
+        message: data.message || response.statusText + "",
+        type: "warning",
+      });
       // throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const { status,ok, } = response
+    const { status, ok } = response;
     return {
-      code:status,
-      status:ok,
-      data
+      code: status,
+      status: ok,
+      data,
     };
-  } catch (error:any) {
+  } catch (error: any) {
     ElNotification({
-      title: 'Error',
+      title: "Error",
       message: error.message,
-      type: 'error',
-    })
-      // 隐藏loading
-      if (showLoading) {
-        loadingInstance.close();
-      }
-  
+      type: "error",
+    });
+    // 隐藏loading
+    if (showLoading) {
+      loadingInstance.close();
+    }
+
     // throw new Error(`Request failed: ${error.message}`);
   }
 }
@@ -104,17 +104,36 @@ async function request(url: string, options: any = {}): Promise<any> {
 export function get(url: string, params: any = {}): Promise<any> {
   const queryString = new URLSearchParams(params).toString();
   const fullUrl = queryString ? `${url}?${queryString}` : url;
-  return request(fullUrl, { method: 'GET' });
+  return request(fullUrl, { method: "GET" });
 }
 
 // 定义POST请求方法
-export function post(url: string, data: any = {}): Promise<any> {
-  return request(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+export function post(
+  url: string,
+  data: any = {},
+  config: any = {}
+): Promise<any> {
+  const { requestType = "" } = config;
+  // const headersFrom = {
+  //   "Content-Type": "multipart/form-data",
+  //   a: "b", // 随便自己带个什么请求头
+  // };
+  // 执行文件上传
+  let formData = new FormData();
+  for (let key in data) {
+    formData.append(key, data[key]);
+  }
+  const isUpload = requestType === "form";
+  const ops: any = {
+    method: "POST",
+    body: isUpload ? formData : JSON.stringify(data),
+  };
+  if (!isUpload) {
+    ops.headers = {
+      "Content-Type": "application/json",
+    };
+  }
+  return request(url, ops);
 }
-
 // 导出模块
 export default { get, post };

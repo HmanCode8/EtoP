@@ -42,6 +42,22 @@ const getUsers = () => {
 const sendEmail = (params: EmailArrray) => {
   return request.post("/api/sendEmail", params);
 };
+/**
+ * 保存为草稿
+ * @param params
+ * @returns
+ */
+const saveDrafts = (params: EmailArrray) => {
+  return request.post("/api/saveDrafts", params);
+};
+/**
+ * 保存为草稿
+ * @param params
+ * @returns
+ */
+const getDrafts = (params: EmailList) => {
+  return request.get("/api/drafts", params);
+};
 
 /**
  * 删除邮件
@@ -52,4 +68,4 @@ const deleteEmail = (params: MessageId) => {
   return request.post("/api/deleteEmail", params);
 };
 
-export { getEmail, getUsers, sendEmail, deleteEmail };
+export { getEmail, getUsers, sendEmail, saveDrafts, getDrafts, deleteEmail };

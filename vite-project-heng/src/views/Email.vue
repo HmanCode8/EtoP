@@ -17,6 +17,8 @@ import {
   getEmail,
   getUsers,
   sendEmail,
+  saveDrafts,
+  getDrafts,
   deleteEmail,
 } from "@/services/emailService";
 
@@ -25,7 +27,7 @@ import SendEmail from "@/components/Email/SendEmail.vue";
 import UserCenter from "@/components/Email/UserCenter.vue";
 import Drafts from "@/components/Email/Drafts.vue";
 
-const menuActive = ref("drafts");
+const menuActive = ref("usercenter");
 
 const menus = reactive([
   { label: "个人中心", id: "usercenter", icon: "Edit" },
@@ -34,7 +36,6 @@ const menus = reactive([
   { label: "草稿箱", id: "drafts", icon: "Delete" },
 ]);
 
-const messages = ref([]);
 const users = ref([]);
 const router = useRouter();
 const store = useStore();
@@ -47,19 +48,6 @@ const handleBack = () => {
   store.commit("setUserInfo", null);
 };
 
-/**
- * 获取邮件列表
- */
-const handleGetEmail = async () => {
-  try {
-    const res = await getEmail({ userid: userInfo._id });
-    if (res.code === 200) {
-      messages.value = res.data; // 假设 messages 是一个 ref 或 reactive 对象
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 /**
  * 获取用户列表
  */
@@ -74,61 +62,10 @@ const handleGetUsers = async () => {
   }
 };
 
-// 发送邮件
-const handleSendEmail = async ({
-  content,
-  contentBlock,
-  recipientName,
-  recipient,
-  themContet,
-}) => {
-  try {
-    // 构造发送邮件的数据
-    const emailData = {
-      senderName: userInfo.username,
-      sender: userInfo._id,
-      subject: themContet,
-      recipient,
-      recipientName,
-      content,
-      contentBlock,
-    };
-
-    const res = await sendEmail(emailData);
-    if (res.code === 200) {
-      ElMessage({
-        message: "发送成功",
-        type: "success",
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-//删除邮件
-const handleDeleteEmail = async (messageId) => {
-  try {
-    const res = await deleteEmail({ messageId });
-    if (res.code === 200) {
-      ElMessage({
-        message: "删除成功",
-        type: "success",
-      });
-      handleGetEmail();
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 const menuChange = (id) => {
   menuActive.value = id;
 };
 
-watch(menuActive, (newVal) => {
-  handleGetEmail();
-});
 onMounted(() => {
   handleGetUsers();
 });
@@ -181,18 +118,23 @@ onMounted(() => {
       <div class="calc-h flex-1 ml-0 m-3 bg-white flex">
         <UserCenter v-if="menuActive === 'usercenter'" />
         <SendEmail
+          type="sendEmail"
           :users="users"
+          :userInfo="userInfo"
           :menuActive="menuActive"
-          @sendEmail="handleSendEmail"
           v-else-if="menuActive === 'sendemail'"
         />
         <ReceivedEmail
-          :email="userInfo.email"
-          :messages="messages"
-          @deleteEmail="handleDeleteEmail"
+          :userInfo="userInfo"
           v-else-if="menuActive === 'resiemail'"
         />
-        <Drafts v-else />
+        <Drafts
+          v-else
+          type="draft"
+          :userInfo="userInfo"
+          :users="users"
+          :menuActive="menuActive"
+        />
       </div>
     </div>
   </div>

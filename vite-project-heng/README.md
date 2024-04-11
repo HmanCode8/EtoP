@@ -1,6 +1,6 @@
 # 技术栈
 
-vite + vue3 + typescript + pinia + antdv + axios + less
+vite + vue3 + typescript + pinia + antdv + fetch + less
 
 # 项目运行
 

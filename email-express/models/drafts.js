@@ -6,6 +6,8 @@ const drafsSchema = new mongoose.Schema({
   senderName: String,
   // 发送者id
   sender: String,
+  //接受者的邮箱
+  email: String,
   // 主题
   subject: String,
   // 状态
@@ -22,7 +24,7 @@ const drafsSchema = new mongoose.Schema({
   contentBlock: String,
 });
 
-// 创建 message 模型
+// 创建 drafs 模型
 const Drafs = mongoose.model("drafs", drafsSchema);
 
 module.exports = Drafs;

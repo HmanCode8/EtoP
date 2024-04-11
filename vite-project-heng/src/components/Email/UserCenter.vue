@@ -1,10 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, computed } from "vue";
+import { useStore } from "vuex";
+import _ from "lodash";
+import moment from "moment";
+import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
 
-// 使用 ref 创建响应式数据
-const circleUrl = ref(
-  "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-);
+const store = useStore();
+const info = JSON.parse((localStorage as any).getItem("user"));
+const userInfo = reactive(info || store.state.userInfo);
+
+const timePeriods = [
+  { name: "上午", startTime: "06:00", endTime: "12:00" },
+  { name: "中午", startTime: "12:00", endTime: "14:00" },
+  { name: "下午", startTime: "14:00", endTime: "18:00" },
+  { name: "晚上", startTime: "18:00", endTime: "24:00" },
+];
+
+const computers = computed(() => {
+  return {
+    nowTime: moment(new Date()).format("YYYY-MM-DD"),
+    timeWelcome: () => {
+      const currentTime = moment(new Date()).format("HH:mm");
+      const t = _.find(timePeriods, (i) => {
+        const t1 = moment(currentTime, "HH:mm");
+        const t2 = moment(i.startTime, "HH:mm");
+        const t3 = moment(i.endTime, "HH:mm");
+        return t1.isBetween(t2, t3);
+      });
+      return _.get(t, "name");
+    },
+  };
+});
 </script>
 
 <template>
@@ -14,9 +40,11 @@ const circleUrl = ref(
       class="user-content border mr-auto w-5/6 h-screen items-center flex flex-col"
     >
       <div class="flex w-1/2 justify-around items-center p-4">
-        <el-avatar :size="50" :src="circleUrl" />
-        <div class="">2022年22月22日</div>
-        <div>早上好，张三</div>
+        <!-- <input type="file" name="" id="" style="display: none" />
+        <el-avatar :size="50" :src="circleUrl" /> -->
+        <AvatarUpload :userInfo="userInfo" />
+        <div class="">{{ computers.nowTime }}</div>
+        <div>{{ computers.timeWelcome() }}好，张三</div>
       </div>
       <div class="flex w-1/2 justify-around p-4">
         <el-badge :value="12" class="item text-[#dddddd]">

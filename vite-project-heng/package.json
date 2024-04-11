@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "test": "jest --config src/jests/jest.config.js",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -14,6 +13,7 @@
     "element-plus": "^2.6.1",
     "highlight.js": "^11.9.0",
     "moment": "^2.30.1",
+    "v-scale-screen": "^2.2.0",
     "vue": "^3.4.19",
     "vue-hooks-plus": "^1.8.8",
     "vue-quill-editor": "^3.0.6",

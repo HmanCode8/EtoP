@@ -4,7 +4,8 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import "quill/dist/quill.snow.css";
 import _ from "lodash";
-
+import { sendEmail, saveDrafts } from "@/services/emailService";
+import { ElMessage } from "element-plus";
 import { ref, reactive, watch, nextTick, onMounted } from "vue";
 
 const editorContainer = ref("");
@@ -16,6 +17,7 @@ const code = ref("");
 const highlightedCode = ref("");
 const serderValue = ref("");
 const themContet = ref("");
+
 const senderOptions = [
   {
     value: "Option1",
@@ -39,13 +41,21 @@ const senderOptions = [
   },
 ];
 const props = defineProps({
+  userInfo: {
+    type: Object,
+  },
   users: {
     type: Array,
     default: () => [],
   },
+  type: String,
+  draftItem: {
+    type: Object,
+    default: "",
+  },
 });
-const emit = defineEmits(["sendEmail"]);
 
+const emit = defineEmits(["sendEmail", "onBack"]);
 const messageInfo = (m) => {
   ElMessage({
     showClose: true,
@@ -54,7 +64,8 @@ const messageInfo = (m) => {
   });
 };
 
-const handleSendEmail = () => {
+//发送邮件
+const handleSendEmail = async (type) => {
   if (!serderValue.value) {
     return messageInfo("请选择收件人");
   }
@@ -70,15 +81,32 @@ const handleSendEmail = () => {
     _.find(props.users, { _id: serderValue.value }),
     "username"
   );
-  const params = {
-    content: emailContent.value,
-    contentBlock: emailContentBlock.value,
-    recipientName,
-    recipient: serderValue.value,
-    themContet: themContet.value,
-  };
-
-  emit("sendEmail", params);
+  try {
+    // 构造发送邮件的数据
+    const emailData = {
+      senderName: props.userInfo.username,
+      sender: props.userInfo._id,
+      subject: themContet.value,
+      recipient: serderValue.value,
+      recipientName,
+      content: emailContent.value,
+      contentBlock: emailContentBlock.value,
+    };
+    const isSendEmail = type === "sendEmail";
+    const apiEvent = isSendEmail ? sendEmail : saveDrafts;
+    if (!isSendEmail) {
+      emailData.email = props.userInfo.email;
+    }
+    const res = await apiEvent(emailData);
+    if (res.code === 200) {
+      ElMessage({
+        message: "发送成功",
+        type: "success",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 let editor;
@@ -138,20 +166,50 @@ const editRoot = () => {
   });
 };
 
+const initEmail = ({ content, contentBlock, recipient, subject }) => {
+  editor.setContents([{ insert: `${content}\n` }, { insert: "\n" }]);
+  emailContentBlock.value = contentBlock;
+  serderValue.value = recipient;
+  themContet.value = subject;
+};
+
 onMounted(() => {
   editRoot();
+  if (!_.isEmpty(props.draftItem)) {
+    initEmail(props.draftItem);
+  }
 });
 </script>
 
 <template>
   <div class="content-user-input flex flex-col h-3/4 p-5 w-full">
-    <div class="send--header border-b">发送邮件</div>
+    <div class="send--header flex justify-between border-b">
+      <div>发送邮件</div>
+      <div
+        class="hover:cursor-pointer hover:text-[#f00]"
+        v-if="props.type === 'drafts'"
+        @click="emit('onBack')"
+      >
+        草稿箱📦>>
+      </div>
+    </div>
     <div class="send-btn flex">
-      <el-button type="success" plain class="mt-3" @click="handleSendEmail"
+      <el-button
+        type="success"
+        plain
+        class="mt-3"
+        @click="handleSendEmail('sendEmail')"
         >发送</el-button
       >
       <el-button type="primary" plain class="mt-3">定时发送</el-button>
-      <el-button type="danger" plain class="mt-3">保存为草稿</el-button>
+      <el-button
+        type="danger"
+        v-if="props.type !== 'drafts'"
+        plain
+        class="mt-3"
+        @click="handleSendEmail('savaDrafts')"
+        >保存为草稿</el-button
+      >
       <!-- <button id="upload"></button> -->
     </div>
     <div class="flex items-center">

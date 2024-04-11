@@ -1,8 +1,9 @@
 <script setup>
-import { ref, reactive,onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import request from "@/untils/request";
+import { register, login } from "@/services/userService";
 import { ElMessage } from "element-plus";
 
 import { el } from "element-plus/es/locales.mjs";
@@ -17,15 +18,29 @@ const form = reactive({
   email: "11@email.com",
   password: "123",
 });
-onMounted(()=>{
-  console.log(window)
-})
-const register = async () => {
+onMounted(() => {
+  console.log(window);
+});
+
+// 定义 SHA-256 哈希函数
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+  return hashHex;
+}
+
+const onRegister = async () => {
   const { username, email, password } = form;
-  const res = await request.post("/api/register", {
+  // 对密码进行 SHA-256 哈希
+  const hashedPassword = await sha256(password);
+  const res = await register({
     username: form.username,
     email: form.email,
-    password: form.password,
+    password: hashedPassword,
   });
   if (res.code === 200) {
     ElMessage({
@@ -39,11 +54,12 @@ const register = async () => {
     });
   }
 };
-const login = async () => {
-  const res = await request.post("/api/login", {
+const onLogin = async () => {
+  const hashedPassword = await sha256(form.password);
+  const res = await login({
     username: form.username,
     email: form.email,
-    password: form.password,
+    password: hashedPassword,
   });
   if (res.code === 200) {
     store.commit("setUserInfo", res.data.existingUser);
@@ -100,8 +116,8 @@ const rules = {
         <div class="l-btn text-white w-full flex justify-center m-10">
           <el-button
             class="bg-[#4971e3] shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
-            type="'primary'"
-            @click="login"
+            type="primary"
+            @click="onLogin"
             >SING IN</el-button
           >
         </div>
@@ -141,8 +157,8 @@ const rules = {
             <el-form-item>
               <el-button
                 class="bg-[#4971e3] shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
-                type="'primary'"
-                @click="register"
+                type="primary"
+                @click="onRegister"
                 >SING UP</el-button
               >
             </el-form-item>

@@ -1,53 +1,61 @@
 // router/index.js
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import Email from '../views/Email.vue';
-import _ from 'lodash';
-import store from '../store/index.js' // 导入 Vuex store
+import { createRouter, createWebHashHistory } from "vue-router";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+import Email from "../views/Email.vue";
+import Chart from "../views/Chart.vue";
+import _ from "lodash";
+import store from "../store/index.js"; // 导入 Vuex store
 
 const routes = [
   {
-    path: '/',
-    name: 'login',
+    path: "/",
+    name: "login",
     component: Login,
   },
   {
-    path: '/home',
-    name: 'Home',
+    path: "/home",
+    name: "Home",
     component: Home,
-    meta: { requiresAuth: true } // 标记需要认证的路由
+    meta: { requiresAuth: true }, // 标记需要认证的路由
   },
   {
-    path: '/email',
-    name: 'Email',
+    path: "/email",
+    name: "Email",
     component: Email,
-    meta: { requiresAuth: true } // 标记需要认证的路由
+    meta: { requiresAuth: true }, // 标记需要认证的路由
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
+  {
+    path: "/chart",
+    name: "Chart",
+    component: Chart,
   },
   // 其他路由配置...
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 });
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
   // 检查路由是否需要认证
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     // 检查用户是否已登录，这里假设有一个名为 isAuthenticated 的全局变量表示用户登录状态
-    const isAuthenticated =  _.isEmpty(localStorage.getItem('user') || store.state?.userInfo?.username)
+    const isAuthenticated = _.isEmpty(
+      localStorage.getItem("user") || store.state?.userInfo?.username
+    );
     if (isAuthenticated) {
       // 用户未登录，重定向到登录页面
       next({
-        path: '/login',
-        query: { redirect: to.fullPath } // 将跳转前的路由路径作为参数传递给登录页面
+        path: "/login",
+        query: { redirect: to.fullPath }, // 将跳转前的路由路径作为参数传递给登录页面
       });
     } else {
       // 用户已登录，放行
