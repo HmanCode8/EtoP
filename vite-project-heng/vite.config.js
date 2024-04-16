@@ -8,12 +8,6 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig(({ mode }) => {
   return {
-    define: {
-      "import.meta.env.MODE": JSON.stringify(process.env.VUE_APP_BASE_URL),
-      "import.meta.env.VITE_APP_TITLE": JSON.stringify(
-        process.env.VUE_APP_BASE_URL
-      ),
-    },
     resolve: {
       alias: {
         "@": "/src",

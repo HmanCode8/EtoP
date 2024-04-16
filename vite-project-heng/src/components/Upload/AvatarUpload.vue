@@ -24,7 +24,8 @@
 <script setup>
 import { uploadAvatar, getAvatar } from "@/services/userService";
 import { ElMessage } from "element-plus";
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, watchEffect } from "vue";
+import { useStore } from "vuex";
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
   userInfo: {
@@ -44,16 +45,18 @@ const props = defineProps({
   },
 });
 const fileInputRef = ref(null);
+const store = useStore();
 const imgUrl = ref("");
 function clickAvatarBox() {
   fileInputRef.value.click();
 }
+
+watchEffect(() => {
+  imgUrl.value = store.state.userAvatar;
+});
 async function changeFile() {
   try {
     let file = fileInputRef.value.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
     if (file.size / 1024 / 1024 > props.maxsize) {
       return ElMessage({
         message: "文件超过指定大小",
@@ -73,9 +76,7 @@ async function changeFile() {
         type: "success",
       });
       const result = await getAvatar({ userId: props.userInfo._id });
-      reader.onload = () => {
-        console.log("pp");
-      };
+      imgUrl.value = result.data.avatar;
       console.log(result);
     }
   } catch (error) {

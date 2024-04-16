@@ -38,7 +38,7 @@ const drafts = ref<Drafts[]>([]);
  */
 const handleGetDrafts = async () => {
   try {
-    const res = await getDrafts({ userid: props.userInfo._id });
+    const res = await getDrafts();
     console.log(res);
 
     if (res.code === 200) {

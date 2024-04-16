@@ -33,7 +33,7 @@ const computers = computed(() => {
  */
 const handleGetEmail = async () => {
   try {
-    const res = await getEmail({ userid: props.userInfo._id });
+    const res = await getEmail();
     if (res.code === 200) {
       messages.value = res.data; // 假设 messages 是一个 ref 或 reactive 对象
     }

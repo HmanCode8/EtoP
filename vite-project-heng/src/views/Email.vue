@@ -17,10 +17,9 @@ import {
   getEmail,
   getUsers,
   sendEmail,
-  saveDrafts,
-  getDrafts,
   deleteEmail,
 } from "@/services/emailService";
+import { loginOut } from "@/services/userService";
 
 import ReceivedEmail from "@/components/Email/ReceivedEmail.vue";
 import SendEmail from "@/components/Email/SendEmail.vue";
@@ -40,12 +39,19 @@ const users = ref([]);
 const router = useRouter();
 const store = useStore();
 
-const info = JSON.parse(localStorage.getItem("user"));
-const userInfo = reactive(info || store.state.userInfo);
-const handleBack = () => {
-  // 使用 router.push() 方法跳转到指定路由
-  router.push("/login");
-  store.commit("setUserInfo", null);
+const userInfo = reactive(store.state.userInfo);
+const handleBack = async () => {
+  const res = await loginOut();
+  if (res.code === 200) {
+    ElMessage({
+      message: "退出成功",
+      type: "success",
+    });
+    // 使用 router.push() 方法跳转到指定路由
+    router.push("/login");
+    store.commit("setUserInfo", null);
+    sessionStorage.removeItem("token");
+  }
 };
 
 /**

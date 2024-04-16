@@ -6,11 +6,13 @@ const draftsController = require("./controllers/draftsController");
 const uploadController = require("./controllers/uploadController");
 
 const bodyParser = require("body-parser");
+const apiStatusResponseMiddleware = require("./middlewares/apiStatusResponseMiddleware");
 
 const app = express();
 
 // 使用 body-parser 中间件来解析 JSON 格式的请求体
 app.use(bodyParser.json());
+app.use(apiStatusResponseMiddleware);
 const cors = require("cors"); // 导入 cors 中间件
 // 连接 MongoDB 数据库
 mongoose

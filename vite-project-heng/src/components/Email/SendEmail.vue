@@ -84,8 +84,6 @@ const handleSendEmail = async (type) => {
   try {
     // 构造发送邮件的数据
     const emailData = {
-      senderName: props.userInfo.username,
-      sender: props.userInfo._id,
       subject: themContet.value,
       recipient: serderValue.value,
       recipientName,

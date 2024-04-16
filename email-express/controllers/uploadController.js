@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs").promises; // 引入 fs 模块的 promises API
 const Upload = require("../models/upload");
+const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 
 // 配置 multer 中间件
 const storage = multer.diskStorage({
@@ -28,9 +29,7 @@ router.post("/uploadAvatar", uploadMulter.single("file"), async (req, res) => {
     // 查找数据库中是否已经上传过该用户的头像
     const existingUpload = await Upload.findOne({ user_id: userId });
 
-    if (existingUpload && existingUpload.filepath.includes(req.body.user_id)) {
-      console.log("existingUpload11", existingUpload.filepath);
-      console.log("existingUpload22", req.body.user_id);
+    if (userId === req.body.user_id) {
       // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息
       const oldFilePath = path.join(__dirname, "..", existingUpload.filepath);
       await fs.unlink(oldFilePath); // 删除旧的文件
@@ -38,7 +37,9 @@ router.post("/uploadAvatar", uploadMulter.single("file"), async (req, res) => {
       existingUpload.filename = originalname;
       existingUpload.filepath = filePath;
       await existingUpload.save();
+      // const newData = { filename: req.body.name, filename: req.body.age };
 
+      // const updatedData = await Upload.findByIdAndUpdate(userId, newData, { new: true });
       res.json(existingUpload);
     } else {
       // 如果数据库中没有该用户的头像记录，则创建新的记录
@@ -56,22 +57,29 @@ router.post("/uploadAvatar", uploadMulter.single("file"), async (req, res) => {
   }
 });
 // 获取用户头像路由
-router.get("/getAvatar", async (req, res) => {
+router.get("/getAvatar", verifyTokenMiddleWare, async (req, res) => {
   try {
-    const userId = req.query.userId;
+    const { userId } = req.userInfo;
     // 查找数据库中该用户的头像记录
     const existingUpload = await Upload.findOne({ user_id: userId });
-    console.log("touxian", existingUpload);
-    if (existingUpload) {
-      // 返回头像文件的路径
-      const filePath = path.join(__dirname, "..", existingUpload.filepath);
-      res.sendFile(filePath);
+    const { filename, filepath, user_id } = existingUpload;
+    if (user_id === userId) {
+      // 读取头像文件并以 Base64 编码返回给客户端
+      const filePath = path.join(__dirname, "..", filepath);
+      const fileData = await fs.readFile(filePath);
+      const base64Data = fileData.toString("base64");
+      const base64Image = `data:image/${
+        path.extname(filename).split(".")[1]
+      };base64,${base64Data}`;
+
+      // 返回头像数据给客户端
+      res.success({ avatar: base64Image });
     } else {
-      res.json({ error: "未找到用户头像" });
+      res.status(404).json({ error: "未找到用户头像" });
     }
   } catch (error) {
     console.error("获取头像失败：", error);
-    res.status(500).json({ error: "获取头像失败" });
+    res.error({ error: "获取头像失败" });
   }
 });
 

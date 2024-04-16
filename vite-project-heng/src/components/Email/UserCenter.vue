@@ -6,7 +6,7 @@ import moment from "moment";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
 import { getAvatar } from "@/services/userService";
 const store = useStore();
-const info = JSON.parse((localStorage as any).getItem("user"));
+const info = JSON.parse((sessionStorage as any).getItem("user"));
 const userInfo = reactive(info || store.state.userInfo);
 
 const timePeriods = [
@@ -17,8 +17,8 @@ const timePeriods = [
 ];
 
 const handlegetAvatar = async () => {
-  const result = await getAvatar({ userId: userInfo._id });
-  console.log("handlegetAvatar", result);
+  const result = await getAvatar();
+  store.commit("setAvatar", result.data.avatar);
 };
 onMounted(() => {
   handlegetAvatar();

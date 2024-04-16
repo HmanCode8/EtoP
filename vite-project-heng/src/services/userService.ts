@@ -23,6 +23,14 @@ const login = (params: Register) => {
   return request.post("/api/login", params);
 };
 /**
+ * 登出
+ * @param params
+ * @returns
+ */
+const loginOut = (params: Register) => {
+  return request.post("/api/logout", params);
+};
+/**
  * 头像上传
  * @param params
  * @returns
@@ -39,4 +47,4 @@ const getAvatar = (params: Register) => {
   return request.get("/api/getAvatar", params);
 };
 
-export { register, login, uploadAvatar, getAvatar };
+export { register, login, loginOut, uploadAvatar, getAvatar };

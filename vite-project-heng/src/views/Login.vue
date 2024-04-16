@@ -62,8 +62,9 @@ const onLogin = async () => {
     password: hashedPassword,
   });
   if (res.code === 200) {
-    store.commit("setUserInfo", res.data.existingUser);
-    localStorage.setItem("user", JSON.stringify(res.data.existingUser));
+    const { email, username } = res.data;
+    store.commit("setUserInfo", { email, username });
+    sessionStorage.setItem("token", res.data.token);
     router.push("/email");
   } else {
     console.log("login", res);

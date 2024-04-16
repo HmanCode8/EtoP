@@ -44,7 +44,14 @@ async function request(url: string, options: any = {}): Promise<any> {
   try {
     // 合并URL
     url = `${BASE_URL}${url}`;
-
+    // 添加 Authorization 头部
+    const token = sessionStorage.getItem("token"); // 从 sessionStorage 中获取 Token，你可以根据实际情况获取
+    if (token) {
+      options.headers = {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
     // 执行请求拦截器
     for (const interceptor of interceptors.request) {
       options = await interceptor(options);
@@ -80,11 +87,13 @@ async function request(url: string, options: any = {}): Promise<any> {
       // throw new Error(`HTTP error! status: ${response.status}`);
     }
     const { status, ok } = response;
-    return {
-      code: status,
-      status: ok,
-      data,
-    };
+    return (
+      data || {
+        code: status,
+        status: ok,
+        data,
+      }
+    );
   } catch (error: any) {
     ElNotification({
       title: "Error",
