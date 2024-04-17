@@ -12,7 +12,10 @@ function verifyToken(req, res, next) {
   const jwtToken = token.split(" ")[1];
   jwt.verify(jwtToken, SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: "Invalid token" });
+      return res
+        .status(302)
+        .json({ message: "Invalid token，please login again" });
+      // return res.redirect("http://localhost:5173/#/login");
     }
 
     req.userInfo = decoded; // 将解码后的用户信息保存在请求对象中

@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     cb(null, "./uploads"); // 文件保存的目录
   },
   filename: function (req, file, cb) {
-    const userId = req.body.user_id; // 获取用户ID
+    const { userId } = req.userInfo; // 获取用户ID
     const extname = path.extname(file.originalname); // 获取文件扩展名
     const filename = userId + "_" + "avatars" + extname; // 拼接用户ID、文件类型和文件扩展名作为文件名
     cb(null, filename); // 生成文件名
@@ -21,41 +21,43 @@ const storage = multer.diskStorage({
 const uploadMulter = multer({ storage: storage });
 
 // 用户头像上传路由
-router.post("/uploadAvatar", uploadMulter.single("file"), async (req, res) => {
-  try {
-    const { originalname, path: filePath } = req.file;
-    const userId = req.body.user_id || "";
+router.post(
+  "/uploadAvatar",
+  verifyTokenMiddleWare,
+  uploadMulter.single("file"),
+  async (req, res) => {
+    try {
+      const { originalname, path: filePath } = req.file;
+      const { userId } = req.userInfo;
 
-    // 查找数据库中是否已经上传过该用户的头像
-    const existingUpload = await Upload.findOne({ user_id: userId });
+      // 查找数据库中是否已经上传过该用户的头像
+      const existingUpload = await Upload.findOne({ user_id: userId });
 
-    if (userId === req.body.user_id) {
-      // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息
-      const oldFilePath = path.join(__dirname, "..", existingUpload.filepath);
-      await fs.unlink(oldFilePath); // 删除旧的文件
+      if (existingUpload) {
+        // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息
+        const oldFilePath = path.join(__dirname, "..", existingUpload.filepath);
+        await fs.unlink(oldFilePath); // 删除旧的文件
 
-      existingUpload.filename = originalname;
-      existingUpload.filepath = filePath;
-      await existingUpload.save();
-      // const newData = { filename: req.body.name, filename: req.body.age };
+        existingUpload.filename = originalname;
+        existingUpload.filepath = filePath;
+        await existingUpload.save();
 
-      // const updatedData = await Upload.findByIdAndUpdate(userId, newData, { new: true });
-      res.json(existingUpload);
-    } else {
-      // 如果数据库中没有该用户的头像记录，则创建新的记录
-      const upload = new Upload({
-        user_id: userId,
-        filename: originalname,
-        filepath: filePath,
-      });
-      const savedUpload = await upload.save();
-      res.json(savedUpload);
+        res.success(existingUpload);
+      } else {
+        // 如果数据库中没有该用户的头像记录，则创建新的记录
+        const upload = new Upload({
+          user_id: userId,
+          filename: originalname,
+          filepath: filePath,
+        });
+        const savedUpload = await upload.save();
+        res.success(savedUpload);
+      }
+    } catch (error) {
+      res.error({ error: "文件上传失败" });
     }
-  } catch (error) {
-    console.error("文件上传失败：", error);
-    res.status(500).json({ error: "文件上传失败" });
   }
-});
+);
 // 获取用户头像路由
 router.get("/getAvatar", verifyTokenMiddleWare, async (req, res) => {
   try {
@@ -75,11 +77,10 @@ router.get("/getAvatar", verifyTokenMiddleWare, async (req, res) => {
       // 返回头像数据给客户端
       res.success({ avatar: base64Image });
     } else {
-      res.status(404).json({ error: "未找到用户头像" });
+      res.error({ message: "未找到用户头像" });
     }
   } catch (error) {
-    console.error("获取头像失败：", error);
-    res.error({ error: "获取头像失败" });
+    res.error({ message: "获取头像失败" });
   }
 });
 
