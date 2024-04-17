@@ -55,8 +55,8 @@ const saveDrafts = (params: EmailArrray) => {
  * @param params
  * @returns
  */
-const getDrafts = (params: EmailList) => {
-  return request.get("/api/drafts", params);
+const getDrafts = () => {
+  return request.get("/api/drafts");
 };
 
 /**

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watchEffect, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import _ from "lodash";
 import SendEmail from "@/components/Email/SendEmail.vue";
 import moment from "moment";

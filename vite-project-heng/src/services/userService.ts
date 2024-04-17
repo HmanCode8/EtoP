@@ -43,8 +43,8 @@ const uploadAvatar = (params: Register) => {
  * @param params
  * @returns
  */
-const getAvatar = (params: Register) => {
-  return request.get("/api/getAvatar", params);
+const getAvatar = () => {
+  return request.get("/api/getAvatar");
 };
 
 export { register, login, loginOut, uploadAvatar, getAvatar };

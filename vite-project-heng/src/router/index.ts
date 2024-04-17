@@ -5,7 +5,6 @@ import Login from "../views/Login.vue";
 import Email from "../views/Email.vue";
 import Chart from "../views/Chart.vue";
 import _ from "lodash";
-import store from "../store/index.js"; // 导入 Vuex store
 
 const routes = [
   {
@@ -45,6 +44,7 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
+  console.log(from);
   // 检查路由是否需要认证
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     // 检查用户是否已登录，这里假设有一个名为 isAuthenticated 的全局变量表示用户登录状态

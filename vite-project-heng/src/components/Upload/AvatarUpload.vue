@@ -63,19 +63,14 @@ async function changeFile() {
         type: "waring",
       });
     }
-    // 执行文件上传
-    const params = {
-      user_id: props.userInfo._id,
-      file,
-    };
 
-    const res = await uploadAvatar(params);
+    const res = await uploadAvatar({ file });
     if (res) {
       ElMessage({
         message: "上传成功",
         type: "success",
       });
-      const result = await getAvatar({ userId: props.userInfo._id });
+      const result = await getAvatar();
       imgUrl.value = result.data.avatar;
       console.log(result);
     }

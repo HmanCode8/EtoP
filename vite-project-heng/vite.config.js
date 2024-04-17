@@ -1,16 +1,19 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import path from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // const baseDir = process.env.VITE_APP_ENV === 'development' ? '/global_dev.js' : '/global.js';
-
+console.log(process.env.NODE_ENV);
 export default defineConfig(({ mode }) => {
   return {
+    envDir: "env",
+    transpileDependencies: ["vuetify"],
     resolve: {
       alias: {
-        "@": "/src",
+        "@": path.resolve(__dirname, "src"),
       },
     },
     server: {

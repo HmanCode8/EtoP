@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { reactive, computed, onMounted } from "vue";
-import { useStore } from "vuex";
 import _ from "lodash";
 import moment from "moment";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
 import { getAvatar } from "@/services/userService";
+
+import { useStore } from "vuex";
 const store = useStore();
 const info = JSON.parse((sessionStorage as any).getItem("user"));
 const userInfo = reactive(info || store.state.userInfo);

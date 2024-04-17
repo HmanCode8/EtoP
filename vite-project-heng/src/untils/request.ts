@@ -1,7 +1,7 @@
 import { ElLoading, ElNotification } from "element-plus";
 
 const BASE_URL: string = "http://localhost:3000"; // 基础 URL
-
+console.log(" request==: ", import.meta.env.VITE_BASE_URL);
 // 加载loading
 let loadingInstance: any = null; // 修改为合适的类型
 
@@ -79,11 +79,18 @@ async function request(url: string, options: any = {}): Promise<any> {
     const data: any = await response.json();
 
     if (!response.ok) {
-      return ElNotification({
+      ElNotification({
         title: "Error",
-        message: data.message || response.statusText + "",
+        message: "" + data.message || response.statusText + "",
         type: "warning",
       });
+      setTimeout(() => {
+        if (response.status === 302) {
+          location.href = "/login";
+          sessionStorage.removeItem("token");
+        }
+      }, 3000);
+      return;
       // throw new Error(`HTTP error! status: ${response.status}`);
     }
     const { status, ok } = response;

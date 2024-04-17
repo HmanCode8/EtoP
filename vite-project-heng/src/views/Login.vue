@@ -1,14 +1,14 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import request from "@/untils/request";
 import { register, login } from "@/services/userService";
 import { ElMessage } from "element-plus";
 
 import { el } from "element-plus/es/locales.mjs";
 // import type { FormProps } from 'element-plus'
 
+const swithVal = ref(false);
 const labelPosition = ref("right");
 const router = useRouter();
 const store = useStore();
@@ -96,10 +96,20 @@ const rules = {
     },
   ],
 };
+
+watchEffect(() => {
+  document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
+});
 </script>
 
 <template>
-  <div class="h-screen bg-[#ecf0f3] flex items-center justify-center">
+  <el-switch
+    class="absolute right-0 p-5"
+    v-model="swithVal"
+    active-text="暗色"
+    inactive-text="亮色"
+  />
+  <div class="h-screen flex items-center justify-center">
     <div
       class="login-modal w-1/2 h-1/2 border bg-[#ecf0f3] flex shadow-inner overflow-hidden"
     >
