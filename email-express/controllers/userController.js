@@ -8,7 +8,9 @@ router.get("/users", verifyTokenMiddleWare, async (req, res) => {
   try {
     // 查询数据库中的所有用户
     const users = await Register.find();
-    res.success(users);
+    res.success(
+      users.map((u) => ({ email: u.email, username: u.username, _id: u._id }))
+    );
   } catch (error) {
     res.error({ message: "获取用户列表失败，请稍后重试" });
   }

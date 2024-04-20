@@ -3,7 +3,9 @@ import { ref, computed, onMounted } from "vue";
 import _ from "lodash";
 import SendEmail from "@/components/Email/SendEmail.vue";
 import moment from "moment";
-import { getDrafts } from "@/services/emailService";
+import { getDrafts, deleteDrafts } from "@/services/emailService";
+import { ElMessage } from "element-plus";
+import { el } from "element-plus/es/locale/index.mjs";
 
 interface Drafts {
   _id: string;
@@ -18,9 +20,6 @@ const props = defineProps({
   users: {
     type: Array as () => any[],
     default: [],
-  },
-  userInfo: {
-    type: Object,
   },
   menuActive: {
     type: String,
@@ -55,6 +54,26 @@ const onShowSendEmail = (data: any) => {
 
 const handleSendEmail = (data: any) => {
   emit("sendEmail", data);
+};
+const handleDeleteDrafts = async () => {
+  try {
+    /**
+     * 选中的ids
+     */
+    const isCheckDrafts = _.filter(drafts.value, "checked");
+    if (_.size(isCheckDrafts) === 0) {
+      return ElMessage.error("请选择邮件");
+    }
+    const ids = _.map(isCheckDrafts, "_id");
+    const res = await deleteDrafts({ ids });
+    if (res.code === 200) {
+      handleGetDrafts();
+    } else {
+      ElMessage.error(res.message);
+    }
+  } catch (error) {
+    ElMessage.error("删除失败");
+  }
 };
 const computers = computed(() => {
   return {
@@ -96,9 +115,9 @@ onMounted(() => {
   />
 
   <div class="w-full flex flex-col" v-else>
-    <div class="border-b p-4">草稿箱</div>
+    <div class="p-4">草稿箱</div>
     <div class="p-4">
-      <el-button type="danger">删除邮件</el-button>
+      <el-button type="danger" @click="handleDeleteDrafts">删除邮件</el-button>
     </div>
     <div class="bg-[#f8f8f8] pl-4">
       <el-checkbox
@@ -109,11 +128,7 @@ onMounted(() => {
       />
     </div>
     <ul class="drafts pl-1 overflow-auto">
-      <li
-        v-for="m in drafts"
-        :key="m._id"
-        class="border-b d-item flex p-3 items-center"
-      >
+      <li v-for="m in drafts" :key="m._id" class="d-item flex p-3 items-center">
         <div class="w-1/6">
           <el-checkbox
             @change="(data:boolean)=>handleChage(data,m._id)"

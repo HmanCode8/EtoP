@@ -7,12 +7,12 @@ const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 router.post("/saveDrafts", verifyTokenMiddleWare, async (req, res) => {
   try {
     // 从请求体中获取发送邮件的数据
-    const { susername, userId } = req.userInfo;
+    const { username, userId } = req.userInfo;
 
     // 创建新的 message 对象
     const newMessage = new Drafs({
       ...req.body,
-      senderName: susername,
+      senderName: username,
       sender: userId,
       status: "pending", // 默认状态为待发送
 
@@ -44,4 +44,24 @@ router.get("/drafts", verifyTokenMiddleWare, async (req, res) => {
   }
 });
 
+// 删除草稿的接口
+router.post("/deleteDrafts", verifyTokenMiddleWare, async (req, res) => {
+  try {
+    /**
+     * 多个删除，根据id数组
+     */
+
+    // const { ids } = req.body; // 获取请求体中的id数组
+    // const deletedMessages = await Drafs.deleteMany({ _id: { $in: ids } });
+    // res.success(deletedMessages);
+
+    const { ids } = req.body; // 获取请求体中的id数组
+    const deletedMessages = await Drafs.deleteMany({ _id: { $in: ids } });
+    res.success(deletedMessages);
+    // 将删除结果发送给客户端
+  } catch (err) {
+    // 如果发生错误，发送错误消息给客户端
+    res.error({ error: err.message });
+  }
+});
 module.exports = router;

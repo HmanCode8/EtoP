@@ -66,10 +66,6 @@ async function changeFile() {
 
     const res = await uploadAvatar({ file });
     if (res) {
-      ElMessage({
-        message: "上传成功",
-        type: "success",
-      });
       const result = await getAvatar();
       imgUrl.value = result.data.avatar;
       console.log(result);

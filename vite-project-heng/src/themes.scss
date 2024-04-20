@@ -1,9 +1,74 @@
-// themes.scss
+$themes: (
+  light: (
+    primary-color: theme("colors.lightThemeColor"),
+    secondary-color: theme("colors.lightSecondaryColor"),
+    border-b-color: #4e8fd9,
+    active-color: #f8989857,
+    br-color: #f8989857,
+  ),
+  dark: (
+    primary-color: theme("colors.darkThemeColor"),
+    secondary-color: theme("colors.darkSecondaryColor"),
+    border-b-color: #ffdde1,
+    active-color: #f8989857,
+    br-color: #769862,
+  ),
+  custom: (
+    primary-color: #ffdde1,
+    secondary-color: #ffeb99,
+    border-b-color: #ffdde1,
+    active-color: #333,
+    br-color: #cdc0c0,
+  ),
+  fresh: (
+    primary-color: theme("colors.freshThemeColor"),
+    secondary-color: #4e8fd9,
+    border-b-color: #ffdde1,
+    active-color: #333,
+    br-color: #cdc0c0,
+  ),
+);
 
-// 默认主题
-$primary-color: #3498db;
-$secondary-color: #e74c3c;
+// 定义函数根据主题切换样式
+@function set-theme-color($theme) {
+  @return map-get($themes, $theme);
+}
 
-// 暗黑主题
-$primary-color-dark: #333333;
-$secondary-color-dark: #666666;
+//定义一个主题变量拼接到类名，作为前缀
+$theme-prefix: "email-";
+
+// 触发切换主题时，切换单独元素的颜色
+@each $theme, $colors in $themes {
+  [data-theme="#{$theme}"] {
+    background-color: map-get($colors, primary-color);
+    color: map-get($colors, secondary-color);
+  }
+  [data-theme="#{$theme}"] body {
+    // background-color: map-get($colors, primary-color);
+    // background-image: url("./assets/images/bg-#{nth($theme, 1)}.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: map-get($colors, secondary-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "border-bt"} {
+    border-bottom: 1px solid map-get($colors, border-b-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "box-shadow"} {
+    box-shadow: 0 0 10px map-get($colors, border-b-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "item-active-bg"} {
+    color: map-get($colors, active-color);
+    background-color: map-get($colors, active-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "br-color"} {
+    // border-right: 1px solid map-get($colors, br-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "bb-color"} {
+    // border-bottom: 1px solid map-get($colors, br-color);
+  }
+  [data-theme="#{$theme}"] input {
+    border: none;
+    outline: none;
+    /* 其他需要去除的默认样式 */
+  }
+}

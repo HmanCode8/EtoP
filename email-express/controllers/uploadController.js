@@ -20,6 +20,15 @@ const storage = multer.diskStorage({
 });
 const uploadMulter = multer({ storage: storage });
 
+//暂停函数
+function pauseSync(ms) {
+  const startTime = Date.now();
+  while (Date.now() - startTime < ms) {
+    // 空循环，等待指定时间
+    // console.log("暂停" + ms);
+  }
+}
+
 // 用户头像上传路由
 router.post(
   "/uploadAvatar",
@@ -32,16 +41,27 @@ router.post(
 
       // 查找数据库中是否已经上传过该用户的头像
       const existingUpload = await Upload.findOne({ user_id: userId });
-
+      pauseSync(5000);
       if (existingUpload) {
-        // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息
-        const oldFilePath = path.join(__dirname, "..", existingUpload.filepath);
-        await fs.unlink(oldFilePath); // 删除旧的文件
+        try {
+          // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息
+          const oldFilePath = path.join(
+            __dirname,
+            "..",
+            existingUpload.filepath
+          );
+          await fs.unlink(oldFilePath); // 删除旧的文件
+        } catch {
+          existingUpload.filename = decodeURIComponent(originalname);
+          existingUpload.filepath = filePath;
+          await existingUpload.save();
+          res.success(existingUpload);
+          return;
+        }
 
-        existingUpload.filename = originalname;
+        existingUpload.filename = decodeURIComponent(originalname);
         existingUpload.filepath = filePath;
         await existingUpload.save();
-
         res.success(existingUpload);
       } else {
         // 如果数据库中没有该用户的头像记录，则创建新的记录

@@ -4,14 +4,16 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { register, login } from "@/services/userService";
 import { ElMessage } from "element-plus";
+//引入主题hook
+import useTheme from "@/hooks/useTheme.js";
+import { th } from "element-plus/es/locale/index.mjs";
 
-import { el } from "element-plus/es/locales.mjs";
 // import type { FormProps } from 'element-plus'
-
 const swithVal = ref(false);
 const labelPosition = ref("right");
 const router = useRouter();
 const store = useStore();
+const { currentTheme, toggleTheme } = useTheme();
 
 const form = reactive({
   username: "shiheng he",
@@ -35,6 +37,7 @@ async function sha256(message) {
 
 const onRegister = async () => {
   const { username, email, password } = form;
+
   // 对密码进行 SHA-256 哈希
   const hashedPassword = await sha256(password);
   const res = await register({
@@ -63,8 +66,8 @@ const onLogin = async () => {
   });
   if (res.code === 200) {
     const { email, username } = res.data;
-    store.commit("setUserInfo", { email, username });
     sessionStorage.setItem("token", res.data.token);
+    sessionStorage.setItem("userInfo", JSON.stringify({ email, username }));
     router.push("/email");
   } else {
     console.log("login", res);
@@ -72,46 +75,79 @@ const onLogin = async () => {
   console.log("login", res);
 };
 
-const rules = {
+// 表单验证规则
+/**
+ * 邮箱验证规则，参考：https://emailregex.com/
+ * 密码验证规则，参考：https://www.regexpal.com/97131
+ *
+ */
+
+//正则表达式验证规则
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,16}$/;
+
+const emailRules = [
+  { required: true, message: "请输入邮箱", trigger: "blur" },
+  { type: "email", message: "邮箱格式不正确", trigger: "blur" },
+  {
+    validator: (rule, value, callback) => {
+      if (!emailRegex.test(value)) {
+        callback(new Error("邮箱格式不正确"));
+      } else {
+        callback();
+      }
+    },
+    trigger: "blur",
+  },
+];
+const passwordRules = [
+  { required: true, message: "请输入密码", trigger: "blur" },
+  { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" },
+  {
+    validator: (rule, value, callback) => {
+      if (!passwordRegex.test(value)) {
+        callback(new Error("密码必须包含大小写字母和数字"));
+      } else {
+        callback();
+      }
+    },
+    trigger: "blur",
+  },
+];
+
+const formRules = {
   username: [
-    {
-      required: true,
-      message: "username is not null",
-      trigger: "blur",
-    },
-    { min: 3, max: 5, message: "Length should be 3 to 5", trigger: "blur" },
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
   ],
-  email: [
-    {
-      required: true,
-      message: "email is not null",
-      trigger: "blur",
-    },
-  ],
-  password: [
-    {
-      required: true,
-      message: "password is not null",
-      trigger: "blur",
-    },
-  ],
+  email: emailRules,
+  password: passwordRules,
 };
 
 watchEffect(() => {
-  document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
+  // document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
+  // toggleTheme(swithVal.value);
+  swithVal.value = currentTheme.value === "dark";
 });
+const toggleThemeFn = () => {
+  swithVal.value = !swithVal.value;
+  // document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
+  toggleTheme(swithVal.value);
+};
 </script>
 
 <template>
   <el-switch
     class="absolute right-0 p-5"
-    v-model="swithVal"
+    @change="toggleThemeFn"
+    :model-value="swithVal"
     active-text="暗色"
     inactive-text="亮色"
   />
   <div class="h-screen flex items-center justify-center">
     <div
-      class="login-modal w-1/2 h-1/2 border bg-[#ecf0f3] flex shadow-inner overflow-hidden"
+      class="login-modal w-1/2 h-1/2 border flex shadow-inner overflow-hidden"
     >
       <div
         class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
@@ -126,7 +162,7 @@ watchEffect(() => {
         </div>
         <div class="l-btn text-white w-full flex justify-center m-10">
           <el-button
-            class="bg-[#4971e3] shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
+            class="shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
             type="primary"
             @click="onLogin"
             >SING IN</el-button
@@ -142,7 +178,7 @@ watchEffect(() => {
             :label-position="labelPosition"
             label-width="auto"
             :model="form"
-            :rules="rules"
+            :rules="formRules"
           >
             <el-form-item prop="username">
               <el-input
@@ -167,7 +203,7 @@ watchEffect(() => {
             </el-form-item>
             <el-form-item>
               <el-button
-                class="bg-[#4971e3] shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
+                class="shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
                 type="primary"
                 @click="onRegister"
                 >SING UP</el-button

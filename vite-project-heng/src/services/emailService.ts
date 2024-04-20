@@ -4,10 +4,12 @@ interface EmailList {
   userid: string;
 }
 
-type MessageId = {
-  messageId: string;
-};
+type Ids = string[];
 
+interface Status {
+  messageId: string;
+  status: boolean;
+}
 interface EmailArrray {
   senderName: string;
   sender: string;
@@ -58,14 +60,47 @@ const saveDrafts = (params: EmailArrray) => {
 const getDrafts = () => {
   return request.get("/api/drafts");
 };
-
+/**
+ * 删除草稿
+ * @param params
+ * @returns
+ */
+const deleteDrafts = (params: Ids) => {
+  return request.post("/api/deleteDrafts", params);
+};
+/**
+ * 根据id更新邮件是否已经阅读的接口
+ * @param params
+ * @returns
+ */
+const updateReadStatus = (params: Status) => {
+  return request.post("/api/updateReadStatus", params);
+};
+/**
+ * 根据id更新邮件是否已经阅读的接口
+ * @param params
+ * @returns
+ */
+const getEmailCount = () => {
+  return request.get("/api/getEmailCount");
+};
 /**
  * 删除邮件
  * @param params
  * @returns
  */
-const deleteEmail = (params: MessageId) => {
-  return request.post("/api/deleteEmail", params);
+const deleteEmail = () => {
+  return request.post("/api/deleteEmail");
 };
 
-export { getEmail, getUsers, sendEmail, saveDrafts, getDrafts, deleteEmail };
+export {
+  getEmail,
+  getUsers,
+  sendEmail,
+  saveDrafts,
+  getDrafts,
+  deleteEmail,
+  deleteDrafts,
+  updateReadStatus,
+  getEmailCount,
+};

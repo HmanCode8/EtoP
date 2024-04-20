@@ -30,8 +30,8 @@ const title = ref("数据展示平台");
 
 <template>
   <v-scale-screen width="1920" height="1080" :fullScreen="true">
-    <div class="h-screen flex flex-col bg-[#303c4c]">
-      <div class="flex bg-[#066bda] text-white items-center justify-between">
+    <div class="h-screen flex flex-col">
+      <div class="flex text-white items-center justify-between">
         <div class="left lg:w-1/4 flex justify-around">
           <router-link class="hover:text-[#50c48f] hover:underline" to="/home"
             >首页</router-link

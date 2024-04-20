@@ -31,7 +31,7 @@ const users = ref([]);
 const router = useRouter();
 const store = useStore();
 
-const userInfo = reactive(store.state.userInfo);
+const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
 const handleBack = async () => {
   const res = await loginOut();
   if (res.code === 200) {
@@ -42,7 +42,9 @@ const handleBack = async () => {
     // 使用 router.push() 方法跳转到指定路由
     router.push("/login");
     store.commit("setUserInfo", null);
+    store.commit("setAvatar", null);
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("userInfo");
   }
 };
 
@@ -71,49 +73,45 @@ onMounted(() => {
 
 <template>
   <div class="h-screen flex flex-col">
-    <div class="header h-20 flex items-center pl-5 bg-cover bg-center">
+    <div class="flex justify-between items-center h-10">
       <div
         class="avatar flex justify-center items-center border w-10 h-10 bg-white rounded-full"
       >
-        <el-icon class="text-avatarColor"><UserFilled /></el-icon>
+        <el-icon><UserFilled /></el-icon>
       </div>
       <div class="user-name text-white font-bold ml-5" v-if="userInfo">
         你好，{{ userInfo.username }}
       </div>
       <div
-        class="back flex items-center text-white absolute right-5 hover:cursor-pointer hover:text-menuTextColor"
+        class="back flex items-center text-white absolute right-5 hover:cursor-pointer"
       >
         <span>返回</span>
         <el-icon class="text-lg" @click="handleBack"> <Right /></el-icon>
       </div>
     </div>
-    <div class="contain bg-myBgColor flex flex-1 rounded-md">
-      <div class="w-40 m-3 bg-white rounded-sm">
+    <div class="contain flex flex-1 rounded-md">
+      <div class="w-40 m-3 rounded-sm">
         <!-- 侧边菜单栏 -->
-        <div class="flex flex-col h-full">
-          <div class="menu-title font-bold p-5 bg-[#1c67d7] text-[#dd5050]">
-            我的站内信
-          </div>
+        <div class="flex flex-col h-full email-br-color">
+          <div class="menu-title font-bold p-5">我的站内信</div>
           <ul>
             <li
               v-for="m in menus"
               :key="m.id"
               @click="menuChange(m.id)"
               :class="`p-2 hover:cursor-pointer hover:text-fontColor shadow-sm ${
-                menuActive === m.id ? 'bg-menuBg text-fontColor' : ''
+                menuActive === m.id ? 'email-item-active-bg' : ''
               }`"
             >
               <div class="flex items-center">
-                <el-icon class="text-menuTextColor"
-                  ><component :is="m.icon"
-                /></el-icon>
+                <el-icon><component :is="m.icon" /></el-icon>
                 <div class="ml-4">{{ m.label }}</div>
               </div>
             </li>
           </ul>
         </div>
       </div>
-      <div class="calc-h flex-1 ml-0 m-3 bg-white flex">
+      <div class="calc-h flex-1 ml-0 m-3 flex">
         <UserCenter v-if="menuActive === 'usercenter'" />
         <SendEmail
           type="sendEmail"

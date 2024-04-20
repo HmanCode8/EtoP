@@ -4,7 +4,11 @@ import { ElMessage } from "element-plus";
 import ScrollDiv from "@/components/Until/ScrollDiv.vue";
 import moment from "moment";
 import _ from "lodash";
-import { getEmail, deleteEmail } from "@/services/emailService";
+import {
+  getEmail,
+  deleteEmail,
+  updateReadStatus,
+} from "@/services/emailService";
 const props = defineProps({
   userInfo: {
     type: Object,
@@ -15,8 +19,25 @@ const messages = ref([]);
 const emailId = ref("");
 
 // 定义触发自定义事件的方法
-const handleChooseEmailId = (id) => {
+const handleChooseEmailId = async (id) => {
   emailId.value = id;
+  /**
+   * 更新邮件状态
+   */
+
+  try {
+    const res = await updateReadStatus({ messageId: id, status: "read" });
+    if (res.code === 200) {
+      handleGetEmail();
+    } else {
+      ElMessage({
+        message: "更新失败",
+        type: "error",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 const computers = computed(() => {
   return {
@@ -43,9 +64,9 @@ const handleGetEmail = async () => {
 };
 
 //删除邮件
-const handleDeleteEmail = async (messageId) => {
+const handleDeleteEmail = async () => {
   try {
-    const res = await deleteEmail({ messageId });
+    const res = await deleteEmail();
     if (res.code === 200) {
       ElMessage({
         message: "删除成功",
@@ -64,8 +85,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="content-user-list border-r w-1/4 flex flex-col">
-    <div class="user-title font-bold p-3 border-b h-[20]">
+  <div class="content-user-list email-br-color w-1/4 flex flex-col">
+    <div class="user-title font-bold p-3 h-[20]">
       收件箱({{ computers.dataSize(messages) }})
       <span class="text-[#c9d9ee] font-serif"> {{ props.email }}</span>
     </div>
@@ -77,13 +98,13 @@ onMounted(() => {
         class="u-item"
       >
         <div
-          class="msg flex border-b items-center hover:bg-userListBg hover: cursor-pointer p-3"
+          class="msg flex email-bb-color items-center hover:bg-userListBg hover: cursor-pointer p-3"
         >
           <div class="msg-l w-[10%]">
             <div
               class="avatar flex justify-center items-center border border-[#0058ff] w-8 h-8 bg-[#e5e5ff] rounded-full"
             >
-              <el-icon class="text-avatarColor"><UserFilled /></el-icon>
+              <el-icon><UserFilled /></el-icon>
             </div>
           </div>
           <div class="msg-r pl-3 w-[85%]">
@@ -99,6 +120,15 @@ onMounted(() => {
               class="r-b text-[#c5c9ce] h-[50px] w-2/3 overflow-hidden flex justify-between"
             >
               {{ m.content }}
+            </div>
+          </div>
+          <div class="w-[5%]">
+            <!-- 是否已读小圆点，未读则不显示 -->
+            <div
+              v-if="m.status !== 'read'"
+              class="dot flex justify-center items-center w-2 h-2 bg-[#ff0000] rounded-full"
+            >
+              <i class="el-icon el-icon-circle-close text-white"></i>
             </div>
           </div>
           <div class="w-[5%]">

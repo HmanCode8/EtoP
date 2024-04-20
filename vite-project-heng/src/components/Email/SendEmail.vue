@@ -18,28 +18,7 @@ const highlightedCode = ref("");
 const serderValue = ref("");
 const themContet = ref("");
 
-const senderOptions = [
-  {
-    value: "Option1",
-    label: "Option1",
-  },
-  {
-    value: "Option2",
-    label: "Option2",
-  },
-  {
-    value: "Option3",
-    label: "Option3",
-  },
-  {
-    value: "Option4",
-    label: "Option4",
-  },
-  {
-    value: "Option5",
-    label: "Option5",
-  },
-];
+const senderOptions = [];
 const props = defineProps({
   userInfo: {
     type: Object,
@@ -171,6 +150,9 @@ const initEmail = ({ content, contentBlock, recipient, subject }) => {
   themContet.value = subject;
 };
 
+watch(serderValue, (newVal) => {
+  console.log("newVal", newVal);
+});
 onMounted(() => {
   editRoot();
   if (!_.isEmpty(props.draftItem)) {
@@ -181,7 +163,7 @@ onMounted(() => {
 
 <template>
   <div class="content-user-input flex flex-col h-3/4 p-5 w-full">
-    <div class="send--header flex justify-between border-b">
+    <div class="send--header flex justify-between">
       <div>发送邮件</div>
       <div
         class="hover:cursor-pointer hover:text-[#f00]"
@@ -226,7 +208,7 @@ onMounted(() => {
         />
       </el-select>
     </div>
-    <div class="flex items-center border-b pb-4">
+    <div class="flex items-center pb-4">
       <div class="label w-20">主题：</div>
       <el-input placeholder="请输入" v-model="themContet"></el-input>
     </div>

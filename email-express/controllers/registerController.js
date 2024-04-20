@@ -6,6 +6,10 @@ router.post("/register", async (req, res) => {
   try {
     // 从请求体中获取用户提供的信息
     const { username, email, password } = req.body;
+    // 检查用户名和密码是否为空
+    if (!username || !password) {
+      return res.error({ message: "用户名或密码不能为空" });
+    }
 
     // 检查是否存在相同的邮箱或用户名
     const existingUser = await Register.findOne({
