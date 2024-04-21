@@ -11,6 +11,10 @@ body {
   }
 }
 
+::view-transition-new,
+::view-transition-old {
+  animation: none;
+}
 // 全局样式
 /* 隐藏浏览器默认的滚动条 */
 ::-webkit-scrollbar {

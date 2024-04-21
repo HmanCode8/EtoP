@@ -177,16 +177,18 @@ onMounted(() => {
       <el-button
         type="success"
         plain
-        class="mt-3"
+        class="mt-3 email-btn"
         @click="handleSendEmail('sendEmail')"
         >发送</el-button
       >
-      <el-button type="primary" plain class="mt-3">定时发送</el-button>
+      <el-button type="primary" plain class="mt-3 email-btn border-none"
+        >定时发送</el-button
+      >
       <el-button
         type="danger"
         v-if="props.type !== 'drafts'"
         plain
-        class="mt-3"
+        class="mt-3 email-btn"
         @click="handleSendEmail('savaDrafts')"
         >保存为草稿</el-button
       >

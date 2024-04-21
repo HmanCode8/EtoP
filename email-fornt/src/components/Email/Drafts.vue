@@ -5,7 +5,6 @@ import SendEmail from "@/components/Email/SendEmail.vue";
 import moment from "moment";
 import { getDrafts, deleteDrafts } from "@/services/emailService";
 import { ElMessage } from "element-plus";
-import { el } from "element-plus/es/locale/index.mjs";
 
 interface Drafts {
   _id: string;
@@ -117,9 +116,11 @@ onMounted(() => {
   <div class="w-full flex flex-col" v-else>
     <div class="p-4">草稿箱</div>
     <div class="p-4">
-      <el-button type="danger" @click="handleDeleteDrafts">删除邮件</el-button>
+      <el-button class="email-btn" type="danger" @click="handleDeleteDrafts"
+        >删除邮件</el-button
+      >
     </div>
-    <div class="bg-[#f8f8f8] pl-4">
+    <div class="text-[#f8f8f8] pl-4">
       <el-checkbox
         :model-value="allchecked"
         @change="allOnChage"
@@ -162,5 +163,9 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  // /deep/ .el-checkbox__label {
+  //   color: aqua; /* 修改颜色为aqua */
+  //   font-weight: bold; /* 修改为粗体 */
+  // }
 }
 </style>

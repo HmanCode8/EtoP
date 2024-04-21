@@ -146,9 +146,7 @@ const toggleThemeFn = () => {
     inactive-text="亮色"
   />
   <div class="h-screen flex items-center justify-center">
-    <div
-      class="login-modal w-1/2 h-1/2 border flex shadow-inner overflow-hidden"
-    >
+    <div class="login-modal w-1/2 h-1/2 flex email-box-shadow overflow-hidden">
       <div
         class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
       >

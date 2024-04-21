@@ -73,19 +73,22 @@ onMounted(() => {
 
 <template>
   <div class="h-screen flex flex-col">
-    <div class="flex justify-between items-center h-10">
-      <div
-        class="avatar flex justify-center items-center border w-10 h-10 bg-white rounded-full"
-      >
-        <el-icon><UserFilled /></el-icon>
+    <div class="flex items-center justify-between h-16 pl-3 pr-3">
+      <!-- <div
+        class="logo w-[300px] h-[300px] bg-cover bg-center bg-no-repeat"
+      ></div> -->
+      <div class="flex items-center">
+        <div
+          class="avatar flex justify-center items-center w-10 h-10 rounded-full"
+        >
+          <el-icon><UserFilled /></el-icon>
+        </div>
+        <div class="user-name font-bold ml-5" v-if="userInfo">
+          你好，{{ userInfo.username }}
+        </div>
       </div>
-      <div class="user-name text-white font-bold ml-5" v-if="userInfo">
-        你好，{{ userInfo.username }}
-      </div>
-      <div
-        class="back flex items-center text-white absolute right-5 hover:cursor-pointer"
-      >
-        <span>返回</span>
+      <div class="back flex items-center absolute right-5 hover:cursor-pointer">
+        <span>退出</span>
         <el-icon class="text-lg" @click="handleBack"> <Right /></el-icon>
       </div>
     </div>
@@ -100,7 +103,7 @@ onMounted(() => {
               :key="m.id"
               @click="menuChange(m.id)"
               :class="`p-2 hover:cursor-pointer hover:text-fontColor shadow-sm ${
-                menuActive === m.id ? 'email-item-active-bg' : ''
+                menuActive === m.id ? 'email-bb-color' : ''
               }`"
             >
               <div class="flex items-center">
@@ -140,8 +143,8 @@ onMounted(() => {
 .box {
   margin: 10px auto;
 }
-.header {
-  background-image: url("../assets/title-bg.png");
+.logo {
+  background-image: url("../assets/logo.jpg");
 }
 .calc-h {
   height: calc(100vh - 100px);

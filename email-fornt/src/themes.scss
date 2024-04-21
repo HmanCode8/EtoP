@@ -5,13 +5,19 @@ $themes: (
     border-b-color: #4e8fd9,
     active-color: #f8989857,
     br-color: #f8989857,
+    box-shadow: #f8989857,
+    btn-color: #f89898,
+    content-bg-color: #f00,
   ),
   dark: (
     primary-color: theme("colors.darkThemeColor"),
     secondary-color: theme("colors.darkSecondaryColor"),
     border-b-color: #ffdde1,
     active-color: #f8989857,
-    br-color: #769862,
+    br-color: #59704c,
+    box-shadow: #f00,
+    btn-color: #3b654e,
+    content-bg-color: #59704c,
   ),
   custom: (
     primary-color: #ffdde1,
@@ -40,7 +46,32 @@ $theme-prefix: "email-";
 // 触发切换主题时，切换单独元素的颜色
 @each $theme, $colors in $themes {
   [data-theme="#{$theme}"] {
-    background-color: map-get($colors, primary-color);
+    //渐变主题色45deg
+    // background: linear-gradient(
+    //   45deg,
+    //   map-get($colors, primary-color),
+    //   map-get($colors, content-bg-color)
+    // );
+    // 主题色
+    // background-image: url("./assets/logo.jpg");
+    // background-repeat: no-repeat;
+    // background-size: cover;
+    // background-size: 100% 100%;
+    // background-color: map-get($colors, primary-color);
+    //如果是ligh主题，则使用图片作为背景
+    @if $theme == "light" {
+      background-image: url("./assets/logo.jpg");
+      background-repeat: no-repeat;
+      // background-size: cover;
+      // background-size: 100% 100%;
+      // background-color: map-get($colors, primary-color);
+    }
+    //如果是dark主题，则使用纯色作为背景
+    @else if $theme == "dark" {
+      background-color: map-get($colors, primary-color);
+    }
+    // 主题色
+    // background-color: map-get($colors, primary-color);
     color: map-get($colors, secondary-color);
   }
   [data-theme="#{$theme}"] body {
@@ -49,6 +80,9 @@ $theme-prefix: "email-";
     background-repeat: no-repeat;
     background-size: cover;
     color: map-get($colors, secondary-color);
+  }
+  [data-theme="#{$theme}"] .email-btn {
+    background-color: map-get($colors, btn-color);
   }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "border-bt"} {
     border-bottom: 1px solid map-get($colors, border-b-color);
@@ -60,11 +94,20 @@ $theme-prefix: "email-";
     color: map-get($colors, active-color);
     background-color: map-get($colors, active-color);
   }
-  [data-theme="#{$theme}"] #{"." + $theme-prefix + "br-color"} {
-    // border-right: 1px solid map-get($colors, br-color);
+  // 阴影
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "box-shadow"} {
+    box-shadow: 2px 2px 6px #fff, -2px -2px 6px map-get($colors, box-shadow);
   }
+
+  // [data-theme="#{$theme}"] #{"." + $theme-prefix + "br-color"} {
+  //   // border-right: 1px solid map-get($colors, br-color);
+  // }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "bb-color"} {
-    // border-bottom: 1px solid map-get($colors, br-color);
+    border-bottom: 1px solid map-get($colors, br-color);
+  }
+  //content-bg-color
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "content-bg-color"} {
+    background-color: map-get($colors, content-bg-color);
   }
   [data-theme="#{$theme}"] input {
     border: none;

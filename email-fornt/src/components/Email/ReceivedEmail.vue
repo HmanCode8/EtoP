@@ -98,11 +98,11 @@ onMounted(() => {
         class="u-item"
       >
         <div
-          class="msg flex email-bb-color items-center hover:bg-userListBg hover: cursor-pointer p-3"
+          class="msg flex email-bb-color items-center hover:content-bg-color hover: cursor-pointer p-3"
         >
           <div class="msg-l w-[10%]">
             <div
-              class="avatar flex justify-center items-center border border-[#0058ff] w-8 h-8 bg-[#e5e5ff] rounded-full"
+              class="avatar flex justify-center items-center border w-8 h-8 rounded-full"
             >
               <el-icon><UserFilled /></el-icon>
             </div>
@@ -112,12 +112,12 @@ onMounted(() => {
               <div class="name w-[120px] overflow-hidden">
                 {{ m.subject || "--" }}
               </div>
-              <div class="date text-[#c5c9ce] text-sm">
+              <div class="date text-sm">
                 {{ computers.msgDate(m.timestamp, "YYYY-MM-DD") }}
               </div>
             </div>
             <div
-              class="r-b text-[#c5c9ce] h-[50px] w-2/3 overflow-hidden flex justify-between"
+              class="r-b h-[50px] w-2/3 overflow-hidden flex justify-between"
             >
               {{ m.content }}
             </div>
@@ -126,9 +126,9 @@ onMounted(() => {
             <!-- 是否已读小圆点，未读则不显示 -->
             <div
               v-if="m.status !== 'read'"
-              class="dot flex justify-center items-center w-2 h-2 bg-[#ff0000] rounded-full"
+              class="dot flex justify-center items-center w-2 h-2 rounded-full"
             >
-              <i class="el-icon el-icon-circle-close text-white"></i>
+              <i class="el-icon el-icon-circle-close"></i>
             </div>
           </div>
           <div class="w-[5%]">
@@ -151,11 +151,11 @@ onMounted(() => {
     <!-- <el-empty v-else :image-size="200" /> -->
   </div>
   <div class="content-user-input flex flex-col p-5 w-3/4" v-if="emailId !== ''">
-    <div class="rounded-md p-3 m-10-auto bg-[#f7f7f7]">
+    <div class="rounded-md p-3 m-10-auto content-bg-color">
       <div class="font-bold overflow-hidden flex justify-center items-center">
         {{ computers.emailContent.subject }}
       </div>
-      <div class="text-[#b7b7b8]">
+      <div class="">
         发件时间：{{
           computers.msgDate(
             computers.emailContent.timestamp,
@@ -163,12 +163,8 @@ onMounted(() => {
           )
         }}
       </div>
-      <div class="text-[#b7b7b8]">
-        发件人：{{ computers.emailContent.senderName }}
-      </div>
-      <div class="text-[#b7b7b8]">
-        收件人：{{ computers.emailContent.recipientName }}
-      </div>
+      <div class="">发件人：{{ computers.emailContent.senderName }}</div>
+      <div class="">收件人：{{ computers.emailContent.recipientName }}</div>
     </div>
     <div class="m-5" v-html="computers.emailContent.contentBlock"></div>
   </div>
