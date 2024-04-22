@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, onMounted, watchEffect } from "vue";
+import CryptoJS from "crypto-js";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { register, login } from "@/services/userService";
@@ -25,14 +26,9 @@ onMounted(() => {
 });
 
 // 定义 SHA-256 哈希函数
-async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-  return hashHex;
+function sha256(message) {
+  let hash = CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
+  return hash;
 }
 
 const onRegister = async () => {

@@ -4,7 +4,9 @@ interface EmailList {
   userid: string;
 }
 
-type Ids = string[];
+interface Ids {
+  ids: string[];
+}
 
 interface Status {
   messageId: string;

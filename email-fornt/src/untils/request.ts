@@ -1,7 +1,6 @@
 import { ElLoading, ElNotification } from "element-plus";
 
-const BASE_URL: string = "http://localhost:3000"; // 基础 URL
-console.log(" request==: ", import.meta.env.VITE_BASE_URL);
+const BASE_URL: string = import.meta.env.VITE_BASE_URL; // 基础 URL
 // 加载loading
 let loadingInstance: any = null; // 修改为合适的类型
 
@@ -44,6 +43,7 @@ async function request(url: string, options: any = {}): Promise<any> {
   try {
     // 合并URL
     url = `${BASE_URL}${url}`;
+    console.log(" request==: ", url);
     // 添加 Authorization 头部
     const token = sessionStorage.getItem("token"); // 从 sessionStorage 中获取 Token，你可以根据实际情况获取
     if (token) {

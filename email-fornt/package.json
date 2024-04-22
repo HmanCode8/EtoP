@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "echarts": "^5.5.0",
     "element-plus": "^2.6.1",
     "highlight.js": "^11.9.0",

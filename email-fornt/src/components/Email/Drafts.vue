@@ -63,8 +63,8 @@ const handleDeleteDrafts = async () => {
     if (_.size(isCheckDrafts) === 0) {
       return ElMessage.error("请选择邮件");
     }
-    const ids = _.map(isCheckDrafts, "_id");
-    const res = await deleteDrafts({ ids });
+    const id: string[] = _.map(isCheckDrafts, "_id");
+    const res = await deleteDrafts({ ids: id });
     if (res.code === 200) {
       handleGetDrafts();
     } else {
