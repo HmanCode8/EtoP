@@ -109,9 +109,15 @@ $theme-prefix: "email-";
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "content-bg-color"} {
     background-color: map-get($colors, content-bg-color);
   }
-  [data-theme="#{$theme}"] input {
-    border: none;
-    outline: none;
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "prefix"} {
+    background-color: map-get($colors, content-bg-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "form-item"} {
+    border-bottom: 1px solid map-get($colors, border-b-color);
+    // outline: none;
+    padding: 10px;
+    background-color: transparent;
+    color: map-get($colors, secondary-color);
     /* 其他需要去除的默认样式 */
   }
 }

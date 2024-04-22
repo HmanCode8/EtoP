@@ -1,45 +1,50 @@
 <script setup>
 import { ref, reactive, onMounted, watchEffect } from "vue";
 import CryptoJS from "crypto-js";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { register, login } from "@/services/userService";
 import { ElMessage } from "element-plus";
+import { register, login } from "@/services/userService";
+import { useRouter } from "vue-router";
+import _ from "lodash";
 //引入主题hook
 import useTheme from "@/hooks/useTheme.js";
-import { th } from "element-plus/es/locale/index.mjs";
-
-// import type { FormProps } from 'element-plus'
 const swithVal = ref(false);
 const labelPosition = ref("right");
 const router = useRouter();
-const store = useStore();
+const isRegister = ref(true);
 const { currentTheme, toggleTheme } = useTheme();
-
 const form = reactive({
-  username: "shiheng he",
-  email: "11@email.com",
-  password: "123",
+  username: "",
+  password: "",
+  confirmPassword: "",
 });
+
 onMounted(() => {
   console.log(window);
 });
 
-// 定义 SHA-256 哈希函数
 function sha256(message) {
+  if (_.isEmpty(message)) {
+    return null;
+  }
   let hash = CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
   return hash;
 }
 
 const onRegister = async () => {
-  const { username, email, password } = form;
+  const { username, password, confirmPassword } = form;
+  if (password !== confirmPassword) {
+    ElMessage({
+      message: "密码与确认密码不一致",
+      type: "error",
+    });
+    return;
+  }
 
-  // 对密码进行 SHA-256 哈希
   const hashedPassword = await sha256(password);
   const res = await register({
     username: form.username,
-    email: form.email,
     password: hashedPassword,
+    confirmPassword: hashedPassword,
   });
   if (res.code === 200) {
     ElMessage({
@@ -53,11 +58,14 @@ const onRegister = async () => {
     });
   }
 };
-const onLogin = async () => {
-  const hashedPassword = await sha256(form.password);
+
+const onchageLogin = async () => {
+  const { username, password, confirmPassword } = form;
+  // 登录表单检验，检验用户密码
+  // if()
+  const hashedPassword = await sha256(password);
   const res = await login({
-    username: form.username,
-    email: form.email,
+    username: username,
     password: hashedPassword,
   });
   if (res.code === 200) {
@@ -71,76 +79,16 @@ const onLogin = async () => {
   console.log("login", res);
 };
 
-// 表单验证规则
-/**
- * 邮箱验证规则，参考：https://emailregex.com/
- * 密码验证规则，参考：https://www.regexpal.com/97131
- *
- */
-
-//正则表达式验证规则
-
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,16}$/;
-
-const emailRules = [
-  { required: true, message: "请输入邮箱", trigger: "blur" },
-  { type: "email", message: "邮箱格式不正确", trigger: "blur" },
-  {
-    validator: (rule, value, callback) => {
-      if (!emailRegex.test(value)) {
-        callback(new Error("邮箱格式不正确"));
-      } else {
-        callback();
-      }
-    },
-    trigger: "blur",
-  },
-];
-const passwordRules = [
-  { required: true, message: "请输入密码", trigger: "blur" },
-  { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" },
-  {
-    validator: (rule, value, callback) => {
-      if (!passwordRegex.test(value)) {
-        callback(new Error("密码必须包含大小写字母和数字"));
-      } else {
-        callback();
-      }
-    },
-    trigger: "blur",
-  },
-];
-
-const formRules = {
-  username: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
-    { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
-  ],
-  email: emailRules,
-  password: passwordRules,
-};
-
 watchEffect(() => {
-  // document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
-  // toggleTheme(swithVal.value);
   swithVal.value = currentTheme.value === "dark";
 });
 const toggleThemeFn = () => {
   swithVal.value = !swithVal.value;
-  // document.documentElement.dataset.theme = swithVal.value ? "light" : "dark";
   toggleTheme(swithVal.value);
 };
 </script>
 
 <template>
-  <el-switch
-    class="absolute right-0 p-5"
-    @change="toggleThemeFn"
-    :model-value="swithVal"
-    active-text="暗色"
-    inactive-text="亮色"
-  />
   <div class="h-screen flex items-center justify-center">
     <div class="login-modal w-1/2 h-1/2 flex email-box-shadow overflow-hidden">
       <div
@@ -150,25 +98,77 @@ const toggleThemeFn = () => {
         <div class="inner-b"></div>
         <div class="l-title">
           <div class="font-bold text-center text-xl">welcome back!</div>
-          <div class="text-sm text-[#c2c6c9]">
-            你有账号的话，直接就登录吧，不要麻烦就行！！
-          </div>
+          <div class="text-sm text-[#c2c6c9]">选择你喜欢的主题进入</div>
         </div>
         <div class="l-btn text-white w-full flex justify-center m-10">
-          <el-button
+          <!-- <el-button
             class="shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
             type="primary"
             @click="onLogin"
             >SING IN</el-button
-          >
+          > -->
+          <el-switch
+            class="absolute right-0 p-5"
+            @change="toggleThemeFn"
+            :model-value="swithVal"
+            active-text="dark"
+            inactive-text="light"
+          />
         </div>
       </div>
       <div class="m-r w-2/3 flex flex-col justify-center items-center">
-        <div class="font-bold text-center text-xl">创建账号</div>
-        <div class="text-sm text-[#c2c6c9] p-3">注册账号标识同意协议说明</div>
+        <div class="font-bold text-center text-xl">
+          {{ isRegister ? "注册" : "登录" }}
+        </div>
         <div class="icons"></div>
         <div class="forms w-2/3 p-3">
-          <el-form
+          <form action="#">
+            <div class="username flex items-center">
+              <input
+                class="email-form-item w-full"
+                v-model="form.username"
+                placeholder="username"
+              />
+              <div class="prixt emial-prefix">@hehsiheng.com</div>
+            </div>
+            <div class="password flex">
+              <!-- 可显示可隐藏密码 -->
+              <input
+                class="email-form-item w-full"
+                v-model="form.password"
+                placeholder="password"
+                type="password"
+              />
+            </div>
+            <div v-if="isRegister" class="confirm-password flex">
+              <input
+                class="email-form-item w-full"
+                v-model="form.confirmPassword"
+                placeholder="confirmPassword"
+                type="password"
+              />
+            </div>
+            <div class="btn-box flex justify-between pt-4">
+              <el-button
+                class="shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
+                type="primary"
+                @click="isRegister ? onRegister() : onchageLogin()"
+                >{{ isRegister ? "SING UP" : "SING IN" }}</el-button
+              >
+              <div
+                class="switch-form flex hover:cursor-pointer justify-center items-center"
+              >
+                <div class="text-sm">
+                  {{ isRegister ? "Login" : "Register" }}
+                </div>
+                <el-icon class="text-lg" @click="isRegister = !isRegister">
+                  <Right
+                /></el-icon>
+              </div>
+            </div>
+            <!-- 右下角的注册切换表单 -->
+          </form>
+          <!-- <el-form
             :label-position="labelPosition"
             label-width="auto"
             :model="form"
@@ -176,23 +176,24 @@ const toggleThemeFn = () => {
           >
             <el-form-item prop="username">
               <el-input
-                class="custom-input"
-                placeholder="Name"
+                class="custom-input flex"
+                placeholder="用户名"
                 v-model="form.username"
               />
+              @hehsiheng.com
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="password">
               <el-input
                 class="custom-input"
-                placeholder="Email"
-                v-model="form.email"
+                placeholder="密码"
+                v-model="form.password"
               />
             </el-form-item>
-            <el-form-item>
+            <el-form-item prop="confirmPassword">
               <el-input
                 class="custom-input"
-                placeholder="Password"
-                v-model="form.password"
+                placeholder="确认密码"
+                v-model="form.confirmPassword"
               />
             </el-form-item>
             <el-form-item>
@@ -202,8 +203,9 @@ const toggleThemeFn = () => {
                 @click="onRegister"
                 >SING UP</el-button
               >
+              SING UP
             </el-form-item>
-          </el-form>
+          </el-form> -->
         </div>
       </div>
     </div>
@@ -241,5 +243,9 @@ button {
   bottom: -15%;
   left: -18px;
   transition: 1.25s;
+}
+input:focus {
+  /* 在输入框获取焦点时应用的样式 */
+  outline: transparent; /* 举例：添加蓝色的边框 */
 }
 </style>

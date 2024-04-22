@@ -29,6 +29,9 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 
+//静态资源目录
+app.use(express.static(__dirname + "/dist"));
+
 // 使用 cors 中间件，允许来自所有源的跨域请求
 app.use(cors());
 // 设置请求体大小限制为 50MB
