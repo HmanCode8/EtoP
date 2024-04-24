@@ -1,0 +1,581 @@
+[
+    {
+        "Id": 1,
+        "name": "QQ信息查询",
+        "description": "根据QQ号返回QQ昵称，QQ等级等信息",
+        "sum": 148942270,
+        "router": "qq/info"
+    },
+    {
+        "Id": 24,
+        "name": "万能短网址还原",
+        "description": "支持所有短网址还原真实网址",
+        "sum": 84761361,
+        "router": "site/UrlRevert"
+    },
+    {
+        "Id": 34,
+        "name": "骚扰号码查询",
+        "description": "数据来自360手机安全中心",
+        "sum": 9353090,
+        "router": "search/harassPhone"
+    },
+    {
+        "Id": 7,
+        "name": "IP地址查询",
+        "description": "IP地址信息查询，支持IPV4、IPV6地址",
+        "sum": 8921860,
+        "router": "ip/ipaddress"
+    },
+    {
+        "Id": 14,
+        "name": "手机号归属地查询",
+        "description": "查询手机号归属地信息",
+        "sum": 6546690,
+        "router": "common/teladress"
+    },
+    {
+        "Id": 29,
+        "name": "QQ翻译",
+        "description": "QQ官方翻译接口",
+        "sum": 3268666,
+        "router": "txt/QQFanyi"
+    },
+    {
+        "Id": 28,
+        "name": "每日一句英文",
+        "description": "每日一句英文，新的一天行动起来吧",
+        "sum": 2959009,
+        "router": "common/OneDayEnglish"
+    },
+    {
+        "Id": 20,
+        "name": "全网热搜榜",
+        "description": "支持60多个平台的热搜榜信息",
+        "sum": 1452366,
+        "router": "common/HotList"
+    },
+    {
+        "Id": 40,
+        "name": "天气信息查询",
+        "description": "查询当地天气信息以及未来天气",
+        "sum": 1024873,
+        "router": "weather/GetWeather"
+    },
+    {
+        "Id": 15,
+        "name": "历史上的今天",
+        "description": "历史上的今天都发生了哪些大事",
+        "sum": 785806,
+        "router": "common/history"
+    },
+    {
+        "Id": 2,
+        "name": "QQ会员信息查询",
+        "description": "查询QQ会员信息",
+        "sum": 694546,
+        "router": "qq/vip"
+    },
+    {
+        "Id": 48,
+        "name": "舔狗日记",
+        "description": "今天给女神发信息了吗",
+        "sum": 665026,
+        "router": "SimpWords"
+    },
+    {
+        "Id": 12,
+        "name": "备案查询",
+        "description": "查询域名备案信息",
+        "sum": 639777,
+        "router": "site/icp"
+    },
+    {
+        "Id": 43,
+        "name": "天气查询-自定义地区",
+        "description": "自定义地区天气信息查询",
+        "sum": 471040,
+        "router": "weather/weather"
+    },
+    {
+        "Id": 13,
+        "name": "快递查询",
+        "description": "查询快递物流信息",
+        "sum": 316024,
+        "router": "common/delivery"
+    },
+    {
+        "Id": 11,
+        "name": "二维码生成",
+        "description": "生成指定内容的二维码",
+        "sum": 314850,
+        "router": "qrcode/encode"
+    },
+    {
+        "Id": 5,
+        "name": "Bing每日一图",
+        "description": "返回必应每日一图的最近7张图",
+        "sum": 261301,
+        "router": "bing"
+    },
+    {
+        "Id": 35,
+        "name": "淘宝下拉词查询",
+        "description": "查询淘宝关键词的下拉词",
+        "sum": 185095,
+        "router": "search/taobao_suggest"
+    },
+    {
+        "Id": 10,
+        "name": "QQ会员信息查询2",
+        "description": "查询QQ会员信息",
+        "sum": 173441,
+        "router": "qq/getQQLevelInfo"
+    },
+    {
+        "Id": 30,
+        "name": "奥运会排行榜",
+        "description": "官方奥运会排行榜数据",
+        "sum": 154773,
+        "router": "search/getOlyMedals"
+    },
+    {
+        "Id": 49,
+        "name": "毒鸡汤",
+        "description": "每日emo",
+        "sum": 83688,
+        "router": "SoulWords"
+    },
+    {
+        "Id": 42,
+        "name": "每日一部电影推荐",
+        "description": "每日推荐一部电影",
+        "sum": 74309,
+        "router": "common/OneFilm"
+    },
+    {
+        "Id": 47,
+        "name": "空间说说获取",
+        "description": "获取空间说说信息",
+        "sum": 64473,
+        "router": "qq/MsgList"
+    },
+    {
+        "Id": 36,
+        "name": "食物营养查询",
+        "description": "食物营养查询，吃适合的食物",
+        "sum": 63334,
+        "router": "search/FoodHeat"
+    },
+    {
+        "Id": 26,
+        "name": "favicon.ico图标获取",
+        "description": "获取网站的favicon.ico",
+        "sum": 58007,
+        "router": "site/favicon"
+    },
+    {
+        "Id": 3,
+        "name": "垃圾分类",
+        "description": "查询垃圾分类信息",
+        "sum": 57871,
+        "router": "common/rubbish"
+    },
+    {
+        "Id": 31,
+        "name": "表情包搜索",
+        "description": "再也不会缺图了",
+        "sum": 53004,
+        "router": "picture/emoticon"
+    },
+    {
+        "Id": 16,
+        "name": "字典",
+        "description": "字典词义查询",
+        "sum": 48779,
+        "router": "txt/dict"
+    },
+    {
+        "Id": 18,
+        "name": "经纬度信息查询",
+        "description": "查询经纬线详细信息",
+        "sum": 47012,
+        "router": "ip/geocoder"
+    },
+    {
+        "Id": 17,
+        "name": "域名收录/反链查询",
+        "description": "查询域名的SEO收录与反链信息",
+        "sum": 40994,
+        "router": "site/employ"
+    },
+    {
+        "Id": 46,
+        "name": "全国油价查询",
+        "description": "全国油价信息查询",
+        "sum": 29585,
+        "router": "common/GasolinePriceQuery"
+    },
+    {
+        "Id": 44,
+        "name": "图片文字识别",
+        "description": "识别图片中的文字",
+        "sum": 25238,
+        "router": "ocr"
+    },
+    {
+        "Id": 22,
+        "name": "米游社随机头像",
+        "description": "米游社随机头像",
+        "sum": 25055,
+        "router": "picture/miyoushe_avatar"
+    },
+    {
+        "Id": 27,
+        "name": "强制加QQ群",
+        "description": "一键强制加QQ群",
+        "sum": 18859,
+        "router": "qq/joingroup"
+    },
+    {
+        "Id": 25,
+        "name": "商标信息查询",
+        "description": "包括企业商标注册信息、商标logo,商标类别等信息查询",
+        "sum": 17390,
+        "router": "search/trademark"
+    },
+    {
+        "Id": 45,
+        "name": "身份证OCR识别",
+        "description": "识别身份证信息",
+        "sum": 13162,
+        "router": "ocr/RecognizeIdcard"
+    },
+    {
+        "Id": 6,
+        "name": "AI鉴黄",
+        "description": "对图片内容进行鉴黄识别",
+        "sum": 13130,
+        "router": "ai/jianhuang"
+    },
+    {
+        "Id": 37,
+        "name": "QQ群信息查询",
+        "description": "查询QQ群信息",
+        "sum": 11140,
+        "router": "qq/group_info"
+    },
+    {
+        "Id": 4,
+        "name": "AI抠图",
+        "description": "一键AI抠图",
+        "sum": 10194,
+        "router": "ai/matting"
+    },
+    {
+        "Id": 32,
+        "name": "QQ空间访客查询",
+        "description": "查询总访客、今日访客信息",
+        "sum": 4751,
+        "router": "qq/QzoneVisitor"
+    },
+    {
+        "Id": 41,
+        "name": "万物识别",
+        "description": "识别图片信息",
+        "sum": 3471,
+        "router": "ocr/recognition"
+    },
+    {
+        "Id": 50,
+        "name": "每日一言",
+        "description": "一天之计在于晨，早安！",
+        "sum": 2991,
+        "router": "common/yiyan"
+    },
+    {
+        "Id": 21,
+        "name": "以图搜番",
+        "description": "以图搜番",
+        "sum": 2863,
+        "router": "search/anilistInfo"
+    },
+    {
+        "Id": 8,
+        "name": "域名whois查询",
+        "description": "查询域名whois信息",
+        "sum": 2784,
+        "router": "site/whois"
+    },
+    {
+        "Id": 39,
+        "name": "二维码解析",
+        "description": "解析二维码内容",
+        "sum": 2329,
+        "router": "qrcode/decode"
+    },
+    {
+        "Id": 19,
+        "name": "域名拦截查询",
+        "description": "检查域名在QQ微信是否正常访问",
+        "sum": 1634,
+        "router": "site/waylay"
+    },
+    {
+        "Id": 33,
+        "name": "域名注册查询",
+        "description": "查询域名是否注册",
+        "sum": 1344,
+        "router": "site/reg"
+    },
+    {
+        "name": "6.7w",
+        "description": "超星学习通、知到智慧树、等全网网课答案在线搜索",
+        "router": "https://api.vvhan.com/article/wangke.html"
+    },
+    {
+        "name": "10.7w",
+        "description": "有趣的摸鱼人专属日历",
+        "router": "https://api.vvhan.com/article/moyu.html"
+    },
+    {
+        "name": "6.9w",
+        "description": "有趣的职场人专属日历",
+        "router": "https://api.vvhan.com/article/zhichang.html"
+    },
+    {
+        "name": "29.4w",
+        "description": "获取必应每日壁纸",
+        "router": "https://api.vvhan.com/article/bing.html"
+    },
+    {
+        "name": "11.1w",
+        "description": "随机输出一张超清风景图片",
+        "router": "https://api.vvhan.com/article/views.html"
+    },
+    {
+        "name": "13.0w",
+        "description": "随机输出一张超清动漫图片",
+        "router": "https://api.vvhan.com/article/acg.html"
+    },
+    {
+        "name": "9.7w",
+        "description": "随机输出电脑分辨率cosplay或福利姬等美图",
+        "router": "https://api.vvhan.com/article/pcGirl.html"
+    },
+    {
+        "name": "6.9w",
+        "description": "随机输出手机分辨率cosplay或福利姬等美图",
+        "router": "https://api.vvhan.com/article/mobileGirl.html"
+    },
+    {
+        "name": "6.9w",
+        "description": "随机输出一张精选头像图片",
+        "router": "https://api.vvhan.com/article/rand.html"
+    },
+    {
+        "name": "7.1w",
+        "description": "随机输出一张动漫头像图片",
+        "router": "https://api.vvhan.com/article/dm.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "随机输出一张男生头像图片",
+        "router": "https://api.vvhan.com/article/boy.html"
+    },
+    {
+        "name": "6.8w",
+        "description": "随机输出一张女生头像图片",
+        "router": "https://api.vvhan.com/article/girl.html"
+    },
+    {
+        "name": "6.8w",
+        "description": "随机输出一张小众头像图片",
+        "router": "https://api.vvhan.com/article/niche.html"
+    },
+    {
+        "name": "8.3w",
+        "description": "网易云音乐 输出最新热歌榜随机歌曲",
+        "router": "https://api.vvhan.com/article/%E7%83%AD%E6%AD%8C%E6%A6%9C.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "网易云音乐 输出最新新歌榜随机歌曲",
+        "router": "https://api.vvhan.com/article/%E6%96%B0%E6%AD%8C%E6%A6%9C.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "网易云音乐 输出最新飙升榜随机歌曲",
+        "router": "https://api.vvhan.com/article/%E9%A3%99%E5%8D%87%E6%A6%9C.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "网易云音乐 输出最新原创榜随机歌曲",
+        "router": "https://api.vvhan.com/article/%E5%8E%9F%E5%88%9B%E6%A6%9C.html"
+    },
+    {
+        "name": "387.4w",
+        "description": "随机输出 动漫文学，网络鸡汤，文学诗词等文案",
+        "router": "https://api.vvhan.com/article/yiyan.html"
+    },
+    {
+        "name": "8.4w",
+        "description": "随机输出一句骚骚的骚话",
+        "router": "https://api.vvhan.com/article/sexy.html"
+    },
+    {
+        "name": "8.2w",
+        "description": "随机输出一句撩人的情话",
+        "router": "https://api.vvhan.com/article/love.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "随机输出一段笑话",
+        "router": "https://api.vvhan.com/article/joke.html"
+    },
+    {
+        "name": "7.0w",
+        "description": "网站、博客满屏雪花下雪API接口",
+        "router": "https://api.vvhan.com/article/snow.html"
+    },
+    {
+        "name": "6.9w",
+        "description": "网站、博客添加HTML的svg透明波浪特效API接口",
+        "router": "https://api.vvhan.com/article/bolang.html"
+    },
+    {
+        "name": "7.0w",
+        "description": "网站、博客添加樱花效果API接口",
+        "router": "https://api.vvhan.com/article/yinghua.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "网站、博客添加梅花API接口",
+        "router": "https://api.vvhan.com/article/meihua.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "网站、博客添加春节灯笼API接口",
+        "router": "https://api.vvhan.com/article/denglong.html"
+    },
+    {
+        "name": "9.4w",
+        "description": "每天更新今日、明日、本周、本月十二星座运势",
+        "router": "https://api.vvhan.com/article/horoscope.html"
+    },
+    {
+        "name": "16.8w",
+        "description": "输出每日一句励志英语",
+        "router": "https://api.vvhan.com/article/en.html"
+    },
+    {
+        "name": "7.2w",
+        "description": "输出每天60秒读懂世界新闻资讯",
+        "router": "https://api.vvhan.com/article/60s.html"
+    },
+    {
+        "name": "7.2w",
+        "description": "微博热搜、今日头条、知乎日报、虎扑步行街、36氪、哔哩哔哩热榜，知乎、IT资讯、虎嗅网、人人都是产品经理热榜百度、抖音热点豆瓣小组精选等聚合API免费接口",
+        "router": "https://api.vvhan.com/article/hotlist.html"
+    },
+    {
+        "name": "8.8w",
+        "description": "微博实时热搜热榜API免费接口",
+        "router": "https://api.vvhan.com/article/wbHot.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "今日头条实时热搜热榜API免费接口",
+        "router": "https://api.vvhan.com/article/toutiao.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "虎扑步行街实时热搜热榜API免费接口",
+        "router": "https://api.vvhan.com/article/huPu.html"
+    },
+    {
+        "name": "7.6w",
+        "description": "知乎实时热搜热榜API免费接口",
+        "router": "https://api.vvhan.com/article/zhihuHot.html"
+    },
+    {
+        "name": "7.2w",
+        "description": "知乎每日日报API免费接口",
+        "router": "https://api.vvhan.com/article/zhihuDay.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "36氪24小时热榜API免费接口",
+        "router": "https://api.vvhan.com/article/36Ke.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "哔哩哔哩全站日榜API免费接口",
+        "router": "https://api.vvhan.com/article/bili.html"
+    },
+    {
+        "name": "8.9w",
+        "description": "百度热点热榜API免费接口",
+        "router": "https://api.vvhan.com/article/baiduRD.html"
+    },
+    {
+        "name": "10.4w",
+        "description": "抖音热点热榜API免费接口",
+        "router": "https://api.vvhan.com/article/douyinHot.html"
+    },
+    {
+        "name": "7.2w",
+        "description": "豆瓣小组精选API免费接口",
+        "router": "https://api.vvhan.com/article/douban.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "IT资讯热榜API免费接口",
+        "router": "https://api.vvhan.com/article/itNews.html"
+    },
+    {
+        "name": "7.2w",
+        "description": "虎嗅网24小时热榜API免费接口",
+        "router": "https://api.vvhan.com/article/huXiu.html"
+    },
+    {
+        "name": "7.3w",
+        "description": "人人都是产品经理热文日榜API免费接口",
+        "router": "https://api.vvhan.com/article/woShiPm.html"
+    },
+    {
+        "name": "7.9w",
+        "description": "支持电话 文字 链接的QRAPI",
+        "router": "https://api.vvhan.com/article/erweima.html"
+    },
+    {
+        "name": "6.7w",
+        "description": "支持常规二维码图片解析的API",
+        "router": "https://api.vvhan.com/article/erweimapsg.html"
+    },
+    {
+        "name": "46.3w",
+        "description": "支持所有缩短的短网址进行还原",
+        "router": "https://api.vvhan.com/article/short.html"
+    },
+    {
+        "name": "60.5w",
+        "description": "可查 城市 县区的天气情况",
+        "router": "https://api.vvhan.com/article/tianqi.html"
+    },
+    {
+        "name": "143.6w",
+        "description": "获取IP地址的详细信息",
+        "router": "https://api.vvhan.com/article/ipinfo.html"
+    },
+    {
+        "name": "11.5w",
+        "description": "获取系统及浏览器和当地天气信息",
+        "router": "https://api.vvhan.com/article/qianming.html"
+    },
+    {
+        "name": "24.9w",
+        "description": "获取操作系统，浏览器，浏览器版本，访客IP地址，访问时间",
+        "router": "https://api.vvhan.com/article/fangke.html"
+    }
+]

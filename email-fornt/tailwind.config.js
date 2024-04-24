@@ -3,8 +3,14 @@ export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      width: {
+        "calc-width": "calc(100vw - 100px)",
+      },
+      height: {
+        "calc-height": "calc(100vh - 70px)",
+      },
       colors: {
-        lightThemeColor: "#f0f2f5",
+        lightThemeColor: "#e8eefd",
         lightSecondaryColor: "#35aefd",
         freshThemeColor: "#0058ff",
         userListBg: "#e5f2ff",

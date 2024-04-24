@@ -6,6 +6,7 @@ const draftsController = require("./controllers/draftsController");
 const uploadController = require("./controllers/uploadController");
 const loginController = require("./controllers/loginController");
 const userController = require("./controllers/userController");
+const webapisController = require("./controllers/webapisController");
 
 const bodyParser = require("body-parser");
 const apiStatusResponseMiddleware = require("./middlewares/apiStatusResponseMiddleware");
@@ -43,6 +44,7 @@ app.use("/api", draftsController);
 app.use("/api", uploadController);
 app.use("/api", loginController);
 app.use("/api", userController);
+app.use("/api", webapisController);
 
 // 启动服务器
 const PORT = process.env.PORT || 3000;

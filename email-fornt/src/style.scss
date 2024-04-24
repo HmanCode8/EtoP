@@ -18,14 +18,14 @@ body {
 // 全局样式
 /* 隐藏浏览器默认的滚动条 */
 ::-webkit-scrollbar {
-  display: none;
+  // display: none;
 }
 
 /* 设置自定义滚动条的样式 */
 /* 注意：这个样式只适用于 WebKit 浏览器（如 Chrome 和 Safari） */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
+  width: 10px;
+  // height: 3px;
 }
 
 ::-webkit-scrollbar-track {

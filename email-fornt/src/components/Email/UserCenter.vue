@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import _ from "lodash";
 import moment from "moment";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
-import { getAvatar } from "@/services/userService";
 import { getEmailCount } from "@/services/emailService";
 
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 const store = useStore();
-const info = JSON.parse((sessionStorage as any).getItem("user"));
-const userInfo = reactive(info || store.state.userInfo);
 const pendingValue = ref(0);
 const messageTotal = ref(0);
+
+const props = defineProps({
+  userInfo: {
+    type: Object,
+    required: true,
+  },
+});
 
 const timePeriods = [
   { name: "上午", startTime: "06:00", endTime: "12:00" },
@@ -20,12 +24,6 @@ const timePeriods = [
   { name: "下午", startTime: "14:00", endTime: "18:00" },
   { name: "晚上", startTime: "18:00", endTime: "24:00" },
 ];
-
-console.log(" 用户还: ", import.meta.env.VITE_BASE_URL);
-const handlegetAvatar = async () => {
-  const result = await getAvatar();
-  store.commit("setAvatar", result.data.avatar);
-};
 
 const getEmailCountFun = async () => {
   try {
@@ -40,9 +38,7 @@ const getEmailCountFun = async () => {
 };
 
 getEmailCountFun();
-onMounted(() => {
-  handlegetAvatar();
-});
+
 const computers = computed(() => {
   return {
     nowTime: moment(new Date()).format("YYYY-MM-DD"),
@@ -67,9 +63,11 @@ const computers = computed(() => {
       <div class="flex w-1/2 justify-around items-center p-4">
         <!-- <input type="file" name="" id="" style="display: none" />
         <el-avatar :size="50" :src="circleUrl" /> -->
-        <AvatarUpload :userInfo="userInfo" />
+        <AvatarUpload :userInfo="props.userInfo" />
         <div class="">{{ computers.nowTime }}</div>
-        <div>{{ computers.timeWelcome() }}好，张三</div>
+        <div>
+          {{ computers.timeWelcome() }}好，{{ props.userInfo.username }}
+        </div>
       </div>
       <div class="flex w-1/2 justify-around p-4">
         <el-badge :value="pendingValue" class="item">

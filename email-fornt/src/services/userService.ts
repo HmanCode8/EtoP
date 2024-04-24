@@ -27,8 +27,8 @@ const login = (params: Register) => {
  * @param params
  * @returns
  */
-const loginOut = (params: Register) => {
-  return request.post("/api/logout", params);
+const loginOut = () => {
+  return request.post("/api/logout");
 };
 /**
  * 头像上传

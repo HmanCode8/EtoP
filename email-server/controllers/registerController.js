@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Register = require("../models/register");
-const prefix = "@hehsiheng.com";
+const prefix = "@hsh.com";
 // 用户名正则表达式
 const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
 

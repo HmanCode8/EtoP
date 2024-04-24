@@ -41,7 +41,7 @@ router.post(
 
       // 查找数据库中是否已经上传过该用户的头像
       const existingUpload = await Upload.findOne({ user_id: userId });
-      pauseSync(5000);
+      // pauseSync(5000);
       if (existingUpload) {
         try {
           // 如果已经上传过该用户的头像，则删除原有文件并更新数据库中的文件信息

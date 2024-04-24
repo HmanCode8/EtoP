@@ -24,7 +24,7 @@
 <script setup>
 import { uploadAvatar, getAvatar } from "@/services/userService";
 import { ElMessage } from "element-plus";
-import { ref, reactive, watch, watchEffect } from "vue";
+import { ref, reactive, watch, watchEffect, onMounted } from "vue";
 import { useStore } from "vuex";
 const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -50,9 +50,10 @@ const imgUrl = ref("");
 function clickAvatarBox() {
   fileInputRef.value.click();
 }
-
-watchEffect(() => {
-  imgUrl.value = store.state.userAvatar;
+onMounted(async () => {
+  const result = await getAvatar();
+  imgUrl.value = result.data.avatar;
+  console.log(result);
 });
 async function changeFile() {
   try {

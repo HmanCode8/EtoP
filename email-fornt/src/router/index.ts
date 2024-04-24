@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Email from "../views/Email.vue";
 import Chart from "../views/Chart.vue";
+import WebApi from "../views/WebApi.vue";
 import _ from "lodash";
 
 const routes = [
@@ -33,6 +34,11 @@ const routes = [
     path: "/chart",
     name: "Chart",
     component: Chart,
+  },
+  {
+    path: "/webApis",
+    name: "WebApis",
+    component: WebApi,
   },
   // 其他路由配置...
 ];

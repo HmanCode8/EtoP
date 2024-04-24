@@ -11,7 +11,6 @@ import {
   sendEmail,
   deleteEmail,
 } from "@/services/emailService";
-import { loginOut } from "@/services/userService";
 
 import ReceivedEmail from "@/components/Email/ReceivedEmail.vue";
 import SendEmail from "@/components/Email/SendEmail.vue";
@@ -32,21 +31,6 @@ const router = useRouter();
 const store = useStore();
 
 const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
-const handleBack = async () => {
-  const res = await loginOut();
-  if (res.code === 200) {
-    ElMessage({
-      message: "退出成功",
-      type: "success",
-    });
-    // 使用 router.push() 方法跳转到指定路由
-    router.push("/login");
-    store.commit("setUserInfo", null);
-    store.commit("setAvatar", null);
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userInfo");
-  }
-};
 
 /**
  * 获取用户列表
@@ -73,27 +57,8 @@ onMounted(() => {
 
 <template>
   <div class="h-screen flex flex-col">
-    <div class="flex items-center justify-between h-16 pl-3 pr-3">
-      <!-- <div
-        class="logo w-[300px] h-[300px] bg-cover bg-center bg-no-repeat"
-      ></div> -->
-      <div class="flex items-center">
-        <div
-          class="avatar flex justify-center items-center w-10 h-10 rounded-full"
-        >
-          <el-icon><UserFilled /></el-icon>
-        </div>
-        <div class="user-name font-bold ml-5" v-if="userInfo">
-          你好，{{ userInfo.username }}
-        </div>
-      </div>
-      <div class="back flex items-center absolute right-5 hover:cursor-pointer">
-        <span>退出</span>
-        <el-icon class="text-lg" @click="handleBack"> <Right /></el-icon>
-      </div>
-    </div>
     <div class="contain flex flex-1 rounded-md">
-      <div class="w-40 m-3 rounded-sm">
+      <div class="w-40 email-card-shadow m-3 rounded-sm">
         <!-- 侧边菜单栏 -->
         <div class="flex flex-col h-full email-br-color">
           <div class="menu-title font-bold p-5">我的站内信</div>
@@ -114,8 +79,8 @@ onMounted(() => {
           </ul>
         </div>
       </div>
-      <div class="calc-h flex-1 ml-0 m-3 flex">
-        <UserCenter v-if="menuActive === 'usercenter'" />
+      <div class="calc-h email-card-shadow flex-1 ml-0 m-3 flex">
+        <UserCenter :userInfo="userInfo" v-if="menuActive === 'usercenter'" />
         <SendEmail
           type="sendEmail"
           :users="users"

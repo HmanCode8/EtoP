@@ -41,7 +41,8 @@ async function request(url: string, options: any = {}): Promise<any> {
   const showLoading = options.showLoading || true;
 
   try {
-    // 合并URL
+    // 合并URL,如果是一个完整的url直接使用就可以
+
     url = `${BASE_URL}${url}`;
     console.log(" request==: ", url);
     // 添加 Authorization 头部

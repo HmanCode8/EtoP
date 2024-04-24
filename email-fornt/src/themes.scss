@@ -1,37 +1,17 @@
 $themes: (
   light: (
     primary-color: theme("colors.lightThemeColor"),
-    secondary-color: theme("colors.lightSecondaryColor"),
-    border-b-color: #4e8fd9,
-    active-color: #f8989857,
-    br-color: #f8989857,
-    box-shadow: #f8989857,
-    btn-color: #f89898,
-    content-bg-color: #f00,
+    text-color: #000,
+    active-color: #9999ff,
+    header-bg-color: #fff,
+    car-bg-color: #fff,
   ),
   dark: (
-    primary-color: theme("colors.darkThemeColor"),
-    secondary-color: theme("colors.darkSecondaryColor"),
-    border-b-color: #ffdde1,
-    active-color: #f8989857,
-    br-color: #59704c,
-    box-shadow: #f00,
-    btn-color: #3b654e,
-    content-bg-color: #59704c,
-  ),
-  custom: (
-    primary-color: #ffdde1,
-    secondary-color: #ffeb99,
-    border-b-color: #ffdde1,
-    active-color: #333,
-    br-color: #cdc0c0,
-  ),
-  fresh: (
-    primary-color: theme("colors.freshThemeColor"),
-    secondary-color: #4e8fd9,
-    border-b-color: #ffdde1,
-    active-color: #333,
-    br-color: #cdc0c0,
+    primary-color: #000,
+    text-color: #999999,
+    active-color: #1040c5,
+    header-bg-color: #222020,
+    car-bg-color: #232323,
   ),
 );
 
@@ -47,61 +27,15 @@ $theme-prefix: "email-";
 @each $theme, $colors in $themes {
   [data-theme="#{$theme}"] {
     //渐变主题色45deg
-    // background: linear-gradient(
-    //   45deg,
-    //   map-get($colors, primary-color),
-    //   map-get($colors, content-bg-color)
-    // );
-    // 主题色
-    // background-image: url("./assets/logo.jpg");
-    // background-repeat: no-repeat;
-    // background-size: cover;
-    // background-size: 100% 100%;
-    // background-color: map-get($colors, primary-color);
-    //如果是ligh主题，则使用图片作为背景
-    @if $theme == "light" {
-      background-image: url("./assets/logo.jpg");
-      background-repeat: no-repeat;
-      // background-size: cover;
-      // background-size: 100% 100%;
-      // background-color: map-get($colors, primary-color);
-    }
-    //如果是dark主题，则使用纯色作为背景
-    @else if $theme == "dark" {
-      background-color: map-get($colors, primary-color);
-    }
-    // 主题色
-    // background-color: map-get($colors, primary-color);
-    color: map-get($colors, secondary-color);
+    background: map-get($colors, primary-color);
+    color: map-get($colors, text-color);
   }
-  [data-theme="#{$theme}"] body {
-    // background-color: map-get($colors, primary-color);
-    // background-image: url("./assets/images/bg-#{nth($theme, 1)}.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: map-get($colors, secondary-color);
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "header"} {
+    background-color: map-get($colors, header-bg-color);
   }
   [data-theme="#{$theme}"] .email-btn {
     background-color: map-get($colors, btn-color);
   }
-  [data-theme="#{$theme}"] #{"." + $theme-prefix + "border-bt"} {
-    border-bottom: 1px solid map-get($colors, border-b-color);
-  }
-  [data-theme="#{$theme}"] #{"." + $theme-prefix + "box-shadow"} {
-    box-shadow: 0 0 10px map-get($colors, border-b-color);
-  }
-  [data-theme="#{$theme}"] #{"." + $theme-prefix + "item-active-bg"} {
-    color: map-get($colors, active-color);
-    background-color: map-get($colors, active-color);
-  }
-  // 阴影
-  [data-theme="#{$theme}"] #{"." + $theme-prefix + "box-shadow"} {
-    box-shadow: 2px 2px 6px #fff, -2px -2px 6px map-get($colors, box-shadow);
-  }
-
-  // [data-theme="#{$theme}"] #{"." + $theme-prefix + "br-color"} {
-  //   // border-right: 1px solid map-get($colors, br-color);
-  // }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "bb-color"} {
     border-bottom: 1px solid map-get($colors, br-color);
   }
@@ -112,12 +46,20 @@ $theme-prefix: "email-";
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "prefix"} {
     background-color: map-get($colors, content-bg-color);
   }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "nav-active"} {
+    color: map-get($map: $colors, $key: active-color);
+    border-bottom: 2px solid map-get($map: $colors, $key: active-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "username"} {
+    color: map-get($map: $colors, $key: active-color);
+  }
+  [data-theme="#{$theme}"] #{"." + $theme-prefix + "car-bg-color"} {
+    background-color: map-get($map: $colors, $key: car-bg-color);
+  }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "form-item"} {
     border-bottom: 1px solid map-get($colors, border-b-color);
-    // outline: none;
     padding: 10px;
     background-color: transparent;
-    color: map-get($colors, secondary-color);
-    /* 其他需要去除的默认样式 */
+    color: map-get($colors, text-color);
   }
 }
