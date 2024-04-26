@@ -7,16 +7,17 @@ import { loginOut } from "@/services/userService";
 import HomeContain from "@/components/Home/HomeContain.vue";
 import HomeUser from "@/components/Home/HomeUser.vue";
 import WebApi from "@/views/WebApi.vue";
+import Wallpaper from "@/components/Wallpaper/WallpaperList.vue";
 
 const navList = reactive([
   {
     navName: "首页",
     navPath: "/home",
   },
-  {
-    navName: "邮箱",
-    navPath: "/email",
-  },
+  // {
+  //   navName: "邮箱",
+  //   navPath: "/email",
+  // },
   {
     navName: "api",
     navPath: "/webApis",
@@ -68,18 +69,42 @@ const onNavClick = (path: string) => {
         <div class="nav-list flex">
           <div
             :class="[
-              'nav-item relative w-[100px] text-center    hover:cursor-pointer',
-              navActive === item.navPath ? 'email-nav-active1' : '',
+              'nav-item group mx-2 py-3 w-14 hover:text-[#9999ff] hover:scale-110 relative  text-center  hover:cursor-pointer',
+              navActive === item.navPath ? 'active' : '',
             ]"
             @click="onNavClick(item.navPath)"
             v-for="item in navList"
             :key="item.navName"
           >
             {{ item.navName }}
+            <div
+              :class="`nav-bar w-13 h-0.5 rounded-br-xl rounded-bl-xl scale-0 group-hover:scale-100 ${
+                navActive === item.navPath ? 'active' : ''
+              }`"
+            ></div>
           </div>
         </div>
       </div>
-      <div @click="handleBack" class="logout-btn">退出</div>
+      <div class="group relative">
+        <div class="">设置</div>
+        <ul
+          class="ml-auto absolute top-0 text-center right-3 w-40 scale-0 group-hover:scale-100 duration-500 origin-top-right bg-gray-300 m-5 rounded-lg"
+        >
+          <li
+            class="py-2 hover:cursor-pointer hover:bg-gray-200"
+            @click="onNavClick('/email')"
+          >
+            邮箱
+          </li>
+          <li class="py-2 hover:cursor-pointer hover:bg-gray-200">个人中心</li>
+          <li
+            class="py-2 hover:cursor-pointer hover:bg-gray-200"
+            @click="handleBack"
+          >
+            退出
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="home-content m-10 mt-[70px] flex">
       <div
@@ -87,6 +112,7 @@ const onNavClick = (path: string) => {
       >
         <HomeContain v-if="navActive === '/home'" />
         <WebApi v-if="navActive === '/webApis'" />
+        <Wallpaper v-if="navActive === '/wallpaper'" />
       </div>
       <div class="c-user ml-10 flex-grow">
         <HomeUser />
@@ -97,6 +123,7 @@ const onNavClick = (path: string) => {
 </template>
 
 <style scoped lang="scss">
+$active-color: #9999ff;
 .home-bg {
   // background-color: #f5f5f5;
   // height: 100vh;
@@ -106,21 +133,23 @@ const onNavClick = (path: string) => {
 }
 
 .c-main {
-  box-shadow: 2px 3px 4px #677489;
+  // box-shadow: 2px 3px 4px #677489;
 }
 
-.nav-item::after {
-  --theme: #9999ff;
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  transition: opacity 0.5s;
-  border-radius: 6px 6px 0 0;
-  // opacity: 0;
-  transform: scaleX(0.5);
-  background: var(--theme);
+.nav-item {
+  position: relative;
+  &.active {
+    color: $active-color;
+  }
+  .nav-bar {
+    // position: absolute;
+    // bottom: 0;
+    background-color: $active-color;
+    transition: all 0.3s;
+    // opacity: 0;
+    &.active {
+      transform: scale(1);
+    }
+  }
 }
 </style>

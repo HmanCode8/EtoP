@@ -1,0 +1,22 @@
+[
+  { "name": "背景", "cate_key": "backgrounds" },
+  { "name": "时尚", "cate_key": "fashion" },
+  { "name": "自然", "cate_key": "nature" },
+  { "name": "科学", "cate_key": "science" },
+  { "name": "教育", "cate_key": "education" },
+  { "name": "感情", "cate_key": "feelings" },
+  { "name": "健康", "cate_key": "health" },
+  { "name": "人物", "cate_key": "people" },
+  { "name": "宗教", "cate_key": "religion" },
+  { "name": "地点", "cate_key": "places" },
+  { "name": "动物", "cate_key": "animals" },
+  { "name": "工业", "cate_key": "industry" },
+  { "name": "计算机", "cate_key": "computer" },
+  { "name": "食品", "cate_key": "food" },
+  { "name": "体育", "cate_key": "sports" },
+  { "name": "交通", "cate_key": "transportation" },
+  { "name": "旅行", "cate_key": "travel" },
+  { "name": "建筑", "cate_key": "buildings" },
+  { "name": "商业", "cate_key": "business" },
+  { "name": "音乐", "cate_key": "music" }
+]

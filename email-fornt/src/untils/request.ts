@@ -42,9 +42,7 @@ async function request(url: string, options: any = {}): Promise<any> {
 
   try {
     // 合并URL,如果是一个完整的url直接使用就可以
-
-    url = `${BASE_URL}${url}`;
-    console.log(" request==: ", url);
+    const newUrl = url.startsWith("http") ? url : `${BASE_URL}${url}`;
     // 添加 Authorization 头部
     const token = sessionStorage.getItem("token"); // 从 sessionStorage 中获取 Token，你可以根据实际情况获取
     if (token) {
@@ -66,7 +64,7 @@ async function request(url: string, options: any = {}): Promise<any> {
         background: "rgba(0, 0, 0, 0.7)",
       });
     }
-    let response: Response = await fetch(url, options);
+    let response: Response = await fetch(newUrl, options);
 
     // 隐藏loading
     if (showLoading) {

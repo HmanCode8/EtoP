@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { reactive, computed } from "vue";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
 
 import moment from "moment";
 
-const getResultTime = (key) => {
+const getResultTime = (key: string) => {
   let result;
   if (key === "hour") {
     result = moment().format("HH");
@@ -19,7 +19,7 @@ const getResultTime = (key) => {
   if (key === "year") {
     result = moment().format("M");
   }
-  return result;
+  return Number(result);
 };
 
 /**
@@ -57,56 +57,78 @@ const processList = reactive(PROCESS);
 
 const puts = computed(() => {
   return {
-    splitLife: (title) => title.split("p"),
+    splitLife: (title: string) => title.split("p"),
   };
 });
-const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
+const user = JSON.parse((sessionStorage as any).getItem("userInfo"));
+const userInfo = reactive<any>(user);
 </script>
 
 <template>
   <div
-    class="car-item email-car-bg-color relative rounded-lg flex flex-col items-center"
+    class="car-item email-car-bg-color pb-5 rounded-lg flex flex-col items-center"
   >
-    <div class="bg w-full h-30">
+    <div class="bg w-full h-35 relative">
       <img
         class="h-full rounded-lg w-full object-cover"
         src="https://www.vvhan.com/static/newstyle.gif"
         alt=""
         srcset=""
       />
+      <div
+        class="avatar w-full h-1/3 rounded-lg flex justify-center absolute bottom-0"
+      >
+        <AvatarUpload :userInfo="userInfo" />
+      </div>
     </div>
-    <div class="avatar w-full rounded-lg flex justify-center absolute bottom-7">
-      <AvatarUpload :userInfo="userInfo" />
-    </div>
-    <div class="email-username font-bold text-center text-lg">
+
+    <div class="email-username font-bold mt-5 text-center text-lg">
       {{ userInfo.username }}
     </div>
+
+    <div class="signature text-center text-sm mt-5">运气是计划之外的东西</div>
+
+    <div class="flex border-b pb-3 w-3/4 justify-between items-center mt-5">
+      <div
+        class="aticle-sum w-1/2 border-r flex flex-col items-center justify-center"
+      >
+        <div>261</div>
+        <div>近日访问量</div>
+      </div>
+      <div class="flex-grow flex flex-col items-center justify-center">
+        <div>261</div>
+        <div>总访问量</div>
+      </div>
+    </div>
+    <!-- 个性签名 -->
+
     <!-- <div class="remark">{{ userInfo.email }}</div> -->
   </div>
   <div
-    class="car-item email-car-bg-color mt-5 pl-5 pr-5 flex rounded-lg flex-col w-full"
+    class="car-item email-car-bg-color mt-5 p-5 flex rounded-lg flex-col w-full"
   >
-    <div class="h pt-4 border-b-[#000]">人生倒计时</div>
+    <div class="h pb-4 border-b">人生倒计时</div>
     <div
-      class="process-item flex flex-col mt-3"
+      class="process-item flex flex-col"
       v-for="p in processList"
       :key="p.title"
     >
-      <div class="process-name text-sm">
+      <div class="process-name text-sm mt-3 text-[#999]">
         {{ puts.splitLife(p.title)[0]
-        }}<span class="text-lg text-[#9999ff]">{{
-          puts.splitLife(p.title)[1]
-        }}</span
+        }}<span class="email-split-line"
+          >&nbsp;{{ puts.splitLife(p.title)[1] }}&nbsp;</span
         >{{ puts.splitLife(p.title)[2] }}
       </div>
-      <div class="flex justify-between items-center w-full">
+      <div class="flex justify-between text-sm items-center w-full">
         <div class="process-bar bg-slate-300 h-2 w-5/6 rounded-lg">
           <div
             class="progress-bar-inner"
             :style="`width: ${p.processPercent}% ; background-color: ${p.bgColor} ;background-image: linear-gradient(135deg,${p.bgImgColor} 25%,transparent 25%,transparent 50%,${p.bgImgColor} 50%,${p.bgImgColor} 75%,transparent 75%,transparent 100%)`"
           ></div>
         </div>
-        <div class="process-text m-auto">{{ p.processPercent }}%</div>
+        <div class="process-text m-auto text-[#999]">
+          {{ p.processPercent }}%
+        </div>
       </div>
     </div>
   </div>
@@ -115,6 +137,16 @@ const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
 <style scoped lang="scss">
 .avatar {
   background: linear-gradient(to bottom, transparent, white);
+}
+.avatar::after {
+  content: "";
+  position: absolute;
+  top: 34px;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  z-index: 2;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #232323);
 }
 @keyframes progress {
   0% {

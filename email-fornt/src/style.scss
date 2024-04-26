@@ -1,3 +1,7 @@
+// 引入tailwindcss
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 // 引入主题变量文件
 @import "themes"; // 如果文件名是 themes.scss
 

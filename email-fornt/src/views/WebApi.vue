@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
-import { getWebApis } from "@/services/webApiService";
+import { getWebApis, insertWebApis } from "@/services/webApiService";
+import { ElMessageBox } from "element-plus";
+import { ref } from "vue";
 
 interface Api {
   Id: number;
@@ -9,19 +10,38 @@ interface Api {
   router: string;
   sum: number;
 }
-// 定义 props
-const props = defineProps({
-  message: String,
-});
 
 const webApis = ref<Api[]>([]);
 
 // 调用接口获取数据
 const getWebApisData = async () => {
-  const res = await getWebApis();
-  webApis.value = res.data;
+  try {
+    const res = await getWebApis();
+    if (res.code === 200) {
+      if (res.data.length === 0) {
+        updateApis();
+        return;
+      }
+      webApis.value = res.data;
+    }
+  } catch (error) {}
 };
 
+const updateApis = () => {
+  ElMessageBox.alert("接口更新通知", {
+    confirmButtonText: "OK",
+    callback: async () => {
+      try {
+        const res = await insertWebApis();
+        if (res.code === 200) {
+          getWebApisData();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+};
 // 组件挂载时调用接口获取数据
 getWebApisData();
 </script>
@@ -61,10 +81,10 @@ getWebApisData();
 
 <style scoped lang="scss">
 .api-list .api-i {
-  --n: 4;
-  --space: calc(100vw - var(--n) * 230px);
-  --h: calc(var(--space) / var(--n) / 2);
-  margin: 10px var(--h);
+  --n: 6;
+  --w: 100px;
+  --s: calc((100% - 100px * var(--n)) / var(--n) / 2);
+  margin: 10px var(--s);
   box-shadow: 1px 1px 10px #1d4334;
   transition: 0.2s all;
   &:hover {

@@ -1,6 +1,5 @@
 import request from "@/untils/request";
 
-const WEB_API_URL = "https://api.oioweb.cn/libraries";
 /**
  * 获取apis
  * @param params
@@ -9,5 +8,13 @@ const WEB_API_URL = "https://api.oioweb.cn/libraries";
 const getWebApis = () => {
   return request.get("/api/webApis");
 };
+/**
+ * r入库更新apis
+ * @param params
+ * @returns
+ */
+const insertWebApis = () => {
+  return request.post("/api/insertWebApis");
+};
 
-export { getWebApis };
+export { getWebApis, insertWebApis };

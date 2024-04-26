@@ -9,16 +9,19 @@ declare module 'vue' {
   export interface GlobalComponents {
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
     CenterEchart: typeof import('./src/components/Home/centerEchart.vue')['default']
+    Diolog: typeof import('./src/components/Until/Diolog.vue')['default']
     Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
     HomeUser: typeof import('./src/components/Home/HomeUser.vue')['default']
     LeftEchart: typeof import('./src/components/Home/leftEchart.vue')['default']
@@ -33,5 +36,7 @@ declare module 'vue' {
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
     Theme: typeof import('./src/components/Theme/index.vue')['default']
     UserCenter: typeof import('./src/components/Email/UserCenter.vue')['default']
+    Wallpaper: typeof import('./src/components/Wallpaper/index.vue')['default']
+    WallpaperList: typeof import('./src/components/Wallpaper/WallpaperList.vue')['default']
   }
 }

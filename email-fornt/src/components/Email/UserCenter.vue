@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import _ from "lodash";
 import moment from "moment";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
 import { getEmailCount } from "@/services/emailService";
 
-import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-const store = useStore();
 const pendingValue = ref(0);
 const messageTotal = ref(0);
 
