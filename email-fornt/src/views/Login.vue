@@ -151,7 +151,7 @@ const onchageLogin = async () => {
                 type="password"
               />
             </div>
-            <div class="btn-box flex justify-between pt-4">
+            <div class="flex justify-between pt-4">
               <el-button
                 class="shadow-inner rounded-3xl text-sm w-1/2 h-10"
                 native-type="submit"
@@ -189,9 +189,9 @@ const onchageLogin = async () => {
 .login-modal {
   box-shadow: 2px 2px 6px #fff, -2px -2px 6px #f9f9f9;
 }
-button {
-  box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
-}
+// button {
+//   box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
+// }
 .m-l {
   position: relative;
 }

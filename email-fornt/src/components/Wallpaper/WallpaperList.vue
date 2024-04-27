@@ -6,6 +6,7 @@ import { PixabayImage } from "@/interfaces/wallpaper";
 import _ from "lodash";
 import Category from "./Category.vue";
 import Panination from "@/components/Until/Panination.vue";
+// import { useLazyLoad } from "@/hooks/useIntersectionObserver";
 
 const SOURCE_PREFIX = "heshiheng";
 const TARGET_PREFIX = "pixabay";
@@ -14,7 +15,7 @@ const base64 =
 const wallpaperList = ref<PixabayImage[]>([]);
 const wallpaperTotal = ref(0);
 const page = ref<any>(1);
-const pageSize = ref(20);
+const pageSize = ref(21);
 const categoryId = ref<string>("");
 const dialogVisible = ref(false);
 const imgDetail = ref<PixabayImage>({} as PixabayImage);

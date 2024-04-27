@@ -75,9 +75,7 @@ const userInfo = reactive<any>(user);
         alt=""
         srcset=""
       />
-      <div
-        class="avatar w-full h-1/3 rounded-lg flex justify-center absolute bottom-0"
-      >
+      <div class="avatar w-full h-1/3 flex justify-center absolute bottom-0">
         <AvatarUpload :userInfo="userInfo" />
       </div>
     </div>

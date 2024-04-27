@@ -36,7 +36,7 @@ const navList = reactive([
     navPath: "/message",
   },
 ]);
-const navActive = ref<any>(navList[2].navPath);
+const navActive = ref<any>(navList[0].navPath);
 const router = useRouter();
 const store = useStore();
 const handleBack = async () => {
@@ -70,7 +70,7 @@ watch(navActive, (newVal) => {
 <template>
   <div class="home-bg h-full overflow-hidden w-full">
     <div
-      class="home-header email-car-bg-color pl-10 pr-10 fixed z-10 right-0 left-0 flex justify-between items-center h-[60px] border-gray-400"
+      class="email-car-bg-color pl-10 pr-10 z-10 flex justify-between items-center"
     >
       <div>
         <div class="logo"></div>

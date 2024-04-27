@@ -18,8 +18,8 @@ app.use(express.static(__dirname + "/dist"));
 // 定义一个简单的中间件来处理所有的请求
 app.use((req, res, next) => {
   // 使用req.ip来获取前端IP地址
-  console.log("ip=", req.headers["origin"]);
-  console.log("path=", req.url);
+  // console.log("ip=", req.headers["origin"]);
+  // console.log("path=", req.url);
   next();
 });
 
