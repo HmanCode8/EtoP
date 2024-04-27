@@ -1,0 +1,55 @@
+// 星星
+body {
+  background-color: #11151f43;
+  //   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@function createStart($n) {
+  $shadow: "#{random(100)}vw #{random(100)}vh #fff";
+  @for $i from 2 through $n {
+    $shadow: "#{$shadow}, #{random(100)}vw #{random(100)}vh #fff";
+  }
+  @return unquote($shadow);
+}
+$count: 1000;
+$duration: 100s;
+@for $i from 1 through 3 {
+  $count: floor(calc($count / 2));
+  $duration: floor(calc($duration / 2));
+  .layer#{$i} {
+    $size: #{$i}px;
+    position: fixed;
+    width: $size;
+    height: $size;
+    //   background-color: #651b1b;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    box-shadow: createStart($count);
+    animation: startMove$duration linear infinite;
+
+    &::after {
+      position: fixed;
+      content: "";
+      top: -100vh;
+      left: 0;
+      width: inherit;
+      height: inherit;
+      border-radius: inherit;
+      box-shadow: inherit;
+    }
+  }
+}
+
+//从左上角到右下角
+@keyframes startMove {
+  100% {
+    transform: translate(0, 100vh);
+  }
+  //   50% {
+  //     transform: translate(-50vh, -50vh);
+  //   }
+  //   100% {
+  //     transform: translate(0，0);
+  //   }
+}

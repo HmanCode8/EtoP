@@ -163,9 +163,8 @@ const puts = computed(() => {
         <!-- 下载 -->
         <div>
           <!-- 分辨率选择 -->
-          <!-- <a :href="imgDetail.pageURL" target="_blank">查看原图</a>
-          <img :src="imgDetail.pageURL" alt="" srcset="" />
-          <el-select v-model="imgDetail.resolution">
+          <a :href="imgDetail.pageURL" target="_blank">查看原图</a>
+          <!-- <el-select v-model="imgDetail.resolution">
             <el-option label="原图" value="original"></el-option>
             <el-option label="高清" value="large"></el-option>
             <el-option label="中等" value="medium"></el-option>

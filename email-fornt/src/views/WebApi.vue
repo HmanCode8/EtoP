@@ -47,7 +47,7 @@ getWebApisData();
 </script>
 
 <template>
-  <div class="apis-header m-10">
+  <div class="apis-header m-5">
     <h1 class="text-3xl font-bold">WEBAPI接口列表。</h1>
     <h2 class="text-lg mt-2">
       致力于为开发者提供便捷、免费、稳定、快速的免费Web API数据接口服务。
@@ -58,15 +58,15 @@ getWebApisData();
       placeholder="serach by name or description"
     />
   </div>
-  <div class="apis-content h-4/5 flex overflow-auto justify-center">
-    <div class="api-list flex flex-wrap w-full h-full">
+  <div class="apis-content justify-center">
+    <div class="api-list text-sm flex flex-wrap w-full h-full">
       <a
         :href="
           api.router.includes('http')
             ? api.router
             : 'https://api.oioweb.cn/doc/' + api.router
         "
-        class="api-i p-5 w-[300px] rounded-lg m-3"
+        class="api-i relative p-5 w-[300px] rounded-lg m-3"
         v-for="api in webApis"
         :key="api.Id"
       >
@@ -80,21 +80,47 @@ getWebApisData();
 </template>
 
 <style scoped lang="scss">
+$afterHeight: 5px;
+
 .api-list .api-i {
-  --n: 6;
-  --w: 100px;
-  --s: calc((100% - 100px * var(--n)) / var(--n) / 2);
+  --n: 3;
+  --w: 300px;
+  --h: 100px;
+  --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
   margin: 10px var(--s);
+  width: var(--w);
+  height: var(--h);
+  // transform: translateY(-2px);
+  // box-shadow: 3px 5px 5px rgba(33, 32, 32, 0.1);
+  img {
+    background-size: 100% 100%;
+  }
   box-shadow: 1px 1px 10px #1d4334;
   transition: 0.2s all;
   &:hover {
+    $afterHeight: 100px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    // background: linear-gradient(
+    //   to right,
+    //   rgba(255, 251, 4, 0.18),
+    //   rgba(0, 255, 34, 0.18)
+    // );
+    animation: api-i-hover 1s cubic-bezier(0.315, 0.605, 0.375, 0.925) forwards;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: $afterHeight;
+    border-radius: 2px;
     background: linear-gradient(
       to right,
       rgba(255, 251, 4, 0.18),
       rgba(0, 255, 34, 0.18)
     );
-    animation: api-i-hover 1s cubic-bezier(0.315, 0.605, 0.375, 0.925) forwards;
   }
 }
 @keyframes api-i-hover {

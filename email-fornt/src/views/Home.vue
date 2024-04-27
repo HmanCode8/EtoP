@@ -8,6 +8,7 @@ import HomeContain from "@/components/Home/HomeContain.vue";
 import HomeUser from "@/components/Home/HomeUser.vue";
 import WebApi from "@/views/WebApi.vue";
 import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
+import News from "@/components/News/NewList.vue";
 
 const navList = reactive([
   {
@@ -26,10 +27,10 @@ const navList = reactive([
     navName: "壁纸",
     navPath: "/wallpaper",
   },
-  // {
-  //   navName: "视频",
-  //   navPath: "/video",
-  // },
+  {
+    navName: "今日热点",
+    navPath: "/news",
+  },
   {
     navName: "消息",
     navPath: "/message",
@@ -76,7 +77,7 @@ watch(navActive, (newVal) => {
         <div class="nav-list flex">
           <div
             :class="[
-              'nav-item group mx-2 py-3 w-14 hover:text-[#9999ff] hover:scale-110 relative  text-center  hover:cursor-pointer',
+              'nav-item group mx-5 py-3  hover:text-[#9999ff] hover:scale-110 relative  text-center  hover:cursor-pointer',
               navActive === item.navPath ? 'active' : '',
             ]"
             @click="onNavClick(item.navPath)"
@@ -114,16 +115,14 @@ watch(navActive, (newVal) => {
       </div>
     </div>
     <div class="home-content m-10 mt-[70px] flex">
-      <div
-        class="c-main h-calc-height overflow-auto email-car-bg-color w-calc-width"
-      >
+      <div class="c-main h-calc-height overflow-auto w-calc-width">
         <HomeContain v-if="navActive === '/home'" />
         <WebApi v-if="navActive === '/webApis'" />
         <WallpaperList
           :pathkey="navActive"
           v-if="navActive === '/wallpaper' || navActive === '/video'"
         />
-        <!-- <div v-if="navActive === '/video'">视频</div> -->
+        <News v-if="navActive === '/news'" />
       </div>
       <div class="c-user ml-10 flex-grow">
         <HomeUser />

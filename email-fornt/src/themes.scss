@@ -32,6 +32,9 @@ $theme-prefix: "email-";
     background: map-get($colors, primary-color);
     color: map-get($colors, text-color);
   }
+  [data-theme="#{$theme}"] ::-webkit-scrollbar-track {
+    background-color: map-get($colors, primary-color);
+  }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "header"} {
     background-color: map-get($colors, header-bg-color);
   }

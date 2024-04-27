@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 // 引入主题变量文件
+@import "start";
 @import "themes"; // 如果文件名是 themes.scss
 
 // 保留之前定义的全局样式
@@ -28,17 +29,17 @@ body {
 /* 设置自定义滚动条的样式 */
 /* 注意：这个样式只适用于 WebKit 浏览器（如 Chrome 和 Safari） */
 ::-webkit-scrollbar {
-  width: 10px;
-  // height: 3px;
+  width: 5px;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* 滚动条轨道的背景色 */
+  // background: #f1f1f1; /* 滚动条轨道的背景色 */
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: #dad8d8; /* 滚动条滑块的背景色 */
+  background: #999; /* 滚动条滑块的背景色 */
 }
 
 /* 当鼠标悬停在滑块上时，滑块的样式 */

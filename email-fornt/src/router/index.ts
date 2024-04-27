@@ -3,7 +3,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Email from "../views/Email.vue";
-import Chart from "../views/Chart.vue";
 import WebApi from "../views/WebApi.vue";
 import _ from "lodash";
 
@@ -29,11 +28,6 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
-  },
-  {
-    path: "/chart",
-    name: "Chart",
-    component: Chart,
   },
   {
     path: "/webApis",
