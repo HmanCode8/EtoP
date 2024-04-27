@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
@@ -7,7 +7,7 @@ import { loginOut } from "@/services/userService";
 import HomeContain from "@/components/Home/HomeContain.vue";
 import HomeUser from "@/components/Home/HomeUser.vue";
 import WebApi from "@/views/WebApi.vue";
-import Wallpaper from "@/components/Wallpaper/WallpaperList.vue";
+import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
 
 const navList = reactive([
   {
@@ -26,12 +26,16 @@ const navList = reactive([
     navName: "壁纸",
     navPath: "/wallpaper",
   },
+  // {
+  //   navName: "视频",
+  //   navPath: "/video",
+  // },
   {
     navName: "消息",
     navPath: "/message",
   },
 ]);
-const navActive = ref(navList[0].navPath);
+const navActive = ref<any>(navList[2].navPath);
 const router = useRouter();
 const store = useStore();
 const handleBack = async () => {
@@ -57,6 +61,9 @@ const onNavClick = (path: string) => {
     return;
   }
 };
+watch(navActive, (newVal) => {
+  console.log("newVal", newVal);
+});
 </script>
 
 <template>
@@ -112,7 +119,11 @@ const onNavClick = (path: string) => {
       >
         <HomeContain v-if="navActive === '/home'" />
         <WebApi v-if="navActive === '/webApis'" />
-        <Wallpaper v-if="navActive === '/wallpaper'" />
+        <WallpaperList
+          :pathkey="navActive"
+          v-if="navActive === '/wallpaper' || navActive === '/video'"
+        />
+        <!-- <div v-if="navActive === '/video'">视频</div> -->
       </div>
       <div class="c-user ml-10 flex-grow">
         <HomeUser />

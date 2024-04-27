@@ -1,6 +1,6 @@
 <!-- 工具组件弹窗 -->
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 
 const dialogVisible = ref(false); // 弹窗显示状态
 </script>

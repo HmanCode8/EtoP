@@ -36,7 +36,9 @@ const loginOut = () => {
  * @returns
  */
 const uploadAvatar = (params: Register) => {
-  return request.post("/api/uploadAvatar", params, { requestType: "form" });
+  return request.post("/api/uploadAvatar", params, {
+    requestType: "form",
+  });
 };
 /**
  * 获取头像

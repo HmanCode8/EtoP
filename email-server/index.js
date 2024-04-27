@@ -15,6 +15,13 @@ const cors = require("cors"); // 导入 cors 中间件
 
 //静态资源目录
 app.use(express.static(__dirname + "/dist"));
+// 定义一个简单的中间件来处理所有的请求
+app.use((req, res, next) => {
+  // 使用req.ip来获取前端IP地址
+  console.log("ip=", req.headers["origin"]);
+  console.log("path=", req.url);
+  next();
+});
 
 // 使用 cors 中间件，允许来自所有源的跨域请求
 app.use(cors());

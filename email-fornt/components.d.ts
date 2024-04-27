@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
+    Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
     CenterEchart: typeof import('./src/components/Home/centerEchart.vue')['default']
     Diolog: typeof import('./src/components/Until/Diolog.vue')['default']
     Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
@@ -16,10 +17,8 @@ declare module 'vue' {
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
@@ -27,6 +26,7 @@ declare module 'vue' {
     LeftEchart: typeof import('./src/components/Home/leftEchart.vue')['default']
     LeftEchartBottom: typeof import('./src/components/Home/leftEchartBottom.vue')['default']
     MapEchart: typeof import('./src/components/Home/mapEchart.vue')['default']
+    Panination: typeof import('./src/components/Until/Panination.vue')['default']
     ReceivedEmail: typeof import('./src/components/Email/ReceivedEmail.vue')['default']
     RightEchart: typeof import('./src/components/Home/rightEchart.vue')['default']
     RightEchartBottom: typeof import('./src/components/Home/rightEchartBottom.vue')['default']
@@ -36,7 +36,7 @@ declare module 'vue' {
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
     Theme: typeof import('./src/components/Theme/index.vue')['default']
     UserCenter: typeof import('./src/components/Email/UserCenter.vue')['default']
-    Wallpaper: typeof import('./src/components/Wallpaper/index.vue')['default']
+    Video: typeof import('./src/components/Wallpaper/Video.vue')['default']
     WallpaperList: typeof import('./src/components/Wallpaper/WallpaperList.vue')['default']
   }
 }

@@ -27,3 +27,31 @@ export interface PixabayImage {
   webformatURL: string;
   webformatWidth: number;
 }
+
+interface VideoSize {
+  url: string;
+  width: number;
+  height: number;
+  size: number;
+  thumbnail: string;
+}
+export interface Video {
+  comments: number;
+  downloads: number;
+  duration: number;
+  id: number;
+  likes: number;
+  pageURL: string;
+  tags: string;
+  type: string;
+  user: string;
+  userImageURL: string;
+  user_id: number;
+  videos: {
+    large: VideoSize;
+    medium: VideoSize;
+    small: VideoSize;
+    tiny: VideoSize;
+  };
+  views: number;
+}

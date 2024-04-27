@@ -8,6 +8,7 @@ import _ from "lodash";
 const labelPosition = ref("right");
 const router = useRouter();
 const isRegister = ref(false);
+const isShowPasswork = ref(false);
 const form = reactive({
   username: "my123",
   password: "123",
@@ -127,14 +128,20 @@ const onchageLogin = async () => {
               />
               <div class="prixt emial-prefix">@hsh.com</div>
             </div>
-            <div class="password flex">
+            <div class="password flex relative">
               <!-- 可显示可隐藏密码 -->
               <input
                 class="email-form-item w-full"
                 v-model="form.password"
                 placeholder="password"
-                type="password"
+                :type="isShowPasswork ? 'text' : 'password'"
               />
+              <div
+                @click="isShowPasswork = !isShowPasswork"
+                :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
+                  isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'
+                }`"
+              ></div>
             </div>
             <div v-if="isRegister" class="confirm-password flex">
               <input
@@ -213,5 +220,17 @@ button {
 input:focus {
   /* 在输入框获取焦点时应用的样式 */
   outline: transparent; /* 举例：添加蓝色的边框 */
+}
+@mixin bgImg {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.ishowpasswork {
+  background-image: url("@/assets/images/ico-eye.png");
+  @include bgImg;
+}
+.isnohowpasswork {
+  background-image: url("@/assets/images/ico-eye-disabled.png");
+  @include bgImg;
 }
 </style>
