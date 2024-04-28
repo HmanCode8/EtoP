@@ -61,12 +61,12 @@ const REQUEST_LIST = [
 function conCurequest(urls, maxnumber) {
   if (urls.length === 0) return Promise.resolve([]);
   return new Promise((resolve) => {
-    let index = 0;
+    let index = 0; //下一次的请求。每次的请求数为maxnumber
     let result = [];
-    let finishCount = 0;
+    let finishCount = 0; //已完成的请求数
 
     async function _requeset() {
-      const i = index;
+      const i = index; //记录每次的请求是谁
       const url = urls[index];
       index++;
       try {
@@ -75,7 +75,7 @@ function conCurequest(urls, maxnumber) {
       } catch (error) {
         result[i] = [];
       } finally {
-        finishCount++;
+        finishCount++; //已完成的请求数
         if (index < urls.length) {
           _requeset();
         }
@@ -105,6 +105,8 @@ router.post("/cateNews", async (req, res) => {
     for (let i = 0; i < result.length; i++) {
       news[new_keys[i]] = result[i];
     }
+    //设置缓存
+    res.set("Cache-Control", "public, max-age=300");
     res.success(news);
   } catch (error) {
     console.log(error);

@@ -5,14 +5,14 @@ const apiData = require("../data/cate.json"); // 假设 JSON 数据保存在 api
 const WallpaperCate = require("../models/wallpaperCate");
 const _ = require("lodash");
 // 将原先的
-// const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 // 修改为
-let fetch;
-try {
-  fetch = require("node-fetch");
-} catch (err) {
-  fetch = require("node-fetch").default;
-}
+// let fetch;
+// try {
+//   fetch = require("node-fetch");
+// } catch (err) {
+//   fetch = require("node-fetch").default;
+// }
 
 const SOURCE_PREFIX = "pixabay";
 const TARGET_PREFIX = "heshiheng";
@@ -67,7 +67,6 @@ router.post("/wallpaper", async (req, res) => {
     const queryString = new URLSearchParams(params).toString() + isPro;
     const baseURL = type === "/video" ? VIDEO_API_URL : WALLPAPER_API_URL;
     const url = baseURL + `?key=${API_KEY}&${queryString}`;
-    console.log("url", url);
     const result = await fetch(url);
     const data = await result.json();
     const wallpaperList = data.hits.map((item) =>
@@ -78,7 +77,9 @@ router.post("/wallpaper", async (req, res) => {
       )
     );
     const newData = { ...data, hits: wallpaperList };
-
+    //设置缓存
+    res.set("Cache-Control", "public, max-age=300");
+    // res.set("Content-Type", "application/json");
     res.success(newData);
   } catch (error) {
     console.log(error);

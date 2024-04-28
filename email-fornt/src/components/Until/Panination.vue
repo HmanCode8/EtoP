@@ -41,7 +41,6 @@ const onFirstPage = () => {
 const onLastPage = () => {
   onPageChange(pageTotal.value);
 };
-console.log("pageTotal", pageTotal.value);
 const pageList = computed(() => {
   const list = [];
   for (let i = 0; i < 3; i++) {

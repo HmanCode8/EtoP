@@ -61,7 +61,6 @@ const handleGetNews = async () => {
       new_keys: ["sixNews", "hotAll"],
     });
     const { sixNews: six, hotAll: h } = res.data;
-    console.log("getApisCateNews", res.data.hotAll.data);
     sixNews.value = six;
     hotAll.value = h.data;
   } catch (error) {
@@ -72,7 +71,7 @@ handleGetNews();
 </script>
 
 <template>
-  <div class="p-2 my-5 border-b">
+  <div class="p-2 my-5">
     <h2 class="title mb-3 font-bold flex items-center text-lg">
       {{ sixNews.title }}
     </h2>
@@ -91,12 +90,12 @@ handleGetNews();
     </div>
   </div>
   <div>
-    <div class="article-list">
+    <!-- <div class="article-list">
       <div class="at-item" v-for="(item, index) in articleList" :key="index">
         {{ item.title }}
       </div>
       <div>{{ hotAll }}</div>
-    </div>
+    </div> -->
   </div>
 </template>
 

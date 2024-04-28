@@ -12,7 +12,7 @@ interface Api {
 }
 
 const webApis = ref<Api[]>([]);
-
+const newWindow = ref<Window>();
 // 调用接口获取数据
 const getWebApisData = async () => {
   try {
@@ -44,6 +44,23 @@ const updateApis = () => {
 };
 // 组件挂载时调用接口获取数据
 getWebApisData();
+
+const openUrl = (router: string) => {
+  const url = router.includes("http")
+    ? router
+    : "https://api.oioweb.cn/doc/" + router;
+  // 检查是否已经存在旧窗口
+  if (typeof newWindow.value !== "undefined" && !newWindow.value.closed) {
+    newWindow.value.close(); // 如果存在，则关闭旧窗口
+  }
+
+  // 打开新窗口
+  newWindow.value = window.open(
+    url,
+    "_blank",
+    "width=800,height=600,toolbar=no,location=no"
+  );
+};
 </script>
 
 <template>
@@ -60,20 +77,16 @@ getWebApisData();
   </div>
   <div class="apis-content justify-center">
     <div class="api-list text-sm flex flex-wrap w-full h-full">
-      <a
-        :href="
-          api.router.includes('http')
-            ? api.router
-            : 'https://api.oioweb.cn/doc/' + api.router
-        "
-        class="api-i relative p-5 w-[300px] rounded-lg m-3"
+      <div
+        @click="openUrl(api.router)"
+        class="api-i hover:cursor-pointer relative p-5 w-[300px] rounded-lg m-3"
         v-for="api in webApis"
         :key="api.Id"
       >
         <h2 class="i-name">{{ api.name }}</h2>
         <div class="i-description">{{ api.description }}</div>
         <div class="i-sum">Response time: {{ api.sum }}</div>
-      </a>
+      </div>
     </div>
   </div>
   <div class="apis-footer"></div>

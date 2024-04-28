@@ -1,10 +1,9 @@
-<script setup>
-import Theme from "@/components/Theme/index.vue";
-</script>
+<script setup></script>
 
 <template>
   <router-view></router-view>
   <Theme />
+  <!-- <div class="app-footer">底部</div> -->
 </template>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

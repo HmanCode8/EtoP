@@ -22,10 +22,14 @@ router.post("/sendEmail", verifyTokenMiddleWare, async (req, res) => {
   try {
     // 从请求体中获取发送邮件的数据
     // const { sender, subject, recipient, content, contentBlock } = req.body
-
+    const { userId, username } = req.userInfo; // 获取路由参数中的用户ID
     // 创建新的 message 对象
     const newMessage = new Message({
       ...req.body,
+      // 发送者
+      senderName: username,
+      // 发送者id
+      sender: userId,
       status: "pending", // 默认状态为待发送
 
       timestamp: new Date(),
@@ -97,7 +101,6 @@ router.post("/deleteEmail", verifyTokenMiddleWare, async (req, res) => {
     const deletedMessage = await Message.findByIdAndDelete({
       messageId: userId,
     });
-    console.log("deletedMessage", deletedMessage);
     // 如果找到并成功删除邮件，则返回删除成功的消息给客户端
     if (deletedMessage) {
       res.json({ message: "邮件删除成功" });

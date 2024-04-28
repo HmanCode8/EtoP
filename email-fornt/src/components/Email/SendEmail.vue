@@ -125,7 +125,6 @@ const editRoot = () => {
   }
 
   editor.on("text-change", (delta, oldDelta, source) => {
-    // console.log('editor.root',editor.root)
     delta.ops.forEach((op) => {
       // 检查操作的内容是否为 'image'
       if (op.insert && op.insert.image) {
@@ -150,9 +149,6 @@ const initEmail = ({ content, contentBlock, recipient, subject }) => {
   themContet.value = subject;
 };
 
-watch(serderValue, (newVal) => {
-  console.log("newVal", newVal);
-});
 onMounted(() => {
   editRoot();
   if (!_.isEmpty(props.draftItem)) {
@@ -162,7 +158,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="content-user-input flex flex-col h-3/4 p-5 w-full">
+  <div
+    class="email-car-bg-color content-user-input flex flex-col h-3/4 p-5 w-full"
+  >
     <div class="send--header flex justify-between">
       <div>发送邮件</div>
       <div

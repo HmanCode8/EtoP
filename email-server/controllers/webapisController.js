@@ -10,7 +10,6 @@ router.get("/webApis", async (req, res) => {
   try {
     // const result = await fetch("https://api.oioweb.cn/libraries");
     // const data = await result.json();
-    // console.log("spis", data);
     //查询数据库中的所有api
     const data = await WebApi.find();
     res.success(data);

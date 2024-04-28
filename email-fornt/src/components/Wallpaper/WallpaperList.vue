@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import defaultUrl from "@/assets/loading.gif";
 import { getWallpaper } from "@/services/wallpaperService";
 import { PixabayImage } from "@/interfaces/wallpaper";
@@ -15,7 +15,8 @@ const base64 =
 const wallpaperList = ref<PixabayImage[]>([]);
 const wallpaperTotal = ref(0);
 const page = ref<any>(1);
-const pageSize = ref(21);
+const pageSize = ref(20);
+const lazyImg = ref<HTMLImageElement>(null as any);
 const categoryId = ref<string>("");
 const dialogVisible = ref(false);
 const imgDetail = ref<PixabayImage>({} as PixabayImage);
@@ -68,11 +69,12 @@ const handleCategoryClick = (cateId: string) => {
 };
 
 // 添加一个Intersection Observer
-const lazyLoadImages = () => {
+const lazyLoadImages = (selecter: string = ".lazy-load") => {
   const options = {
     threshold: 0,
+    root: document.querySelector(".wallpaper-list"),
   };
-  const imgs = document.querySelectorAll(".lazy-load");
+  const imgs = document.querySelectorAll(selecter);
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -106,14 +108,18 @@ const puts = computed(() => {
     <div class="wallpaper-h h-20 border-b"></div>
     <Category @onCategoryClick="handleCategoryClick" />
   </div>
-  <div class="wallpaper-list flex flex-wrap mt-5 w-full">
+  <div
+    v-if="wallpaperList.length > 0"
+    class="wallpaper-list relative flex flex-wrap mt-5 w-full"
+  >
     <div
-      class="wallpaper-item group relative hover:cursor-pointer rounded-lg hover:shadow-lg"
+      class="wallpaper-item group bg-white relative hover:cursor-pointer rounded-lg hover:shadow-lg"
       href=""
       v-for="w in wallpaperList"
       :key="w.id"
     >
       <img
+        ref="lazyImg"
         class="lazy-load w-full h-full rounded-lg"
         :data-src="w.webformatURL"
         :src="defaultUrl"
@@ -122,11 +128,17 @@ const puts = computed(() => {
 
       <div
         @click="ondialogVisible(w)"
-        class="w-full h-ful bg-gradient-to-br rounded-lg from-[#000] to-[#3d403e] absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center opacity-0 group-hover:opacity-70 group-hover:transition-opacity duration-300"
+        class="w-full h-ful bg-gradient-to-br rounded-lg from-[#000] to-[#3d403e] absolute z-10 top-0 left-0 right-0 bottom-0 flex justify-center items-center opacity-0 group-hover:opacity-70 group-hover:transition-opacity duration-300"
       >
         <img class="w-1/3 h-1/3" :src="base64" alt="" srcset="" />
       </div>
     </div>
+  </div>
+  <div
+    class="mt-5 email-car-bg-color h-40 flex justify-center items-center rounded-lg p-5"
+    v-else
+  >
+    no data
   </div>
   <Panination
     :currentPage="page"
@@ -192,7 +204,6 @@ const puts = computed(() => {
     margin: 10px var(--s);
     width: var(--w);
     height: var(--h);
-    transform: translateY(-2px);
     box-shadow: 3px 5px 5px rgba(33, 32, 32, 0.1);
     img {
       background-size: 100% 100%;

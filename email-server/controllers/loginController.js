@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Register = require("../models/register");
+const LoginCount = require("../models/loginCount");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../constants/config");
-
 // 用户名正则表达式
 const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
 
@@ -40,10 +40,6 @@ router.post("/login", async (req, res) => {
     }
     const { username: name, email: em, id, password: paswod } = existingUser;
 
-    // 使用 bcryptjs 模块来验证密码是否匹配
-    // if (!password === paswod) {
-    //   return res.notFound({ statusCode: 401, message: "密码错误" });
-    // }
     // 用户验证成功，生成 Token
     const token = jwt.sign(
       { username: name, email: em, password: paswod, userId: id },
@@ -59,12 +55,30 @@ router.post("/login", async (req, res) => {
       userId: id,
       token,
     };
+    //统计登录次数
+    const loginCount = await LoginCount.findOne({ username });
+    if (loginCount) {
+      loginCount.count++;
+      await loginCount.save();
+    } else {
+      const newLoginCount = new LoginCount({ username, count: 1 });
+      await newLoginCount.save();
+    }
     res.success(successData, "登录成功");
   } catch (error) {
     res.error({ statusCode: 500, message: "登录失败，请稍后重试" });
   }
 });
 
+//获取所有人登录次数
+router.get("/loginCount", async (req, res) => {
+  try {
+    const loginCounts = await LoginCount.find();
+    res.success(loginCounts, "获取登录次数成功");
+  } catch (error) {
+    res.error({ statusCode: 500, message: "获取登录次数失败，请稍后重试" });
+  }
+});
 // 登出路由
 router.post("/logout", (req, res) => {
   // 清除客户端存储的 Token，假设 Token 存储在名为 "jwtToken" 的 Cookie 中

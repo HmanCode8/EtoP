@@ -55,7 +55,7 @@ const computers = computed(() => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col">
+  <div class="email-car-bg-color w-full flex flex-col">
     <div class="p-4">个人中心</div>
     <div class="user-content mr-auto w-5/6 h-screen items-center flex flex-col">
       <div class="flex w-1/2 justify-around items-center p-4">

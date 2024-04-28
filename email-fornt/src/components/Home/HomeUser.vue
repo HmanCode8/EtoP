@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
-
+import { login, loginsum } from "@/services/userService";
 import moment from "moment";
+import _ from "lodash";
 
 const getResultTime = (key: string) => {
   let result;
   if (key === "hour") {
-    result = moment().format("HH");
+    const h = moment().format("H");
+    result =
+      Number(h) === 0
+        ? (Number(moment().format("mm")) / 60).toFixed(1)
+        : moment().format("HH");
   }
   if (key === "week") {
-    // debugger;
-    result = moment().day();
+    const w = moment().day();
+    result = w === 0 ? 7 : w;
   }
   if (key === "month") {
     result = moment().date();
@@ -53,11 +58,30 @@ const PROCESS = [
   },
 ];
 
+const loginCount = ref<any>(0);
 const processList = reactive(PROCESS);
 
+const getLoginCount = async () => {
+  try {
+    const res = await loginsum();
+    if (res.code === 200) {
+      loginCount.value = res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+getLoginCount();
 const puts = computed(() => {
   return {
     splitLife: (title: string) => title.split("p"),
+    loginSum: _.reduce(
+      loginCount.value,
+      (pre: number, cur: any) => {
+        return pre + cur.count;
+      },
+      0
+    ),
   };
 });
 const user = JSON.parse((sessionStorage as any).getItem("userInfo"));
@@ -90,7 +114,7 @@ const userInfo = reactive<any>(user);
       <div
         class="aticle-sum w-1/2 border-r flex flex-col items-center justify-center"
       >
-        <div>261</div>
+        <div>{{ puts.loginSum }}</div>
         <div>近日访问量</div>
       </div>
       <div class="flex-grow flex flex-col items-center justify-center">

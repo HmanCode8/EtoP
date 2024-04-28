@@ -31,6 +31,15 @@ const loginOut = () => {
   return request.post("/api/logout");
 };
 /**
+ * 获取登录次数
+ * @param params
+ * @returns
+ */
+
+const loginsum = () => {
+  return request.get("/api/loginCount");
+};
+/**
  * 头像上传
  * @param params
  * @returns
@@ -49,4 +58,4 @@ const getAvatar = () => {
   return request.get("/api/getAvatar");
 };
 
-export { register, login, loginOut, uploadAvatar, getAvatar };
+export { register, login, loginsum, loginOut, uploadAvatar, getAvatar };

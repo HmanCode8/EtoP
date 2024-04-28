@@ -32,15 +32,15 @@ const ortherTheme = (newTheme) => {
 // 切换主题
 const toggleTheme = (status = false) => {
   const newTheme = status ? "dark" : "light";
-  if (newTheme === "light") {
-    starts.forEach((item) => {
-      item.style.display = "none";
-    });
-  } else {
-    starts.forEach((item) => {
-      item.style.display = "block";
-    });
-  }
+  // if (newTheme === "light") {
+  //   starts.forEach((item) => {
+  //     item.style.display = "none";
+  //   });
+  // } else {
+  //   starts.forEach((item) => {
+  //     item.style.display = "block";
+  //   });
+  // }
   localStorage.setItem("theme", newTheme);
   if (navigator.userAgent.includes("Chrome")) {
     chromeTheme(newTheme);

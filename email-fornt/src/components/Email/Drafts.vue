@@ -37,8 +37,6 @@ const drafts = ref<Drafts[]>([]);
 const handleGetDrafts = async () => {
   try {
     const res = await getDrafts();
-    console.log(res);
-
     if (res.code === 200) {
       drafts.value = res.data; // 假设 messages 是一个 ref 或 reactive 对象
     }
@@ -113,7 +111,7 @@ onMounted(() => {
     @onBack="showSendEmail = false"
   />
 
-  <div class="w-full flex flex-col" v-else>
+  <div class="email-car-bg-color w-full flex flex-col" v-else>
     <div class="p-4">草稿箱</div>
     <div class="p-4">
       <el-button class="email-btn" type="danger" @click="handleDeleteDrafts"
@@ -147,8 +145,8 @@ onMounted(() => {
                 ><Link
               /></el-icon>
             </div>
-            {{ m.subject }} -
-            <span class="text-[#666]">{{ m.content }}</span>
+            {{ m.subject }} ———
+            <span class="">{{ m.content }}</span>
           </div>
           <div>{{ computers.computedDate(m.timestamp) }}</div>
         </div>

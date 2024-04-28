@@ -5,18 +5,17 @@ import { ElMessage } from "element-plus";
 import { register, login } from "@/services/userService";
 import { useRouter } from "vue-router";
 import _ from "lodash";
+import { useUserStore } from "@/store";
+
+const userStore = useUserStore();
 const labelPosition = ref("right");
 const router = useRouter();
 const isRegister = ref(false);
 const isShowPasswork = ref(false);
 const form = reactive({
-  username: "my123",
-  password: "123",
+  username: "",
+  password: "",
   confirmPassword: "",
-});
-
-onMounted(() => {
-  console.log(window);
 });
 
 function sha256(message) {
@@ -58,8 +57,6 @@ const onRegister = async () => {
 
 const onchageLogin = async () => {
   const { username, password, confirmPassword } = form;
-  // 登录表单检验，检验用户密码
-  // if()
   const hashedPassword = await sha256(password);
   const res = await login({
     username: username,
@@ -69,12 +66,11 @@ const onchageLogin = async () => {
     const { email, username } = res.data;
     sessionStorage.setItem("token", res.data.token);
     sessionStorage.setItem("userInfo", JSON.stringify({ email, username }));
-    // router.push("/email");
+    userStore.setNavActive("/home");
     router.push("/home");
   } else {
-    console.log("login", res);
+    ElMessage.error("登录失败");
   }
-  console.log("login", res);
 };
 </script>
 

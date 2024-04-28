@@ -1,9 +1,4 @@
 // 星星
-body {
-  background-color: #11151f43;
-  //   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 @function createStart($n) {
   $shadow: "#{random(100)}vw #{random(100)}vh #fff";
   @for $i from 2 through $n {

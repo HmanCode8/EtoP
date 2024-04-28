@@ -5,9 +5,6 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
-console.log(process.env.VITE_APP_ENV);
-// const baseDir = process.env.VITE_APP_ENV === 'development' ? '/global_dev.js' : '/global.js';
-console.log(process.env.NODE_ENV);
 export default defineConfig(({ mode }) => {
   return {
     envDir: "env",

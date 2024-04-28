@@ -85,7 +85,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="content-user-list email-br-color w-1/4 flex flex-col">
+  <div
+    class="email-car-bg-color content-user-list email-br-color w-1/4 flex flex-col"
+  >
     <div class="user-title font-bold p-3 h-[20]">
       收件箱({{ computers.dataSize(messages) }})
       <span class="text-[#c9d9ee] font-serif"> {{ props.email }}</span>
@@ -150,7 +152,10 @@ onMounted(() => {
     </ul>
     <!-- <el-empty v-else :image-size="200" /> -->
   </div>
-  <div class="content-user-input flex flex-col p-5 w-3/4" v-if="emailId !== ''">
+  <div
+    class="email-car-bg-color content-user-input flex flex-col p-5 ml-2 w-3/4"
+    v-if="emailId !== ''"
+  >
     <div class="rounded-md p-3 m-10-auto content-bg-color">
       <div class="font-bold overflow-hidden flex justify-center items-center">
         {{ computers.emailContent.subject }}

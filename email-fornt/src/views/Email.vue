@@ -1,6 +1,5 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch, nextTick } from "vue";
-import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import moment from "moment";
 import _ from "lodash";
@@ -16,7 +15,6 @@ import ReceivedEmail from "@/components/Email/ReceivedEmail.vue";
 import SendEmail from "@/components/Email/SendEmail.vue";
 import UserCenter from "@/components/Email/UserCenter.vue";
 import Drafts from "@/components/Email/Drafts.vue";
-
 const menuActive = ref("usercenter");
 
 const menus = reactive([
@@ -28,10 +26,8 @@ const menus = reactive([
 
 const users = ref([]);
 const router = useRouter();
-const store = useStore();
-
+const userStore = useUserStore();
 const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
-
 /**
  * 获取用户列表
  */
@@ -50,24 +46,28 @@ const menuChange = (id) => {
   menuActive.value = id;
 };
 
+const onHome = () => {
+  userStore.setNavActive("/home");
+  router.push("/home");
+};
 onMounted(() => {
   handleGetUsers();
 });
 </script>
 
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="email-box h-screen flex flex-col">
     <div class="contain flex flex-1 rounded-md">
       <div class="w-40 email-card-shadow m-3 rounded-sm">
         <!-- 侧边菜单栏 -->
-        <div class="flex flex-col h-full email-br-color">
-          <div class="menu-title font-bold p-5">我的站内信</div>
+        <div class="email-car-bg-color flex flex-col h-full email-br-color">
+          <div class="menu-title font-bold p-5" @click="onHome">返回首页</div>
           <ul>
             <li
               v-for="m in menus"
               :key="m.id"
               @click="menuChange(m.id)"
-              :class="`p-2 hover:cursor-pointer hover:text-fontColor shadow-sm ${
+              :class="`p-2 hover:cursor-pointer shadow-sm ${
                 menuActive === m.id ? 'email-bb-color' : ''
               }`"
             >
@@ -79,7 +79,7 @@ onMounted(() => {
           </ul>
         </div>
       </div>
-      <div class="calc-h email-card-shadow flex-1 ml-0 m-3 flex">
+      <div class="flex-1 ml-0 m-3 flex">
         <UserCenter :userInfo="userInfo" v-if="menuActive === 'usercenter'" />
         <SendEmail
           type="sendEmail"
@@ -105,11 +105,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.box {
-  margin: 10px auto;
+.email-box {
+  /* background-image: url("../assets/logo.jpg"); */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
 }
 .logo {
-  background-image: url("../assets/logo.jpg");
 }
 .calc-h {
   height: calc(100vh - 100px);
