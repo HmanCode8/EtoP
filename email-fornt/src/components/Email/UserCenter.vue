@@ -77,31 +77,15 @@ const computers = computed(() => {
           <div class="">提醒邮件</div>
         </el-badge>
       </div>
-      <div class="w-1/2 justify-around p-4">
+      <!-- <div class="w-1/2 justify-around p-4">
         <div class="font-bold">消息中心</div>
         <ul class="flex flex-col">
           <li class="flex justify-between p-4">
             <div>邮箱容量已经升级256G</div>
             <div>2022年2月2日</div>
           </li>
-          <li class="flex justify-between p-4">
-            <div>邮箱容量已经升级256G</div>
-            <div>2022年2月2日</div>
-          </li>
-          <li class="flex justify-between p-4">
-            <div>邮箱容量已经升级256G</div>
-            <div>2022年2月2日</div>
-          </li>
-          <li class="flex justify-between p-4">
-            <div>邮箱容量已经升级256G</div>
-            <div>2022年2月2日</div>
-          </li>
-          <li class="flex justify-between p-4">
-            <div>邮箱容量已经升级256G</div>
-            <div>2022年2月2日</div>
-          </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -96,7 +96,7 @@ watch(searchVal, (val) => {
         :key="api.Id"
       >
         <div class="api-contain flex items-center h-10">
-          <div class="i-sum">{{ api.name }}1</div>
+          <div class="i-sum">{{ api.name }}</div>
           <div class="i-name p-2 ml-auto r text-sm">Hot:{{ api.sum }}</div>
         </div>
         <div class="i-description text-[#f00] mb-auto overflow-auto">
@@ -112,18 +112,17 @@ watch(searchVal, (val) => {
 // $afterHeight: 15px;
 
 .api-list .api-i {
-  --n: 3;
+  --n: 4;
   --w: 300px;
   --h: 120px;
   --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
   margin: 10px var(--s);
   width: var(--w);
   height: var(--h);
-  box-shadow: 1px 1px 10px #1d4334;
+  box-shadow: 1px 1px 3px #1d4334;
   &:hover {
     &::after {
       border-radius: 5px;
-
       height: 100%;
       transition: height 0.5s; // 添加过渡效果
     }
@@ -132,7 +131,7 @@ watch(searchVal, (val) => {
   &::after {
     content: "";
     position: absolute;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 0 5px;
     bottom: 0;
     left: 0;
     right: 0;

@@ -46,6 +46,24 @@ handleGetNews();
       </div>
     </div>
   </div>
+  <div class="p-2 my-5" v-if="sixNews.title">
+    <h2 class="title mb-3 font-bold flex items-center text-lg">
+      {{ sixNews.title }}
+    </h2>
+    <div class="article flex">
+      <!-- float-left -->
+      <img class="w-1/3 h-60" :src="sixNews.banner" alt="" />
+      <div>
+        <p
+          class="ml-5 text-sm"
+          v-for="(item, index) in sixNews.data"
+          :key="index"
+        >
+          {{ index + 1 }} : {{ item }}
+        </p>
+      </div>
+    </div>
+  </div>
   <div class="p-2 my-5 flex justify-center items-center" v-else>暂无数据</div>
   <div>
     <!-- <div class="article-list">

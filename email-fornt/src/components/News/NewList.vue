@@ -124,7 +124,7 @@ const openUrl = (url: string) => {
 .new-list {
   font-size: 12px;
   .new-item {
-    --n: 3;
+    --n: 4;
     --w: 330px;
     --h: 300px;
     --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);

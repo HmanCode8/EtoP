@@ -50,7 +50,7 @@ watch([cateActive], () => {
 </script>
 
 <template>
-  <div class="cate-list flex flex-wrap mt-5 w-full">
+  <div class="cate-list flex flex-wrap mt-5">
     <div
       :class="[
         'cate-item email-wallpaper-bg hover:cursor-pointer text-sm text-center rounded-2xl',

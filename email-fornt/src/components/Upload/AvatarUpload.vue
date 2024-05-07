@@ -1,7 +1,7 @@
 <template>
-  <div class="relative bg-black">
+  <div class="relative ">
     <div
-      class="avatar-box scale-100 hover:scale-150 duration-300 rounded-full w-16 h-16"
+      class="avatar-box scale-100 hover:scale-110 duration-300 rounded-full w-16 h-16"
       @click="clickAvatarBox"
     >
       <input

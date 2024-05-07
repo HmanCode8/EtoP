@@ -104,16 +104,16 @@ const puts = computed(() => {
 </script>
 
 <template>
-  <div class="mb-5">
-    <div class="wallpaper-h h-20 border-b"></div>
+  <div class="mb-5  w-full email-car-bg-color">
+    <div class="wallpaper-h h-10 border-b"></div>
     <Category @onCategoryClick="handleCategoryClick" />
   </div>
   <div
     v-if="wallpaperList.length > 0"
-    class="wallpaper-list relative flex flex-wrap mt-5 w-full"
+    class="wallpaper-list  relative flex flex-wrap mt-5"
   >
     <div
-      class="wallpaper-item group bg-white relative hover:cursor-pointer rounded-lg hover:shadow-lg"
+      class="wallpaper-item  group bg-white relative hover:cursor-pointer rounded-lg hover:shadow-lg"
       href=""
       v-for="w in wallpaperList"
       :key="w.id"

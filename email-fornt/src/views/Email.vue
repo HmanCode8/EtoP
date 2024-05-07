@@ -63,7 +63,7 @@ onMounted(() => {
       <div class="w-40 email-card-shadow m-3 rounded-sm">
         <!-- 侧边菜单栏 -->
         <div class="email-car-bg-color flex flex-col h-full email-br-color">
-          <div class="menu-title font-bold p-5" @click="onHome">返回首页</div>
+          <div class="menu-title font-bold p-5 hover:cursor-pointer " @click="onHome"><el-icon><ArrowLeftBold /></el-icon>首页</div>
           <ul>
             <li
               v-for="m in menus"

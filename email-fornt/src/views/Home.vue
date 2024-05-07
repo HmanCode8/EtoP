@@ -74,7 +74,9 @@ onMounted(() => {
     class="email-car-bg-color fixed top-0 left-0 w-full h-16 pl-10 pr-10 z-20 flex justify-between items-center"
   >
     <div class="flex items-center">
-      <div class="logo"></div>
+      <div class="logo flex items-center ">
+        <div class="text-5xl font-bold">HSH </div><span class="text-sm">blog</span>
+      </div>
       <div class="nav-list flex">
         <div
           :class="[
@@ -106,9 +108,11 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-  <div class="home-content clear-both mx-10 my-20 flex">
+<div class="flex flex-col h-full">
+
+  <div class="home-content clear-both m-20 flex">
     <div
-      class="c-main email-car-bg-color max-h-screen overflow-auto w-calc-width"
+      class="c-main   w-calc-width"
     >
       <HomeContain v-if="userStore.navActive === '/home'" />
       <WebApi v-if="userStore.navActive === '/webApis'" />
@@ -125,7 +129,7 @@ onMounted(() => {
       <!-- <HomeUser /> -->
     </div>
   </div>
-  <div class="email-car-bg-color home-footer py-5 text-center">
+  <div class="email-car-bg-color home-footer py-5 text-center ">
     <!-- 行高：1.5rem; -->
     <div class="font-bol">He Web Design ©2022</div>
     <!-- 给我这个网站给个说明 -->
@@ -157,13 +161,15 @@ onMounted(() => {
       >
     </div>
   </div>
+</div>
 </template>
 
 <style scoped lang="scss">
 .logo {
   width: 200px;
   height: 40px;
-  background-image: url("@/assets/logo.png");
+  font-family: math;
+  // background-image: url("@/assets/logo.png");
 
   background-size: 100% 100%;
   background-repeat: no-repeat;
