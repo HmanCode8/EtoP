@@ -80,7 +80,7 @@ const onchageLogin = async () => {
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center">
+  <div class="login-page h-screen flex items-center justify-center">
     <div
       class="login-modal rounded-lg w-1/2 h-1/2 flex email-box-shadow overflow-hidden"
     >
@@ -160,14 +160,13 @@ const onchageLogin = async () => {
                 >{{ isRegister ? "SING UP" : "SING IN" }}</el-button
               >
               <div
+                @click="isRegister = !isRegister"
                 class="switch-form flex hover:cursor-pointer justify-center items-center"
               >
                 <div class="text-sm">
                   {{ isRegister ? "Login" : "Register" }}
                 </div>
-                <el-icon class="text-lg" @click="isRegister = !isRegister">
-                  <Right
-                /></el-icon>
+                <!-- <el-icon class="text-lg"> <Right /></el-icon> -->
               </div>
             </div>
             <!-- 右下角的注册切换表单 -->
@@ -179,6 +178,13 @@ const onchageLogin = async () => {
 </template>
 
 <style scoped lang="scss">
+.login-page {
+  background-image: url("../src/assets/images/login.jpeg");
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 .login-tip {
   width: 100%;
   height: 100%;
@@ -233,5 +239,26 @@ input:focus {
 .isnohowpasswork {
   background-image: url("@/assets/images/ico-eye-disabled.png");
   @include bgImg;
+}
+.switch-form {
+  position: relative;
+  &:hover {
+    ::after {
+      width: 100%;
+      padding: 0 10px;
+      content: "Go";
+    }
+  }
+  ::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    width: 0%;
+    background-color: #dba4f5;
+    transition: all 0.3s ease-in-out;
+  }
 }
 </style>
