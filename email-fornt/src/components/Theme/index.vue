@@ -18,7 +18,7 @@ const toggleThemeFn = () => {
 <template>
   <div
     @click="toggleThemeFn"
-    class="email-theme-color hover:cursor-pointer w-10 h-10 text-[#f00] text-center rounded-full flex justify-center items-center fixed bottom-10 right-10 shadow-2xl z-10"
+    class="email-theme-color hover:cursor-pointer w-10 h-10 text-center rounded-full flex justify-center items-center fixed bottom-10 right-10 shadow-2xl z-10"
   >
     <svg
       v-if="swithVal"
@@ -57,3 +57,5 @@ const toggleThemeFn = () => {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 </style>
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'heshiheng'; ALTER USER
+'root'@'localhost' IDENTIFIED BY 'root';

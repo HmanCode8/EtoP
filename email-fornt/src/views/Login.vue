@@ -7,14 +7,19 @@ import { useRouter } from "vue-router";
 import _ from "lodash";
 import { useUserStore } from "@/store";
 
+// VITE_LOGIN_USER = "my123"
+// VITE_LOGIN_PASSWORD = "123"
+const username = import.meta.env.VITE_LOGIN_USER ?? "";
+const password = import.meta.env.VITE_LOGIN_PASSWORD ?? "";
+
 const userStore = useUserStore();
 const labelPosition = ref("right");
 const router = useRouter();
 const isRegister = ref(false);
 const isShowPasswork = ref(false);
 const form = reactive({
-  username: "",
-  password: "",
+  username,
+  password,
   confirmPassword: "",
 });
 

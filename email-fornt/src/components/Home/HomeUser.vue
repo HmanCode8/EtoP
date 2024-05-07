@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, ref } from "vue";
 import AvatarUpload from "@/components/Upload/AvatarUpload.vue";
-import { login, loginsum } from "@/services/userService";
+import { loginsum } from "@/services/userService";
 import moment from "moment";
 import _ from "lodash";
 
@@ -100,7 +100,7 @@ const userInfo = reactive<any>(user);
         srcset=""
       />
       <div class="avatar w-full h-1/3 flex justify-center absolute bottom-0">
-        <AvatarUpload :userInfo="userInfo" />
+        <AvatarUpload :userInfo="userInfo" action="preview" />
       </div>
     </div>
 

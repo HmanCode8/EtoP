@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { getWebApis, insertWebApis } from "@/services/webApiService";
 import { ElMessageBox } from "element-plus";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import _ from "lodash";
 
 interface Api {
   Id: number;
@@ -12,7 +13,9 @@ interface Api {
 }
 
 const webApis = ref<Api[]>([]);
+const filterApis = ref<Api[]>([]);
 const newWindow = ref<Window>();
+const searchVal = ref<string>("");
 // 调用接口获取数据
 const getWebApisData = async () => {
   try {
@@ -59,8 +62,15 @@ const openUrl = (router: string) => {
     url,
     "_blank",
     "width=800,height=600,toolbar=no,location=no"
-  );
+  ) as any;
 };
+const apis = webApis.value;
+watch(searchVal, (val) => {
+  console.log(val);
+  filterApis.value = _.isEmpty(val)
+    ? apis
+    : _.filter(apis, (i) => _.includes(i.name, val));
+});
 </script>
 
 <template>
@@ -69,23 +79,29 @@ const openUrl = (router: string) => {
     <h2 class="text-lg mt-2">
       致力于为开发者提供便捷、免费、稳定、快速的免费Web API数据接口服务。
     </h2>
+    <!-- <div style="font-size: 12px">转载自：（韩小韩的个人博客）</div> -->
     <input
+      v-model="searchVal"
       type="text"
       class="email-form-item mt-5 w-full"
       placeholder="serach by name or description"
     />
   </div>
   <div class="apis-content justify-center">
-    <div class="api-list text-sm flex flex-wrap w-full h-full">
+    <div class="api-list flex flex-wrap w-full h-full">
       <div
         @click="openUrl(api.router)"
-        class="api-i hover:cursor-pointer relative p-5 w-[300px] rounded-lg m-3"
+        class="api-i p-3 text-sm relative flex flex-col hover:cursor-pointer rounded-lg"
         v-for="api in webApis"
         :key="api.Id"
       >
-        <h2 class="i-name">{{ api.name }}</h2>
-        <div class="i-description">{{ api.description }}</div>
-        <div class="i-sum">Response time: {{ api.sum }}</div>
+        <div class="api-contain flex items-center h-10">
+          <div class="i-sum">{{ api.name }}1</div>
+          <div class="i-name p-2 ml-auto r text-sm">Hot:{{ api.sum }}</div>
+        </div>
+        <div class="i-description text-[#f00] mb-auto overflow-auto">
+          {{ api.description }}
+        </div>
       </div>
     </div>
   </div>
@@ -93,42 +109,35 @@ const openUrl = (router: string) => {
 </template>
 
 <style scoped lang="scss">
-$afterHeight: 5px;
+// $afterHeight: 15px;
 
 .api-list .api-i {
   --n: 3;
   --w: 300px;
-  --h: 100px;
+  --h: 120px;
   --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
   margin: 10px var(--s);
   width: var(--w);
   height: var(--h);
-  // transform: translateY(-2px);
-  // box-shadow: 3px 5px 5px rgba(33, 32, 32, 0.1);
-  img {
-    background-size: 100% 100%;
-  }
   box-shadow: 1px 1px 10px #1d4334;
-  transition: 0.2s all;
   &:hover {
-    $afterHeight: 100px;
+    &::after {
+      border-radius: 5px;
+
+      height: 100%;
+      transition: height 0.5s; // 添加过渡效果
+    }
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    // background: linear-gradient(
-    //   to right,
-    //   rgba(255, 251, 4, 0.18),
-    //   rgba(0, 255, 34, 0.18)
-    // );
-    animation: api-i-hover 1s cubic-bezier(0.315, 0.605, 0.375, 0.925) forwards;
   }
   &::after {
     content: "";
     position: absolute;
+    border-radius: 0 5px 5px 0;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    height: $afterHeight;
-    border-radius: 2px;
+    height: 5%;
     background: linear-gradient(
       to right,
       rgba(255, 251, 4, 0.18),

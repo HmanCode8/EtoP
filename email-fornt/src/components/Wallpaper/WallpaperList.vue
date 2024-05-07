@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, watch, computed } from "vue";
 import defaultUrl from "@/assets/loading.gif";
 import { getWallpaper } from "@/services/wallpaperService";
 import { PixabayImage } from "@/interfaces/wallpaper";
@@ -138,7 +138,7 @@ const puts = computed(() => {
     class="mt-5 email-car-bg-color h-40 flex justify-center items-center rounded-lg p-5"
     v-else
   >
-    no data
+    暂无数据
   </div>
   <Panination
     :currentPage="page"
@@ -197,13 +197,14 @@ const puts = computed(() => {
 .wallpaper-list {
   --theme: #9999ff;
   .wallpaper-item {
-    --n: 3;
+    --n: 4 /* 图片数量 */;
     --w: 300px;
     --h: 200px;
     --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
     margin: 10px var(--s);
     width: var(--w);
     height: var(--h);
+    background-color: rgba(255, 255, 255, 0.08);
     box-shadow: 3px 5px 5px rgba(33, 32, 32, 0.1);
     img {
       background-size: 100% 100%;

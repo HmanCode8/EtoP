@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import HomeContain from "@/components/Home/HomeContain.vue";
-import HomeUser from "@/components/Home/HomeUser.vue";
+// import HomeUser from "@/components/Home/HomeUser.vue";
 import WebApi from "@/views/WebApi.vue";
 import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
 import News from "@/components/News/NewList.vue";
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { loginOut } from "@/services/userService";
 import { useUserStore } from "@/store";
+import img from "@/assets/logo.png";
 
+console.log(img);
 const navList = reactive([
   {
     navName: "首页",
@@ -36,6 +38,8 @@ const navList = reactive([
     navPath: "/message",
   },
 ]);
+// 注入gsap动画库
+// const { gsap } = inject("gsap");
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -52,7 +56,6 @@ const handleBack = async () => {
     router.push("/login");
   }
 };
-console.log("userStore.navActive1212", userStore.navActive);
 
 const onNavClick = (path: string) => {
   userStore.setNavActive(path);
@@ -61,6 +64,9 @@ const onNavClick = (path: string) => {
     return;
   }
 };
+onMounted(() => {
+  // gsap.to(".nav-items", { rotation: 360, duration: 2, ease: "bounce.out" });
+});
 </script>
 
 <template>
@@ -116,10 +122,41 @@ const onNavClick = (path: string) => {
       <News v-if="userStore.navActive === '/news'" />
     </div>
     <div class="c-user ml-10 flex-grow">
-      <HomeUser />
+      <!-- <HomeUser /> -->
     </div>
   </div>
-  <div class="home-footer"></div>
+  <div class="email-car-bg-color home-footer py-5 text-center">
+    <!-- 行高：1.5rem; -->
+    <div class="font-bol">He Web Design ©2022</div>
+    <!-- 给我这个网站给个说明 -->
+    <div class="text-sm my-5">
+      这是一个基于Vue3.x+Element-Plus的个人网站，主要用于记录平时学习的心得体会，分享一些个人项目，以及一些技术文章。
+    </div>
+    <div class="icon-list flex justify-center items-center my-5">
+      <!-- <a title="打赏站长" target="_blank" href="/images/reward.webp"></a> -->
+      <a
+        class="icon-item inline-block w-8 h-8 mr-5"
+        title="添加群聊"
+        target="_blank"
+        rel="nofollow"
+        href="https://qm.qq.com/q/tX8dU3hBu0"
+      ></a>
+      <a
+        class="icon-item inline-block w-8 h-8 mr-5"
+        title="Github"
+        target="_blank"
+        rel="nofollow"
+        href="https://github.com/HmanCode8"
+      ></a>
+      <!-- <a title="韩小韩博客" target="_blank" href="https://www.vvhan.com/"></a> -->
+    </div>
+    <div class="text-sm my-5">
+      网站源码：
+      <a href="https://github.com/HmanCode8/email/tree/master" target="_blank"
+        >https://github.com/heshiheng/email-fornt</a
+      >
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -127,6 +164,7 @@ const onNavClick = (path: string) => {
   width: 200px;
   height: 40px;
   background-image: url("@/assets/logo.png");
+
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -144,6 +182,18 @@ const onNavClick = (path: string) => {
         transform: scale(1);
       }
     }
+  }
+}
+.icon-list {
+  // background-color: #9999ff;
+  .icon-item:nth-child(1) {
+    background-size: cover;
+
+    background-image: url("@/assets/images/qq.png");
+  }
+  .icon-item:nth-child(2) {
+    background-size: cover;
+    background-image: url("@/assets/images/github.png");
   }
 }
 </style>

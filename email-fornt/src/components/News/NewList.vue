@@ -2,11 +2,8 @@
 import { ref } from "vue";
 import { getApisCateNews } from "@/services/homeService";
 import { newBases } from "@/assets/base64";
-// 引入 @vueuse/core
-import { useIntersectionObserver } from "@vueuse/core";
-
+import _ from "lodash";
 const hotAllnews = ref<any>([]);
-const target = ref[null];
 const handleGetNews = async () => {
   try {
     const res = await getApisCateNews({
@@ -19,8 +16,8 @@ const handleGetNews = async () => {
         // "baiduHot",
       ],
     });
-    console.log("hotAll", res.data);
-    hotAllnews.value = res.data.hotAll.data.map((d: any, index: number) => ({
+    const hotAllNews = res.data.hotAll.data ?? [];
+    hotAllnews.value = _.map(hotAllNews, (d: any, index: number) => ({
       ...d,
       img: newBases[index],
     }));
@@ -39,11 +36,11 @@ const openUrl = (url: string) => {
   <div
     ref="target"
     @click="handleGetNews"
-    class="title h-12 hover:cursor-pointer hover:bg-gray-100 bg-white rounded-lg mx-2 my-5 flex justify-center items-center"
+    class="title relative bg-white h-12 hover:cursor-pointer rounded-lg mx-2 my-5 flex justify-center items-center"
   >
     今日热点
   </div>
-  <div class="new-list text-sm flex flex-wrap">
+  <div v-if="hotAllnews.length > 0" class="new-list text-sm flex flex-wrap">
     <div
       class="new-item flex flex-col email-car-bg-color rounded-md items-center"
       v-for="item in hotAllnews"
@@ -91,9 +88,39 @@ const openUrl = (url: string) => {
       </div>
     </div>
   </div>
+  <div class="no-data flex justify-center items-center h-20" v-else>
+    暂无数据
+  </div>
 </template>
 
 <style scoped lang="scss">
+.title {
+  &::after {
+    content: "今日热点";
+    position: absolute;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    border-radius: 8px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, #75fbfd, #182c25);
+  }
+  &:hover {
+    &::after {
+      opacity: 1;
+      width: 100%;
+      transition: width 1s; // 添加过渡效果
+    }
+  }
+}
+
 .new-list {
   font-size: 12px;
   .new-item {

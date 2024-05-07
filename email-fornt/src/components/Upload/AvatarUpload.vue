@@ -1,12 +1,9 @@
 <template>
-  <div class="avatar-upload-wrapper">
-    <!-- {{ modelValue }} -->
+  <div class="relative bg-black">
     <div
-      :class="['avatar-box', { 'avatar-box-border': imgUrl ? false : true }]"
+      class="avatar-box scale-100 hover:scale-150 duration-300 rounded-full w-16 h-16"
       @click="clickAvatarBox"
-      :style="{ width: size + 'px', height: size + 'px' }"
     >
-      <!-- 隐藏的input的type=file -->
       <input
         type="file"
         hidden
@@ -15,37 +12,39 @@
         @change="changeFile"
       />
       <img v-if="imgUrl" :src="imgUrl" alt="" />
-      <div v-else class="avatar-marker">
-        <i class="iconfont icon-jiahao"></i>
-      </div>
     </div>
+
+    <el-dialog v-model="showPreview" title="图片详情" width="50%" draggable>
+      <div class="flex">
+        <img
+          class="shadow-lg w-full h-1/2 rounded-lg object-cover"
+          :src="imgUrl"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup>
 import { uploadAvatar, getAvatar } from "@/services/userService";
 import { ElMessage } from "element-plus";
 import { ref, reactive, watch, watchEffect, onMounted } from "vue";
-const emits = defineEmits(["update:modelValue"]);
 const props = defineProps({
   userInfo: {
     type: Object,
   },
-  size: {
-    type: Number,
-    default: 64,
-  },
-  modelValue: {
+  action: {
     type: String,
-    default: "", // 默认头像链接地址
-  },
-  maxSize: {
-    type: Number,
-    default: 5, // 默认最大不超过5M
+    default: "upload",
   },
 });
 const fileInputRef = ref(null);
 const imgUrl = ref("");
+const showPreview = ref(false);
 function clickAvatarBox() {
+  if (props.action === "preview") {
+    showPreview.value = true;
+    return;
+  }
   fileInputRef.value.click();
 }
 onMounted(async () => {
@@ -55,17 +54,12 @@ onMounted(async () => {
 async function changeFile() {
   try {
     let file = fileInputRef.value.files[0];
-    if (file.size / 1024 / 1024 > props.maxsize) {
-      return ElMessage({
-        message: "文件超过指定大小",
-        type: "waring",
-      });
-    }
 
     const res = await uploadAvatar({ file });
     if (res) {
       const result = await getAvatar();
       imgUrl.value = result.data.avatar;
+      console.log(result);
     }
   } catch (error) {
     ElMessage({
@@ -76,40 +70,24 @@ async function changeFile() {
 }
 </script>
 <style lang="scss" scoped>
-.avatar-box-border {
-  border: 1px dashed #409eff !important;
-}
 .avatar-box {
-  border-radius: 50%;
-  margin-left: 20px;
   cursor: pointer;
   position: relative;
-  border: 2px solid #eee;
+  border: 2px solid #fff;
   overflow: hidden;
   &:hover::before {
     content: "";
     display: block;
     position: absolute;
+    // z-index: 1000;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.03);
+    background: rgba($color: #000000, $alpha: 0.3);
   }
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .avatar-marker {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #409eff;
-    i.iconfont {
-      font-size: 24px;
-    }
   }
 }
 </style>

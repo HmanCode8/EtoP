@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
 const uploadSchema = new mongoose.Schema({
-  Id: Number,
   description: String,
   name: String,
   router: String,
-  sum: Number,
+  sum: String,
 });
 
 const WebApis = mongoose.model("webApi", uploadSchema);

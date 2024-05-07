@@ -15,6 +15,8 @@ import ReceivedEmail from "@/components/Email/ReceivedEmail.vue";
 import SendEmail from "@/components/Email/SendEmail.vue";
 import UserCenter from "@/components/Email/UserCenter.vue";
 import Drafts from "@/components/Email/Drafts.vue";
+import { useUserStore } from "@/store";
+
 const menuActive = ref("usercenter");
 
 const menus = reactive([

@@ -23,7 +23,6 @@ router.post("/insertWebApis", async (req, res) => {
   try {
     // 将 JSON 数据写入数据库
     await WebApi.insertMany(apiData);
-
     res.success("数据写入成功");
   } catch (error) {
     res.error({ message: "写入数据失败，请稍后重试" });
