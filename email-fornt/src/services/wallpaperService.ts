@@ -32,5 +32,13 @@ const insertwallpapercategory = () => {
 const getWallpaper = (params: Wallpaper) => {
   return request.post("/api/wallpaper", params);
 };
+/**
+ * 获取壁纸列表
+ * @param params
+ * @returns
+ */
+const getRandomLoginImg = () => {
+  return request.get("/api/randomLoginImg");
+};
 
-export { getWallpaperCategory, insertwallpapercategory, getWallpaper };
+export { getWallpaperCategory, insertwallpapercategory, getWallpaper,getRandomLoginImg };

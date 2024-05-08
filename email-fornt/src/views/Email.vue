@@ -29,7 +29,7 @@ const menus = reactive([
 const users = ref([]);
 const router = useRouter();
 const userStore = useUserStore();
-const userInfo = reactive(JSON.parse(sessionStorage.getItem("userInfo")));
+const userInfo = reactive(JSON.parse(localStorage.getItem("userInfo")));
 /**
  * 获取用户列表
  */

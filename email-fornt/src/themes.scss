@@ -68,10 +68,11 @@ $theme-prefix: "email-";
     color: map-get($map: $colors, $key: text-color);
   }
   [data-theme="#{$theme}"] #{"." + $theme-prefix + "form-item"} {
-    border-bottom: 1px solid map-get($colors, border-b-color);
-    padding: 10px;
+    // border-bottom: 1px solid map-get($colors, border-b-color);
+    height: 40px;
+    // padding: 10px;
     background-color: transparent;
-    color: map-get($colors, text-color);
+    // color: map-get($colors, text-color);
   }
   [data-theme="#{$theme}"] #{"." + "ql-formats"} {
     span {

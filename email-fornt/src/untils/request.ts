@@ -44,7 +44,7 @@ async function request(url: string, options: any = {}): Promise<any> {
     // 合并URL,如果是一个完整的url直接使用就可以
     const newUrl = url.startsWith("http") ? url : `${BASE_URL}${url}`;
     // 添加 Authorization 头部
-    const token = sessionStorage.getItem("token"); // 从 sessionStorage 中获取 Token，你可以根据实际情况获取
+    const token = localStorage.getItem("token"); // 从 localStorage 中获取 Token，你可以根据实际情况获取
     if (token) {
       options.headers = {
         ...options.headers,
@@ -86,7 +86,7 @@ async function request(url: string, options: any = {}): Promise<any> {
       setTimeout(() => {
         if (response.status === 302) {
           location.href = "/login";
-          sessionStorage.removeItem("token");
+          localStorage.removeItem("token");
         }
       }, 3000);
       return;

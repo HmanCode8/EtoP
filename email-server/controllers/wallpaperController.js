@@ -4,21 +4,14 @@ const router = express.Router();
 const apiData = require("../data/cate.json"); // 假设 JSON 数据保存在 api.json 文件中
 const WallpaperCate = require("../models/wallpaperCate");
 const _ = require("lodash");
-// 将原先的
-const fetch = require("node-fetch");
-// 修改为
-// let fetch;
-// try {
-//   fetch = require("node-fetch");
-// } catch (err) {
-//   fetch = require("node-fetch").default;
-// }
+const axios = require("axios");
 
 const SOURCE_PREFIX = "pixabay";
 const TARGET_PREFIX = "heshiheng";
 const API_KEY = "43568381-3e0c7b94d6088eaf4762a1033";
 const WALLPAPER_API_URL = `https://pixabay.com/api/`;
 const VIDEO_API_URL = `https://pixabay.com/api/videos/`;
+const ROUND_LOGIN_IMG ='https://api.vvhan.com/api/wallpaper/views?type=json'
 
 // 获取壁纸分类
 router.get("/wallpapercategory", async (req, res) => {
@@ -67,8 +60,7 @@ router.post("/wallpaper", async (req, res) => {
     const queryString = new URLSearchParams(params).toString() + isPro;
     const baseURL = type === "/video" ? VIDEO_API_URL : WALLPAPER_API_URL;
     const url = baseURL + `?key=${API_KEY}&${queryString}`;
-    const result = await fetch(url);
-    const data = await result.json();
+    const {data} = await axios.get(url);
     const wallpaperList = data.hits.map((item) =>
       _.mapValues(item, (value, key) =>
         _.includes(value, SOURCE_PREFIX)
@@ -87,4 +79,14 @@ router.post("/wallpaper", async (req, res) => {
   }
 });
 
+//获取一张随机图片
+router.get("/randomLoginImg", async (req, res) => {
+  try {
+    const {data} = await axios.get(ROUND_LOGIN_IMG);
+    console.log('===1', data)
+    res.success(data);
+  } catch (error) {
+    res.error({ message: "获取随机图片失败，请稍后重试",data:error });
+  }
+})
 module.exports = router;

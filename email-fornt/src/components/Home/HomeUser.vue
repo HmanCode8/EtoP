@@ -84,7 +84,7 @@ const puts = computed(() => {
     ),
   };
 });
-const user = JSON.parse((sessionStorage as any).getItem("userInfo"));
+const user = JSON.parse((localStorage as any).getItem("userInfo"));
 const userInfo = reactive<any>(user);
 </script>
 

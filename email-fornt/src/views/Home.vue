@@ -51,8 +51,8 @@ const handleBack = async () => {
       type: "success",
     });
     // userStore.setAvatar(null);
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
     router.push("/login");
   }
 };
