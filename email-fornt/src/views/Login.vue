@@ -92,9 +92,19 @@ onMounted(() => {
 </script>
 
 <template>
+<<<<<<< HEAD
   <div ref="loginBG" class="login-page h-screen flex items-center justify-center">
     <div class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex email-box-shadow overflow-hidden">
       <div class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center">
+=======
+  <div class="login-page h-screen flex items-center justify-center">
+    <div
+      class="login-modal rounded-lg w-1/2 h-1/2 flex email-box-shadow overflow-hidden"
+    >
+      <div
+        class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
+      >
+>>>>>>> 235df9bfcbaac3cd6fa732717f7fdfcb5ef0eebc
         <div class="inner-t"></div>
         <div class="inner-b"></div>
         <div class="l-title">
@@ -139,12 +149,29 @@ onMounted(() => {
               <input class="email-form-item w-full" v-model="form.confirmPassword" placeholder="confirmPassword" type="password" />
             </div>
             <div class="flex justify-between pt-4">
+<<<<<<< HEAD
               <el-button class="shadow-inner rounded-3xl text-sm w-1/2 h-10" native-type="submit" type="primary">{{ isRegister ? 'SING UP' : 'SING IN' }}</el-button>
               <div @click="isRegister = !isRegister" class="switch-form flex hover:cursor-pointer justify-center items-center">
+=======
+              <el-button
+                class="shadow-inner rounded-3xl text-sm w-1/2 h-10"
+                native-type="submit"
+                type="primary"
+                >{{ isRegister ? "SING UP" : "SING IN" }}</el-button
+              >
+              <div
+                @click="isRegister = !isRegister"
+                class="switch-form flex hover:cursor-pointer justify-center items-center"
+              >
+>>>>>>> 235df9bfcbaac3cd6fa732717f7fdfcb5ef0eebc
                 <div class="text-sm">
                   {{ isRegister ? 'Login' : 'Register' }}
                 </div>
+<<<<<<< HEAD
                 <el-icon class="text-lg" > <Right /></el-icon>
+=======
+                <!-- <el-icon class="text-lg"> <Right /></el-icon> -->
+>>>>>>> 235df9bfcbaac3cd6fa732717f7fdfcb5ef0eebc
               </div>
             </div>
             <!-- 右下角的注册切换表单 -->
@@ -223,5 +250,26 @@ input {
 .isnohowpasswork {
   background-image: url('@/assets/images/ico-eye-disabled.png');
   @include bgImg;
+}
+.switch-form {
+  position: relative;
+  &:hover {
+    ::after {
+      width: 100%;
+      padding: 0 10px;
+      content: "Go";
+    }
+  }
+  ::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    width: 0%;
+    background-color: #dba4f5;
+    transition: all 0.3s ease-in-out;
+  }
 }
 </style>
