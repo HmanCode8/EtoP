@@ -64,6 +64,9 @@ const onNavClick = (path: string) => {
     return;
   }
 };
+const goBlogPage = () => {
+  window.location.href = "https://shihenghe.online/";
+};
 onMounted(() => {
   // gsap.to(".nav-items", { rotation: 360, duration: 2, ease: "bounce.out" });
 });
@@ -74,8 +77,12 @@ onMounted(() => {
     class="email-car-bg-color fixed top-0 left-0 w-full h-16 pl-10 pr-10 z-20 flex justify-between items-center"
   >
     <div class="flex items-center">
-      <div class="logo flex items-center ">
-        <div class="text-5xl font-bold">HSH </div><span class="text-sm">blog</span>
+      <div
+        class="logo flex items-center hover:cursor-pointer hover:scale-110"
+        @click="goBlogPage"
+      >
+        <div class="text-5xl font-bold">HSH</div>
+        <span class="text-sm">blog</span>
       </div>
       <div class="nav-list flex">
         <div
@@ -108,60 +115,57 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-<div class="flex flex-col h-full">
-
-  <div class="home-content clear-both m-20 flex">
-    <div
-      class="c-main   w-calc-width"
-    >
-      <HomeContain v-if="userStore.navActive === '/home'" />
-      <WebApi v-if="userStore.navActive === '/webApis'" />
-      <WallpaperList
-        :userStore.navActivekey="userStore.navActive"
-        v-if="
-          userStore.navActive === '/wallpaper' ||
-          userStore.navActive === '/video'
-        "
-      />
-      <News v-if="userStore.navActive === '/news'" />
+  <div class="flex flex-col h-full">
+    <div class="home-content clear-both m-20 flex">
+      <div class="c-main w-calc-width">
+        <HomeContain v-if="userStore.navActive === '/home'" />
+        <WebApi v-if="userStore.navActive === '/webApis'" />
+        <WallpaperList
+          :userStore.navActivekey="userStore.navActive"
+          v-if="
+            userStore.navActive === '/wallpaper' ||
+            userStore.navActive === '/video'
+          "
+        />
+        <News v-if="userStore.navActive === '/news'" />
+      </div>
+      <div class="c-user ml-10 flex-grow">
+        <!-- <HomeUser /> -->
+      </div>
     </div>
-    <div class="c-user ml-10 flex-grow">
-      <!-- <HomeUser /> -->
-    </div>
-  </div>
-  <div class="email-car-bg-color home-footer py-5 text-center ">
-    <!-- 行高：1.5rem; -->
-    <div class="font-bol">He Web Design ©2022</div>
-    <!-- 给我这个网站给个说明 -->
-    <div class="text-sm my-5">
-      这是一个基于Vue3.x+Element-Plus的个人网站，主要用于记录平时学习的心得体会，分享一些个人项目，以及一些技术文章。
-    </div>
-    <div class="icon-list flex justify-center items-center my-5">
-      <!-- <a title="打赏站长" target="_blank" href="/images/reward.webp"></a> -->
-      <a
-        class="icon-item inline-block w-8 h-8 mr-5"
-        title="添加群聊"
-        target="_blank"
-        rel="nofollow"
-        href="https://qm.qq.com/q/tX8dU3hBu0"
-      ></a>
-      <a
-        class="icon-item inline-block w-8 h-8 mr-5"
-        title="Github"
-        target="_blank"
-        rel="nofollow"
-        href="https://github.com/HmanCode8"
-      ></a>
-      <!-- <a title="韩小韩博客" target="_blank" href="https://www.vvhan.com/"></a> -->
-    </div>
-    <div class="text-sm my-5">
-      网站源码：
-      <a href="https://github.com/HmanCode8/email/tree/master" target="_blank"
-        >https://github.com/heshiheng/email-fornt</a
-      >
+    <div class="email-car-bg-color home-footer py-5 text-center">
+      <!-- 行高：1.5rem; -->
+      <div class="font-bol">He Web Design ©2022</div>
+      <!-- 给我这个网站给个说明 -->
+      <div class="text-sm my-5">
+        这是一个基于Vue3.x+Element-Plus的个人网站，主要用于记录平时学习的心得体会，分享一些个人项目，以及一些技术文章。
+      </div>
+      <div class="icon-list flex justify-center items-center my-5">
+        <!-- <a title="打赏站长" target="_blank" href="/images/reward.webp"></a> -->
+        <a
+          class="icon-item inline-block w-8 h-8 mr-5"
+          title="添加群聊"
+          target="_blank"
+          rel="nofollow"
+          href="https://qm.qq.com/q/tX8dU3hBu0"
+        ></a>
+        <a
+          class="icon-item inline-block w-8 h-8 mr-5"
+          title="Github"
+          target="_blank"
+          rel="nofollow"
+          href="https://github.com/HmanCode8"
+        ></a>
+        <!-- <a title="韩小韩博客" target="_blank" href="https://www.vvhan.com/"></a> -->
+      </div>
+      <div class="text-sm my-5">
+        网站源码：
+        <a href="https://github.com/HmanCode8/email/tree/master" target="_blank"
+          >https://github.com/heshiheng/email-fornt</a
+        >
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped lang="scss">

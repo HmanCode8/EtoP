@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { getApisCateNews } from "@/services/homeService";
-
+import _ from "lodash";
 interface Message {
   title: string;
   data: string[];
@@ -10,16 +10,22 @@ interface Message {
 }
 
 const sixNews = ref<Message>({ title: "", data: [], time: "", banner: "" });
-const hotAll = ref<Message>({ title: "", data: [], time: "", banner: "" });
+// const hotAll = ref<Message>({ title: "", data: [], time: "", banner: "" });
 
 const handleGetNews = async () => {
   try {
-    const res = await getApisCateNews({
-      new_keys: ["sixNews", "hotAll"],
+    let result = [];
+    const {
+      data: { sixNews: six },
+    } = await getApisCateNews({
+      new_keys: ["sixNews"],
     });
-    const { sixNews: six, hotAll: h } = res.data;
-    sixNews.value = six;
-    hotAll.value = h.data;
+    result = six;
+    if (_.isEmpty(result)) {
+      const res = await fetch("https://api.vvhan.com/api/60s");
+      result = await res.json();
+    }
+    sixNews.value = result;
   } catch (error) {
     console.log(error);
   }
