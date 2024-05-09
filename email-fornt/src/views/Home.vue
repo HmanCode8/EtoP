@@ -4,6 +4,7 @@ import HomeContain from "@/components/Home/HomeContain.vue";
 import WebApi from "@/views/WebApi.vue";
 import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
 import News from "@/components/News/NewList.vue";
+import UpLoad from "@/views/UpLoad.vue";
 import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -34,8 +35,8 @@ const navList = reactive([
     navPath: "/news",
   },
   {
-    navName: "消息",
-    navPath: "/message",
+    navName: "上传",
+    navPath: "/upload",
   },
 ]);
 // 注入gsap动画库
@@ -124,6 +125,7 @@ onMounted(() => {
         "
       />
       <News v-if="userStore.navActive === '/news'" />
+      <UpLoad v-if="userStore.navActive === '/upload'" />
     </div>
     <div class="c-user ml-10 flex-grow">
       <!-- <HomeUser /> -->

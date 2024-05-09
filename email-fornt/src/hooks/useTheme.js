@@ -47,10 +47,9 @@ const toggleTheme = (status = false) => {
   } else {
     ortherTheme(newTheme);
   }
-  theme.value = newTheme;
+  // theme.value = newTheme;
 };
 
-const fn = () => {};
 export default function useTheme() {
   const currentTheme = ref(theme);
   return {
