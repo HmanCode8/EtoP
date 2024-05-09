@@ -90,3 +90,5 @@
 2024-05-09T12:15:14.315Z - GET-/randomLoginImg - 200 - Success - ""
 2024-05-09T12:15:15.726Z - POST-/login - 200 - 登录成功 - ""
 2024-05-09T12:15:15.829Z - POST-/cateNews - 200 - Success - ""
+2024-05-09T12:17:02.830Z - POST-/cateNews - 200 - Success - ""
+2024-05-09T12:17:29.704Z - POST-/cateNews - 200 - Success - ""
