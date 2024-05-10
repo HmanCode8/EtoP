@@ -6,6 +6,8 @@ import _ from "lodash";
 const hotAllnews = ref<any>([]);
 const handleGetNews = async () => {
   try {
+    let result: any = [];
+
     const res = await getApisCateNews({
       new_keys: [
         "hotAll",
@@ -16,8 +18,12 @@ const handleGetNews = async () => {
         // "baiduHot",
       ],
     });
-    const hotAllNews = res.data.hotAll.data ?? [];
-    hotAllnews.value = _.map(hotAllNews, (d: any, index: number) => ({
+    result = res.data.hotAll.data ?? [];
+    if (_.isEmpty(result)) {
+      const res = await fetch("https://api.vvhan.com/api/hotlist/all");
+      result = (await res.json()).data;
+    }
+    hotAllnews.value = _.map(result, (d: any, index: number) => ({
       ...d,
       img: newBases[index],
     }));
