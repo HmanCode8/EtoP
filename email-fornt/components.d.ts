@@ -20,6 +20,8 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
     HomeUser: typeof import('./src/components/Home/HomeUser.vue')['default']
     NewList: typeof import('./src/components/News/NewList.vue')['default']
