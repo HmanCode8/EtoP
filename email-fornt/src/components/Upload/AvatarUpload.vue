@@ -54,12 +54,10 @@ onMounted(async () => {
 async function changeFile() {
   try {
     let file = fileInputRef.value.files[0];
-
     const res = await uploadAvatar({ file });
     if (res) {
       const result = await getAvatar();
       imgUrl.value = result.data.avatar;
-      console.log(result);
     }
   } catch (error) {
     ElMessage({
