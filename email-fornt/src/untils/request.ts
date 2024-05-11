@@ -65,7 +65,22 @@ async function request(url: string, options: any = {}): Promise<any> {
       });
     }
     let response: Response = await fetch(newUrl, options);
-
+    //总的数据量
+    let total = response.headers.get("Content-Length") ?? 0;
+    let loaded = 0;
+    // 监听下载进度
+    const reader = response.body.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      loaded += value.length;
+      const progress = (loaded / total) * 100;
+      console.log("progress", progress);
+    }
+    // 打印响应数据
+    console.log("total", total);
     // 隐藏loading
     if (showLoading) {
       loadingInstance.close();

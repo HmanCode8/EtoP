@@ -1,4 +1,4 @@
-import request from '@/untils/request';
+import request from "@/untils/request";
 
 interface MulterUploadParams {
   name: string;
@@ -11,9 +11,7 @@ interface MulterUploadParams {
 }
 
 function postMulterUploads(params: MulterUploadParams): Promise<any> {
-  return request.post('/api/multerUploads', params, { requestType: 'form' })
+  return request.post("/api/multerUploads", params, { requestType: "form" });
 }
 
-export {
-  postMulterUploads
-}
+export { postMulterUploads };

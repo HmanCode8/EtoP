@@ -19,16 +19,6 @@ const storage = multer.diskStorage({
   },
 });
 const uploadMulter = multer({ storage: storage });
-
-//暂停函数
-function pauseSync(ms) {
-  const startTime = Date.now();
-  while (Date.now() - startTime < ms) {
-    // 空循环，等待指定时间
-    // console.log("暂停" + ms);
-  }
-}
-
 // 用户头像上传路由
 router.post(
   "/uploadAvatar",
