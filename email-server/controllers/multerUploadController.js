@@ -20,34 +20,43 @@ const storage = multer.diskStorage({
 
 // 使用multer存储引擎创建upload.single中间件
 const uploadMulter = multer({ storage: storage });
-
 router.post(
   "/multerUploads",
-  verifyTokenMiddleWare,
-  uploadMulter.single("file"),
   async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).send("No file uploaded.");
-      }
-
-      // 保存文件信息到数据库
-      const uploadRecord = new MulterUploadsModel({
-        fileName: req.file.filename,
-        originalName: req.file.originalname,
-        uploadPath: req.file.destination + "/" + req.file.filename,
-        status: "completed", // 假设文件上传成功后的状态
-      });
-
-      // 保存到数据库
-      await uploadRecord.save();
-
-      // 返回文件ID或其他自定义ID供客户端查询状态
-      res.success(uploadRecord);
+   
+      res.success({a:1});
     } catch (err) {
       return res.error("Error uploading file.");
     }
   }
 );
+// router.post(
+//   "/multerUploads",
+//   verifyTokenMiddleWare,
+//   uploadMulter.single("file"),
+//   async (req, res) => {
+//     try {
+//       if (!req.file) {
+//         return res.status(400).send("No file uploaded.");
+//       }
+
+//       // 保存文件信息到数据库
+//       const uploadRecord = new MulterUploadsModel({
+//         fileName: req.file.filename,
+//         originalName: req.file.originalname,
+//         uploadPath: req.file.destination + "/" + req.file.filename,
+//         status: "completed", // 假设文件上传成功后的状态
+//       });
+
+//       // 保存到数据库
+//       await uploadRecord.save();
+//       // 返回文件ID或其他自定义ID供客户端查询状态
+//       res.success(uploadRecord);
+//     } catch (err) {
+//       return res.error("Error uploading file.");
+//     }
+//   }
+// );
 
 module.exports = router;

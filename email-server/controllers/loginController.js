@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
     }
     res.success(successData, "登录成功");
   } catch (error) {
-    res.error({ statusCode: 500, message: "登录失败，请稍后重试",data:error });
+    res.error({ statusCode: 500, message: "登录失败，请稍后重试" });
   }
 });
 

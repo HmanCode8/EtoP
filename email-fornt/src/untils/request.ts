@@ -66,8 +66,11 @@ async function request(url: string, options: any = {}): Promise<any> {
     }
     let response: Response = await fetch(newUrl, options);
     //总的数据量
-    let total = response.headers.get("Content-Length") ?? 0;
+    let total :any = response.headers.get("Content-Length") ?? 0;
     let loaded = 0;
+    const decoder = new TextDecoder();
+    let streamData = "";
+    // 监听下载进度
     // 监听下载进度
     const reader = response.body.getReader();
     while (true) {
@@ -76,11 +79,11 @@ async function request(url: string, options: any = {}): Promise<any> {
         break;
       }
       loaded += value.length;
-      const progress = (loaded / total) * 100;
-      console.log("progress", progress);
+      streamData += decoder.decode(value);
+      // const progress = (loaded / total) * 100;
+      // console.log("progress===", progress);
     }
     // 打印响应数据
-    console.log("total", total);
     // 隐藏loading
     if (showLoading) {
       loadingInstance.close();
@@ -90,7 +93,7 @@ async function request(url: string, options: any = {}): Promise<any> {
     for (const interceptor of interceptors.response) {
       response = await interceptor(response);
     }
-    const data: any = await response.json();
+    const data: any = JSON.parse(streamData);
 
     if (!response.ok) {
       ElNotification({
