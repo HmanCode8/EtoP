@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   },
 });
 const uploadMulter = multer({ storage: storage });
-// 用户头像上传路由
+
 router.post(
   "/uploadAvatar",
   verifyTokenMiddleWare,

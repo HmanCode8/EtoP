@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const multerUploadSchema = new mongoose.Schema({
+  userId: String,
+  username: String,
+  hash: String,
   fileName: String,
-  originalName: String,
+  size: String,
   uploadPath: String,
   status: String,
   createdAt: {
