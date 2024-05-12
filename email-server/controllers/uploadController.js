@@ -3,13 +3,18 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs").promises; // 引入 fs 模块的 promises API
-const Upload = require("../models/upload");
+const Avatar = require("../models/avatar");
 const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 
 // 配置 multer 中间件
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads"); // 文件保存的目录
+    const { userId } = req.userInfo; // 获取用户ID
+    const dir = `./uploads/${userId}`; // 拼接用户ID作为目录名
+    fs.mkdir(dir, { recursive: true });
+    setTimeout(() => {
+      cb(null, dir); // 文件保存的目录
+    }, 0); // 异步操作，等待目录创建完成
   },
   filename: function (req, file, cb) {
     const { userId } = req.userInfo; // 获取用户ID
@@ -30,7 +35,7 @@ router.post(
       const { userId } = req.userInfo;
 
       // 查找数据库中是否已经上传过该用户的头像
-      const existingUpload = await Upload.findOne({ user_id: userId });
+      const existingUpload = await Avatar.findOne({ user_id: userId });
       // pauseSync(5000);
       if (existingUpload) {
         try {
@@ -55,7 +60,7 @@ router.post(
         res.success(existingUpload);
       } else {
         // 如果数据库中没有该用户的头像记录，则创建新的记录
-        const upload = new Upload({
+        const upload = new Avatar({
           user_id: userId,
           filename: originalname,
           filepath: filePath,
@@ -73,7 +78,7 @@ router.get("/getAvatar", verifyTokenMiddleWare, async (req, res) => {
   try {
     const { userId } = req.userInfo;
     // 查找数据库中该用户的头像记录
-    const existingUpload = await Upload.findOne({ user_id: userId });
+    const existingUpload = await Avatar.findOne({ user_id: userId });
     const { filename, filepath, user_id } = existingUpload;
     if (user_id === userId) {
       // 读取头像文件并以 Base64 编码返回给客户端

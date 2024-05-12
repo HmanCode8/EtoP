@@ -11,11 +11,13 @@ const maxRequestNum = ref(2);
 const folderInput = ref(null);
 // const { chunks, createChunks } = useCutChunks();
 const tableData = reactive([]);
-const showTableData = reactive([]);
+const showTableData = reactive({
+  data: [],
+});
 
 const handletMulterUploads = async () => {
   const res = await getMulterUploads();
-  showTableData = res.data;
+  showTableData.data = res.data;
 };
 handletMulterUploads();
 const readerFile = (file) => {
@@ -197,41 +199,43 @@ const successNum = computed(
     </div>
 
     <div class="mt-5">
-      <div class="flex">
-        <el-table :data="tableData" height="400">
-          <!-- 居中 -->
-          <el-table-column label="文件名" prop="name" />
-          <el-table-column align="center" label="类型" prop="type" />
-          <el-table-column align="center" label="大小" prop="size" />
-          <el-table-column align="center" label="状态" prop="status">
-            <template #default="scope">
-              <el-progress
-                v-if="scope.row.percentage !== -1"
-                :percentage="scope.row.percentage"
-              ></el-progress>
-              <el-button
-                v-else
-                size="small"
-                @click="handleEdit(scope.$index, scope.row)"
-              >
-                待上传
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="操作">
-            <template #default="scope">
-              <el-icon
-                class="hover:text-red-500 hover:cursor-pointer"
-                @click="handleDelete(scope.row)"
-                ><Delete
-              /></el-icon>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="border-l border-gray-300">
-          <el-table :data="showTableData" height="400">
+      <div class="flex w-full justify-between">
+        <div class="w-1/2">
+          <el-table :data="tableData" height="400">
             <!-- 居中 -->
-            <el-table-column label="文件名" prop="filename" />
+            <el-table-column label="文件名" prop="name" />
+            <el-table-column align="center" label="类型" prop="type" />
+            <el-table-column align="center" label="大小" prop="size" />
+            <el-table-column align="center" label="状态" prop="status">
+              <template #default="scope">
+                <el-progress
+                  v-if="scope.row.percentage !== -1"
+                  :percentage="scope.row.percentage"
+                ></el-progress>
+                <el-button
+                  v-else
+                  size="small"
+                  @click="handleEdit(scope.$index, scope.row)"
+                >
+                  待上传
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+              <template #default="scope">
+                <el-icon
+                  class="hover:text-red-500 hover:cursor-pointer"
+                  @click="handleDelete(scope.row)"
+                  ><Delete
+                /></el-icon>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="border-l ml-10 border-gray-200 flex-grow">
+          <el-table :data="showTableData.data" height="400">
+            <!-- 居中 -->
+            <el-table-column label="文件名" prop="fileName" />
             <el-table-column align="center" label="大小" prop="size" />
           </el-table>
         </div>

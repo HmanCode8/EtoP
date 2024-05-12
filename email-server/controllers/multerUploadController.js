@@ -2,18 +2,22 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const { v4: uuidv4 } = require("uuid"); // 使用uuid生成唯一ID
+const fs = require("fs");
 const MulterUploadsModel = require("../models/multerUpload"); // 假设你的模型文件导出的是Model类
 const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 
 // 配置multer存储引擎，这里我们使用diskStorage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads/multerUploads"); // 指定上传文件存放的目录
+  destination: function (req, file, cb) {
+    const { userId } = req.userInfo; // 获取用户ID
+    const dir = `./uploads/multerUploads/${userId}`; // 根据用户ID创建文件夹
+    fs.mkdir(dir, { recursive: true });
+    setTimeout(() => {
+      cb(null, dir); // 文件保存的目录
+    }, 1000); // 异步操作，等待目录创建完成
   },
   filename: (req, file, cb) => {
     // 生成唯一的文件名
-    const hash = req.body.hash; // 从请求体中获取hash参数，如果没有则生成uuid
     const extname = path.extname(file.originalname); // 获取文件扩展名
     const fileName = req.header("fileHash") + extname; // 使用encodeURIComponent编码文件名
     cb(null, fileName);
@@ -37,6 +41,7 @@ router.post(
       const fileHash = req.header("fileHash");
       const fileRecord = await MulterUploadsModel.findOne({
         hash: fileHash,
+        userId,
       });
       if (fileRecord) {
         return res.error({ message: "File already exists.", statusCode: 409 });

@@ -3,7 +3,7 @@ node_modules
 dist
 buildServe
 api.log
-multerUploads
+uploads
 # Log files
 npm-debug.log*
 yarn-debug.log*
