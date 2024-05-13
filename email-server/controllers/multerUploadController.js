@@ -9,13 +9,17 @@ const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 // 配置multer存储引擎，这里我们使用diskStorage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const { userId } = req.userInfo; // 获取用户ID
-    const dir = `./uploads/multerUploads/${userId}`; // 根据用户ID创建文件夹
-    fs.mkdir(dir, { recursive: true });
-    setTimeout(() => {
-      cb(null, dir); // 文件保存的目录
-    }, 1000); // 异步操作，等待目录创建完成
+    const { userId } = req.userInfo;
+    const dir = `./uploads/multerUploads/${userId}`;
+    fs.mkdir(dir, { recursive: true }, (err) => {
+      if (err) {
+        cb(err);
+      } else {
+        cb(null, dir);
+      }
+    });
   },
+  
   filename: (req, file, cb) => {
     // 生成唯一的文件名
     const extname = path.extname(file.originalname); // 获取文件扩展名
@@ -54,7 +58,7 @@ router.post(
         fileName: req.file.originalname,
         size: req.file.size,
         uploadPath: req.file.destination + "/" + req.file.filename,
-        status: "completed", // 假设文件上传成功后的状态
+        status: "uploaded", // 假设文件上传成功后的状态
       });
 
       // 保存到数据库
