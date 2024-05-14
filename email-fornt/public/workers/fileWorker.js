@@ -1,5 +1,5 @@
 // worker.js
-import createChunks from '@/hooks/useChunks'
+import {createChunks} from '@/hooks/useChunks'
 
 self.onmessage = async (e) => {
   const { file, CHUNK_SIZE, startChunk, endChunk } = e.data
@@ -9,6 +9,5 @@ self.onmessage = async (e) => {
    proms.push(p)
   }
   const chucks =await Promise.all(proms)
-  console.log('chucks==',chucks)
   self.postMessage(chucks)
 }

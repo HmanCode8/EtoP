@@ -3,11 +3,14 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const oss = require("../oss");
+const { saveType } = require('../config')
+
 const MulterUploadsModel = require("../models/multerUpload"); // 假设你的模型文件导出的是Model类
 const verifyTokenMiddleWare = require("../middlewares/verifyTokenMiddleWare");
 
 // 配置multer存储引擎，这里我们使用diskStorage
-const storage = multer.diskStorage({
+const dirStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     const { userId } = req.userInfo;
     const dir = `./uploads/multerUploads/${userId}`;
@@ -28,8 +31,12 @@ const storage = multer.diskStorage({
   },
 });
 
-// 使用multer存储引擎创建upload.single中间件
-const uploadMulter = multer({ storage: storage });
+// // 使用multer存储引擎创建upload.single中间件
+// const uploadMulter = multer({ storage: storage });
+
+// 配置multer
+const ossStorage = multer.memoryStorage();
+const uploadMulter = multer({ storage: saveType === 'oss'? ossStorage : dirStorage });
 
 router.post(
   "/multerUploads",
@@ -40,6 +47,7 @@ router.post(
       if (!req.file) {
         return res.error({ message: "No file uploaded." });
       }
+     
       const { userId, username } = req.userInfo; // 从请求头中获取用户信息
       // 使用文件hash是否已经存在同名文件
       const fileHash = req.header("fileHash");
@@ -50,6 +58,9 @@ router.post(
       if (fileRecord) {
         return res.error({ message: "File already exists.", statusCode: 409 });
       }
+      const isOsstype  = saveType === 'oss'
+    
+      const uploadPath = isOsstype ? 'multerUploads/' : req.file.destination + "/" + req.file.filename;
       // 保存文件信息到数据库
       const uploadRecord = new MulterUploadsModel({
         userId,
@@ -57,13 +68,18 @@ router.post(
         hash: fileHash,
         fileName: req.file.originalname,
         size: req.file.size,
-        uploadPath: req.file.destination + "/" + req.file.filename,
+        uploadPath,
+        saveType: saveType === 'oss' ? 'oss' : 'local',
         status: "uploaded", // 假设文件上传成功后的状态
       });
 
       // 保存到数据库
       await uploadRecord.save();
-
+      if (isOsstype) {
+        const ossres = await oss.uploadFile(req.file)
+        res.success({...uploadRecord, ossUrl: ossres.url});
+        return
+       }
       // 返回文件ID或其他自定义ID供客户端查询状态
       res.success(uploadRecord);
     } catch (err) {
@@ -72,9 +88,11 @@ router.post(
   }
 );
 
+
 // 获取文件列表
 router.get("/multerUploads", verifyTokenMiddleWare, async (req, res) => {
   try {
+    // console.log(oss.listBuckets());
     const { userId } = req.userInfo; // 从请求头中获取用户信息
     const fileRecords = await MulterUploadsModel.find({ userId });
     res.success(fileRecords);

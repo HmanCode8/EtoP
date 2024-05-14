@@ -5,15 +5,13 @@ const config = {
     port: 27017,
     name: "email",
   },
-  email: {
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "your-email-address",
-      pass: "your-email-password",
-    },
-  },
+  saveType:'oss',
+  oss: {
+    region: 'oss-cn-beijing',
+    accessKeyId: 'LTAI5tJ7jsngknwzpkTn8L6Z',
+    accessKeySecret: 'JMhCjwKGeCD8uVErFJ2vMVSRvSXEQu',
+    bucket: 'multerupload'
+  }
 };
 
 module.exports = config;

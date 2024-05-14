@@ -7,6 +7,7 @@ const multerUploadSchema = new mongoose.Schema({
   size: String,
   uploadPath: String,
   status: String,
+  saveType: String,
   createdAt: {
     type: Date,
     default: Date.now,

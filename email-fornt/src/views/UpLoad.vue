@@ -1,8 +1,8 @@
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed,watch } from 'vue'
 import { getMulterUploads } from '@/services/multerUpload'
 import concurrentRequest from '@/untils/concurrentRequest'
-import sparkMd5 from 'spark-md5'
+import { webWOrkerChunks, getHash } from '@/hooks/useChunks'
 import _ from 'lodash'
 const uploadBox = ref(null)
 const fileInput = ref(null)
@@ -20,81 +20,24 @@ const handletMulterUploads = async () => {
 }
 handletMulterUploads()
 
-const CHUNK_SIZE = 1024 * 1024 * 10
-const THREAD_COUNT = navigator.hardwareConcurrency || 4
 const readerFile = async (file) => {
-  // }
-  const sparkMd5Hash = new sparkMd5()
-
-  function webWOrkerChunks(file) {
-    return new Promise((resolve) => {
-      const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
-      const threadChunkCount = Math.ceil(chunkCount / THREAD_COUNT)
-      let result = []
-      let finnishCount = 0
-      for (let i = 0; i < THREAD_COUNT; i++) {
-        const worker = new Worker('../../../public/workers/fileWorker.js', { type: 'module' })
-        const start = i * threadChunkCount
-        const end = Math.min((i + 1) * threadChunkCount, chunkCount)
-        worker.postMessage({ file, CHUNK_SIZE, startChunk: start, endChunk: end })
-        worker.onmessage = (e) => {
-         for (let j = start; j < end; j++) {
-          result[j] = e.data[j-start]
-          // worker.terminate()
-          finnishCount++
-          if (finnishCount === THREAD_COUNT) {
-            resolve(result)
-          }
-         }
-        }
-      }
-    })
+  const name = file.name
+  const type = file.type
+  const size = (file.size / 1024 / 1024).toFixed(2)
+  const percentage = -1
+  const chunks = await webWOrkerChunks(file)
+  const hash = await getHash(chunks)
+  const uploaded = _.some(showTableData.data, (item) => item.hash === hash)
+  return {
+    name,
+    type,
+    size,
+    status: uploaded ? 'uploaded' : 'pendding',
+    percentage,
+    file,
+    hash,
+    chunks,
   }
-
-  function getHash(chunks) {
-    console.log('chunks===', chunks)
-    return new Promise((resolve) => {
-      function _read(i) {
-        if (i >= chunks.length) {
-          resolve(sparkMd5Hash.end())
-        }
-        const blob = chunks[i]
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          sparkMd5Hash.append(e.target.result)
-          _read(i + 1)
-        }
-        reader.readAsArrayBuffer(blob)
-      }
-      _read(0)
-    })
-  }
-  return new Promise(async (resolve) => {
-    const name = file.name
-    const type = file.type
-    const size = (file.size / 1024 / 1024).toFixed(2)
-    const percentage = -1
-    const chunks = await webWOrkerChunks(file)
-    const hash = await getHash(chunks)
-    console.log('hash===', hash)
-    // const reader = new FileReader();
-    // reader.readAsArrayBuffer(file);
-    // reader.onload = (e) => {
-    //   sparkMd5Hash.append(e.target.result);
-    //   const hash = sparkMd5Hash.end();
-    //   console.log("hash===", hash);
-    //   const uploaded = _.some(showTableData.data, (item) => item.hash === hash)
-    //   resolve({
-    //     name,
-    //     type,
-    //     size,
-    //     status: uploaded? "uploaded" : "pendding",
-    //     percentage,
-    //     file,
-    //     hash,
-    //   });
-    // };
-  })
 }
 const onFileChange = async (e) => {
   const files = e.target.files
@@ -107,14 +50,22 @@ const onFileChange = async (e) => {
 // 点击上传
 const handleUpload = async () => {
   try {
-    const currentData = tableData.filter((item) => item.status === 'pendding')
-    const res = await concurrentRequest(tableData, maxRequestNum.value, (index, e) => {
+    const peddingData = _.filter(tableData, { status: 'pendding' })
+    if (peddingData.length === 0) {
+      return alert('没有待上传文件')
+    }
+    const update = (index, e) => {
+      const percentage = Math.round((e.loaded / e.total) * 100)
       tableData[index] = {
         ...tableData[index],
-        percentage: Math.round((e.loaded / e.total) * 100),
+        percentage,
+        status:  percentage === 100? 'uploaded' : 'pendding',
       }
-    })
+      console.log('tableData',tableData)
+    }
+    const res = await concurrentRequest(peddingData, maxRequestNum.value, update)
     console.log('res===', res)
+    handletMulterUploads()
   } catch (error) {
     console.log(error)
   }
@@ -125,6 +76,7 @@ const handleDelete = (row) => {
   const index = tableData.indexOf(row)
   tableData.splice(index, 1)
 }
+
 
 onMounted(() => {
   const uploadTarget = uploadBox.value
@@ -178,7 +130,7 @@ onMounted(() => {
   })
 })
 
-const fileSize = computed(() => tableData.reduce((acc, cur) => acc + Number(cur.size), 0))
+const fileSize = computed(() => tableData.reduce((acc, cur) => acc + Number(cur.size), 0).toFixed(2))
 const successNum = computed(() => tableData.filter((item) => item.percentage === 100).length)
 </script>
 
@@ -200,6 +152,34 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
       <!-- 选择文件夹 -->
       <label for="folderInput" class="ml-4 chosose-folder bg-[#1a83fa] rounded-sm text-white p-1 hover:cursor-pointer shadow-lg hover:scale-105 duration-200"> 选择文件夹 </label>
       <input hidden type="file" id="folderInput" name="file" webkitdirectory multiple ref="folderInput" @change="onFileChange" />
+    </div>
+
+    <div class="mt-5">
+      <el-table :data="tableData" height="400">
+        <!-- 居中 -->
+        <el-table-column label="文件名" prop="name" />
+        <el-table-column align="center" label="类型" prop="type" />
+        <el-table-column align="center" label="大小/M" prop="size" />
+        <el-table-column align="center" label="状态" prop="status">
+          <template #default="scope">
+            <el-progress v-if="scope.row.percentage !== -1 && scope.row.status !== 'uploaded'" :percentage="scope.row.percentage"></el-progress>
+            <el-button v-else size="small" :type="scope.row.status !== 'uploaded' ? '' : 'success'"> {{ scope.row.status !== 'uploaded' ? '待上传' : '已上传' }} </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作">
+          <template #default="scope">
+            <el-icon class="hover:text-red-500 hover:cursor-pointer" @click="handleDelete(scope.row)"><Delete /></el-icon>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="flex my-5 text-sm">
+        <div class="p-1 mx-2">文件数量：{{ tableData.length }}</div>
+        <div class="p-1 mx-2">已上传：{{ successNum }} M</div>
+        <div class="p-1 mx-2">总大小：{{ fileSize }}</div>
+      </div>
+      <div class="flex items-center w-full">
+        <el-button type="primary" class="" @click="handleUpload"> 开始上传 </el-button>
+      </div>
     </div>
   </div>
 </template>
