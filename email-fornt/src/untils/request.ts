@@ -66,13 +66,13 @@ async function request(url: string, options: any = {}): Promise<any> {
     }
     let response: Response = await fetch(newUrl, options);
     //总的数据量
-    let total :any = response.headers.get("Content-Length") ?? 0;
+    // let total: any = response.headers.get("Content-Length") ?? 0;
     let loaded = 0;
     const decoder = new TextDecoder();
     let streamData = "";
     // 监听下载进度
     // 监听下载进度
-    const reader = response.body.getReader();
+    const reader = (response.body as any).getReader();
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
@@ -106,7 +106,7 @@ async function request(url: string, options: any = {}): Promise<any> {
           location.href = "/login";
           localStorage.removeItem("token");
         }
-      }, 3000);
+      }, 1000);
       return;
       // throw new Error(`HTTP error! status: ${response.status}`);
     }

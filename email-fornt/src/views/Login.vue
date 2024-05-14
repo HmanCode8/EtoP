@@ -187,12 +187,20 @@ onMounted(() => {
               />
             </div>
             <div class="flex justify-between pt-4">
-              <el-button class="shadow-inner rounded-3xl text-sm w-1/2 h-10" native-type="submit" type="primary">{{ isRegister ? 'SING UP' : 'SING IN' }}</el-button>
-              <div @click="isRegister = !isRegister" class="switch-form flex hover:cursor-pointer justify-center items-center">
+              <el-button
+                class="shadow-inner rounded-3xl text-sm w-1/2 h-10"
+                native-type="submit"
+                type="primary"
+                >{{ isRegister ? "SING UP" : "SING IN" }}</el-button
+              >
+              <div
+                @click="isRegister = !isRegister"
+                class="switch-form flex hover:cursor-pointer justify-center items-center"
+              >
                 <div class="text-sm">
                   {{ isRegister ? "Login" : "Register" }}
                 </div>
-                <el-icon class="text-lg" > <Right /></el-icon>
+                <el-icon class="text-lg"> <Right /></el-icon>
               </div>
             </div>
             <!-- 右下角的注册切换表单 -->
