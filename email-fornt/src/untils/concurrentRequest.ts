@@ -1,9 +1,10 @@
 import xhrRequest from "./xhrRequest";
 
+
 export default function concurrentRequest(
   urls: any,
   maxNum: number,
-  callback: (i: number, e: Event) => void
+  callback: (i: number, e: Event, params: any) => void,
 ): Promise<any[]> {
   return new Promise((resolve) => {
     let index = 0; // 记录当前请求的索引
@@ -14,7 +15,7 @@ export default function concurrentRequest(
       const params = urls[index]; // 取出当前请求的文件
       index++; // 取出第一个后需要将索引+1
       try {
-        const res = await xhrRequest(params, (e) => callback(i, e));
+        const res = await xhrRequest(params, (e) => callback(i, e, params));
         result[i] = res;
       } catch (error) {
         result[i] = error;

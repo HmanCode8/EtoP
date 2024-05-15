@@ -5,7 +5,7 @@ const config = {
     port: 27017,
     name: "email",
   },
-  saveType:'oss',
+  saveType:'local', //oss or local
   oss: {
     region: 'oss-cn-beijing',
     accessKeyId: 'LTAI5tJ7jsngknwzpkTn8L6Z',

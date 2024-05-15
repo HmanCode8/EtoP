@@ -8,6 +8,7 @@ const webapisController = require("../controllers/webapisController");
 const wallpaperController = require("../controllers/wallpaperController");
 const newsController = require("../controllers/newsController");
 const multerUploadController = require("../controllers/multerUploadController");
+const bigFileUploadController = require("../controllers/bigFileUploadController");
 
 module.exports = {
   emailController,
@@ -20,4 +21,5 @@ module.exports = {
   wallpaperController,
   newsController,
   multerUploadController,
+  bigFileUploadController
 };

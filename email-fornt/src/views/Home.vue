@@ -73,10 +73,10 @@ onMounted(() => {
     class="email-car-bg-color fixed top-0 left-0 w-full h-16 pl-10 pr-10 z-20 flex justify-between items-center"
   >
     <div class="flex items-center">
-      <div class="logo flex items-center">
+      <a href="https://www.shihenghe.online/" class="logo flex items-center">
         <div class="text-5xl font-bold">HSH</div>
         <span class="text-sm">blog</span>
-      </div>
+      </a>
       <div class="nav-list flex">
         <div
           :class="[

@@ -1,15 +1,18 @@
 <script setup>
-import { ref, reactive, onMounted, computed, watch } from "vue";
-import { getMulterUploads } from "@/services/multerUpload";
-import concurrentRequest from "@/untils/concurrentRequest";
-import { webWOrkerChunks, getHash } from "@/hooks/useChunks";
-import { ElMessage } from "element-plus";
-import _ from "lodash";
-const uploadBox = ref(null);
-const fileInput = ref(null);
-const maxRequestNum = ref(2);
-const folderInput = ref(null);
-const tableData = reactive([]);
+import { ref, reactive, onMounted, computed, watch } from 'vue'
+import concurrentRequest from '@/untils/concurrentRequest'
+import { webWOrkerChunks, getHash } from '@/hooks/useChunks'
+import { bigFileUpload, mergeBigFile, getMulterUploads } from '@/services/bigFileUpload'
+import xhrRequest from "@/untils/xhrRequest";
+import _ from 'lodash'
+import { ElMessage } from 'element-plus';
+const uploadBox = ref(null)
+const fileInput = ref(null)
+const maxRequestNum = ref(2)
+const folderInput = ref(null)
+const uploadStatus = ref('')
+// const { chunks, createChunks } = useCutChunks();
+const tableData = reactive([])
 const showTableData = reactive({
   data: [],
 });
@@ -54,19 +57,42 @@ const onFileChange = (e) => {
   }
 };
 // 点击上传
+const bigUpload =async ()=>{
+  const file = tableData[0].file
+  let uploads = []
+  // 分块上传
+  const chunks = await webWOrkerChunks(file)
+
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i].blob
+    const chunkItemRes = await bigFileUpload({
+      index: i,
+      total: chunks.length,
+      fileName: 'bigFile',
+      file: chunk,
+    })
+    uploads.push(chunkItemRes)
+  }
+  const res = await Promise.all(uploads)
+  if (res) {
+    const mergeRes = await mergeBigFile({ fileName: tableData[0].file.name })
+    console.log('mergeRes', mergeRes)
+  }
+}
+
 const handleUpload = async () => {
   try {
     const peddingData = _.filter(tableData, { status: "pendding" });
     if (peddingData.length === 0) {
       return alert("没有待上传文件");
     }
-    const update = (index, e) => {
+    const update = (index, e,param) => {
       const percentage = Math.round((e.loaded / e.total) * 100);
-      tableData[index] = {
-        ...tableData[index],
+      const k = tableData.findIndex((item) => item.hash === param.hash);
+      tableData[k] = {
+        ...tableData[k],
         percentage,
-        status:
-          percentage > 0 && percentage < 100 ? statusMap[1] : statusMap[2],
+        status: percentage < 100 ? statusMap[1] : statusMap[2],
       };
     };
     const res = await concurrentRequest(
@@ -74,6 +100,9 @@ const handleUpload = async () => {
       maxRequestNum.value,
       update
     );
+    if(_.every(res, (item) => item.code === 200)){
+      ElMessage.success("上传成功" + res.length + "个文件")
+    }
     console.log("res===", res);
     handletMulterUploads();
   } catch (error) {
@@ -194,7 +223,7 @@ const successNum = computed(
         <el-table-column align="center" label="状态" prop="status">
           <template #default="scope">
             <el-progress
-              v-if="scope.row.status === 'uploading'"
+              v-if="scope.row.status === statusMap[1]"
               :percentage="scope.row.percentage"
             ></el-progress>
             <el-button
@@ -231,3 +260,4 @@ const successNum = computed(
 </template>
 
 <style scoped></style>
+@/services/bigFileUpload

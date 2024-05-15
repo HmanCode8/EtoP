@@ -57,18 +57,20 @@ function webWOrkerChunks(file) {
 function getHash(chunks) {
   return new Promise((resolve) => {
     function _read(i) {
-      if (i >= chunks.length) {
-        resolve(sparkMd5Hash.end());
+      if (i === chunks.length) {
+        resolve(sparkMd5Hash.end())
+        return
       }
-      const blob = chunks[i]?.blob || chunks[i];
-      const reader = new FileReader();
+      const reader = new FileReader()
+
+      const blob = chunks[i]?.blob || chunks[i]
       reader.onload = (e) => {
         sparkMd5Hash.append(e.target.result);
         _read(i + 1);
       };
       reader.readAsArrayBuffer(blob);
     }
-    _read(0);
-  });
+    _read(0)
+  })
 }
-export { createChunks, webWOrkerChunks, getHash };
+export { createChunks, webWOrkerChunks, getHash }
