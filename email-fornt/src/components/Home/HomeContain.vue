@@ -59,9 +59,9 @@ handleGetWeather()
 OneDayEnglish()
 
 onMounted(() => {
-  gsap.fromTo(weatherRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
+  gsap.fromTo(weatherRef.value, { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 3, ease: 'bounce' })
   gsap.fromTo(newSixRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
-  gsap.fromTo(englishRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
+  gsap.fromTo(englishRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'back' })
 })
 </script>
 

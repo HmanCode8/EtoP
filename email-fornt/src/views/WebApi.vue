@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getWebApis, insertWebApis } from '@/services/webApiService'
+import { getWebApis, insertWebApis} from '@/services/webApiService'
 import { ElMessageBox } from 'element-plus'
-import { ref, watch, inject, onMounted } from 'vue'
+import { ref, watch, inject, onMounted,nextTick } from 'vue'
 import _ from 'lodash'
 
 interface Api {
@@ -13,7 +13,6 @@ interface Api {
 }
 const gsap: any = inject('gsap')
 const apiItemList = ref<HTMLDivElement>()
-const apiItemRef = ref<HTMLDivElement>()
 const webApis = ref<Api[]>([])
 const filterApis = ref<Api[]>([])
 const newWindow = ref<Window>()
@@ -62,23 +61,25 @@ const openUrl = (router: string) => {
 }
 const apis = webApis.value
 watch(searchVal, (val) => {
-  console.log(val)
   filterApis.value = _.isEmpty(val) ? apis : _.filter(apis, (i) => _.includes(i.name, val))
 })
 
 watch(webApis, () => {
-   gsap.fromTo(apiItemRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 1, ease: 'elastic' })
-
+  nextTick(() => {
+   gsap.fromTo('.api-i', { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 3, ease: 'bounce' })
+   gsap.fromTo('.api-i-reverse', { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 3, ease: 'back' })
+  })
 })
 
 onMounted(() => {
   // gsap.fromTo(newSixRef.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 1 })
-  let tween = gsap.fromTo(apiItemList.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
-  tween.pause()
-  tween.seek(1)
-  tween.progress(0.1)
-  tween.play()
+  // let tween = gsap.fromTo(apiItemList.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
+  // tween.pause()
+  // tween.seek(1)
+  // tween.progress(0.1)
+  // tween.play()
 })
+
 </script>
 
 <template>
@@ -90,7 +91,7 @@ onMounted(() => {
   </div>
   <div class="apis-content justify-center">
     <div ref="apiItemList" class="api-list flex flex-wrap w-full h-full">
-      <div ref="apiItemRef" @click="openUrl(api.router)" class="api-i p-3 text-sm relative flex flex-col hover:cursor-pointer rounded-lg shadow-xl hover:scale-105 transition-transform duration-300 ease-in-out" v-for="api in webApis" :key="api.Id">
+        <div  @click="openUrl(api.router)" :class="`${index % 3 === 0 ? 'api-i' : 'api-i-reverse'} p-3 text-sm relative flex flex-col hover:cursor-pointer rounded-lg shadow-xl`" v-for="(api,index) in webApis" :key="api.Id">
         <div class="api-contain flex items-center h-10">
           <div class="i-sum">{{ api.name }}</div>
           <div class="i-name p-2 ml-auto r text-sm">Hot:{{ api.sum }}</div>
@@ -99,6 +100,8 @@ onMounted(() => {
           {{ api.description }}
         </div>
       </div>
+
+    
     </div>
   </div>
   <div class="apis-footer"></div>
@@ -107,7 +110,7 @@ onMounted(() => {
 <style scoped lang="scss">
 // $afterHeight: 15px;
 
-.api-list .api-i {
+.api-list .api-i ,.api-i-reverse {
   --n: 4;
   --w: 300px;
   --h: 120px;

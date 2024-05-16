@@ -1,17 +1,21 @@
 <script setup>
-import { ref, reactive, onMounted, computed, watch } from 'vue'
+import { ref, reactive, onMounted, computed, watch,inject } from 'vue'
 import concurrentRequest from '@/untils/concurrentRequest'
 import { webWOrkerChunks, getHash } from '@/hooks/useChunks'
 import { bigFileUpload, mergeBigFile, getMulterUploads } from '@/services/bigFileUpload'
 import xhrRequest from '@/untils/xhrRequest'
 import _ from 'lodash'
 import { ElMessage } from 'element-plus'
+
+//2G的上传限制
+const MAX_SIZE = 2 * 1024 * 1024 * 1024 // 2G 
+const gsap = inject('gsap')
 const uploadBox = ref(null)
+const tableRef = ref(null)
 const fileInput = ref(null)
 const maxRequestNum = ref(6)
 const folderInput = ref(null)
 const uploadStatus = ref('')
-// const { chunks, createChunks } = useCutChunks();
 const tableData = reactive([])
 const showTableData = reactive({
   data: [],
@@ -49,7 +53,7 @@ const readerFile = async (file) => {
   // 如果文件已经上传过，则不再上传
   if (isHave) {
     //ElMessage.warning('文件已上传过')
-    return 
+    return
   }
   tableData.push({
     name,
@@ -70,14 +74,14 @@ const onFileChange = (e) => {
   }
 }
 // 点击上传
-const bigUpload = (fileList) => {
+const bigUpload = ({ chunks, file }) => {
   return new Promise(async (resolve, reject) => {
     try {
       // 分块上传
       const update = (index, e, param) => {
         const percentage = Math.round((e.loaded / e.total) * 100)
       }
-      const chunks = await webWOrkerChunks(file)
+      // const chunks = await webWOrkerChunks(file)
       const res = await concurrentRequest({
         url: '/api/bigFileUpload',
         requestSize: chunks,
@@ -101,6 +105,7 @@ const bigUpload = (fileList) => {
   })
 }
 
+//列表删除
 const handleUpload = async () => {
   try {
     const peddingData = _.filter(tableData, { status: 'pendding' })
@@ -136,6 +141,11 @@ const handleUpload = async () => {
   }
 }
 
+//单行上传
+const handleUploadSigeFile = async (row) => {
+  console.log('handleUploadSigeFile', row)
+  bigUpload(row)
+}
 // 删除
 const handleDelete = (row) => {
   const index = tableData.indexOf(row)
@@ -182,13 +192,17 @@ onMounted(() => {
   })
 })
 
+onMounted(() => {
+  gsap.fromTo(uploadBox.value, { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 3, ease: 'elastic' })
+  gsap.fromTo(tableRef.value, { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 3, ease: 'elastic' })
+})
 const fileSize = computed(() => tableData.reduce((acc, cur) => acc + Number(cur.size), 0).toFixed(2))
 const successNum = computed(() => tableData.filter((item) => item.percentage === 100).length)
 </script>
 
 <template>
   <div class="upload-box h-full w-full">
-    <div ref="uploadBox" class="border hover:cursor-poiner flex flex-col justify-center items-center w-full h-60">
+    <div ref="uploadBox" class="rounded-xl bg-slate-500 shadow-lg hover:cursor-poiner flex flex-col justify-center items-center w-full h-60">
       <p>
         <el-icon><UploadFilled /></el-icon>
       </p>
@@ -207,17 +221,25 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
     </div>
 
     <div class="mt-5">
-      <el-table :data="tableData" height="400">
+     <div ref="tableRef">
+      <el-table  class="rounded-xl shadow-lg hover:cursor-poiner" :data="tableData" height="400">
         <!-- 居中,超出隐藏 -->
         <el-table-column label="文件名" show-overflow-tooltip show prop="name" />
         <el-table-column align="center" show-overflow-tooltip label="类型" prop="type" />
         <el-table-column align="center" label="大小/M" prop="size" />
-        <el-table-column align="center" label="状态" prop="status">
+        <el-table-column align="left" label="状态" prop="status">
           <template #default="scope">
             <el-progress v-if="scope.row.status === statusMap[1]" :percentage="scope.row.percentage"></el-progress>
             <el-button v-else size="small" :type="btnType[scope.row.status]">
               {{ mapAction[scope.row.status] }}
             </el-button>
+            <!-- <span v-if="Number(scope.row.size) > MAX_SIZE">推荐单个上传</span> -->
+            <el-popover v-if="Number(scope.row.file.size) > MAX_SIZE" placement="top-start" title="提示" :width="200" trigger="hover" content=" 文件大小超过2G，推荐单个上传 ">
+              <template #reference>
+                <!-- <el-button @click="handleUploadSigeFile(scope.row)"  size="small" :type="btnType[scope.row.status]"></el-button> -->
+                <el-icon @click="handleUploadSigeFile(scope.row)"><ChatDotRound /></el-icon>
+              </template>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -226,6 +248,7 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
           </template>
         </el-table-column>
       </el-table>
+     </div>
       <div class="flex my-5 text-sm">
         <!-- <div class="p-1 mx-2">文件数量：{{ tableData.length }}个</div> -->
         <div class="p-1 mx-2">已上传：{{ successNum }} / {{ tableData.length }} 个</div>
