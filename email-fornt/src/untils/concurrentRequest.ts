@@ -1,10 +1,10 @@
 import xhrRequest from "./xhrRequest";
-
+import { bigFileUpload } from '@/services/bigFileUpload'
 
 export default function concurrentRequest(
   urls: any,
   maxNum: number,
-  callback: (i: number, e: Event, params: any) => void,
+  callback: any,
 ): Promise<any[]> {
   return new Promise((resolve) => {
     let index = 0; // 记录当前请求的索引
@@ -15,8 +15,21 @@ export default function concurrentRequest(
       const params = urls[index]; // 取出当前请求的文件
       index++; // 取出第一个后需要将索引+1
       try {
-        const res = await xhrRequest(params, (e) => callback(i, e, params));
-        result[i] = res;
+        // callback(i, params, (res: any) => {
+        //   result[i] = res;
+        //   console.log('result[i]',res)
+        // });
+        // const res = await xhrRequest(params, (e) => callback(i, e, params));
+        const res = await bigFileUpload(
+          {
+            index: i,
+            total: urls.length,
+            fileName: callback,
+            file: params.blob,
+          }
+        )
+          result[i] = res;
+
       } catch (error) {
         result[i] = error;
       } finally {

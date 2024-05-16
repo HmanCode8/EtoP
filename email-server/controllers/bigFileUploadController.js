@@ -50,13 +50,13 @@ router.post('/mergeBigFile', verifyTokenMiddleWare, async (req, res) => {
     const { fileName } = req.body
     const uploadPath = './uploads/bigFileUploads/' + req.userInfo.userId
     let files = fs.readdirSync(path.join(process.cwd(), uploadPath))
-    files = files.sort((a, b) => a.split('-')[0] - b.split('-')[0])
+    files = files.sort((a, b) => a.split('_')[0] - b.split('_')[0])
     const writePath = path.join(process.cwd(), `uploads`, `${fileName}`)
     files.forEach((item) => {
         fs.appendFileSync(writePath, fs.readFileSync(path.join(process.cwd(), uploadPath, item)))
         fs.unlinkSync(path.join(process.cwd(), uploadPath, item))
     })
-    res.success({ message: 'mergeBigFile' })
+    res.success({ message: 'File merged successfully.' })
   } catch (err) {
     return res.error({ message: err.message })
   }
