@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import HomeContain from "@/components/Home/HomeContain.vue";
 // import HomeUser from "@/components/Home/HomeUser.vue";
-import WebApi from "@/views/WebApi.vue";
+import WebApi from "@/components/Home/WebApi.vue";
 import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
 import News from "@/components/News/NewList.vue";
-import UpLoad from "@/views/UpLoad.vue";
-import MarkDown from "@/views/Markdowm.vue";
+import UpLoad from "@/components/Home/UpLoad.vue";
+import MarkDown from "@/components/Home/Markdowm.vue";
 import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -138,7 +138,6 @@ onMounted(() => {
         <!-- <HomeUser /> -->
       </div>
     </div>
-    
   </div>
   <div class="email-car-bg-color home-footer py-5 text-center">
     <!-- 行高：1.5rem; -->

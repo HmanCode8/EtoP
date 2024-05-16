@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
+    Carousel: typeof import('./src/components/Home/Carousel.vue')['default']
     Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
     Diolog: typeof import('./src/components/Until/Diolog.vue')['default']
     Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
@@ -24,10 +25,12 @@ declare module 'vue' {
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSlider: typeof import('element-plus/es')['ElSlider']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
     HomeUser: typeof import('./src/components/Home/HomeUser.vue')['default']
+    Markdowm: typeof import('./src/components/Home/Markdowm.vue')['default']
     NewList: typeof import('./src/components/News/NewList.vue')['default']
     Panination: typeof import('./src/components/Until/Panination.vue')['default']
     ReceivedEmail: typeof import('./src/components/Email/ReceivedEmail.vue')['default']
@@ -36,7 +39,9 @@ declare module 'vue' {
     ScrollDiv: typeof import('./src/components/Until/ScrollDiv.vue')['default']
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
     Theme: typeof import('./src/components/Theme/index.vue')['default']
+    UpLoad: typeof import('./src/components/Home/UpLoad.vue')['default']
     UserCenter: typeof import('./src/components/Email/UserCenter.vue')['default']
     WallpaperList: typeof import('./src/components/Wallpaper/WallpaperList.vue')['default']
+    WebApi: typeof import('./src/components/Home/WebApi.vue')['default']
   }
 }

@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Email from "../views/Email.vue";
-import WebApi from "../views/WebApi.vue";
+import WebApi from "../components/Home/WebApi.vue";
 import _ from "lodash";
 
 const routes = [
