@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import { provide } from 'vue';
+import gsap from 'gsap';
+provide('gsap', gsap); // 提供gsap实例给子组件
+</script>
 
 <template>
   <router-view></router-view>

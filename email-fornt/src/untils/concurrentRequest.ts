@@ -1,50 +1,42 @@
 import xhrRequest from "./xhrRequest";
-import { bigFileUpload } from '@/services/bigFileUpload'
 
-export default function concurrentRequest(
-  urls: any,
-  maxNum: number,
-  callback: any,
-): Promise<any[]> {
+export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> {
+  const { url = '', requestSize = [], maxNum = 0, callback = () => { }, fileName = '', type = 'normal' } = xhrRequestParam;
   return new Promise((resolve) => {
     let index = 0; // 记录当前请求的索引
     let result: any = []; // 记录请求结果
     let count = 0; // 记录请求完成的数量
     async function _request() {
       let i = index; // 记录之前的请求的索引
-      const params = urls[index]; // 取出当前请求的文件
+      let params = requestSize[index]; // 取出当前请求的文件
+      params.file = requestSize[index]?.file || requestSize[index]?.blob
       index++; // 取出第一个后需要将索引+1
       try {
-        // callback(i, params, (res: any) => {
-        //   result[i] = res;
-        //   console.log('result[i]',res)
-        // });
-        // const res = await xhrRequest(params, (e) => callback(i, e, params));
-        const res = await bigFileUpload(
-          {
-            index: i,
-            total: urls.length,
-            fileName: callback,
-            file: params.blob,
-          }
-        )
-          result[i] = res;
+        const paramList = type === 'bigUpload' ? {
+          index: i,
+          total: requestSize.length,
+          fileName: fileName,
+          file: params.file,
+        } : params
+        const res = await xhrRequest(url, paramList, (e) => callback(i, e, params));
+
+        result[i] = res;
 
       } catch (error) {
         result[i] = error;
       } finally {
         count++;
         //首先这里肯定是某个请求完成了，无论成功与否，都要继续请求下一个，但是有边界，就是
-        if (index < urls.length) {
+        if (index < requestSize.length) {
           _request();
         }
         // 整体的请求什么时候结束
-        if (count === urls.length) {
+        if (count === requestSize.length) {
           resolve(result);
         }
       }
     }
-    for (let i = 0; i < Math.min(maxNum, urls.length); i++) {
+    for (let i = 0; i < Math.min(maxNum, requestSize.length); i++) {
       _request();
     }
   });

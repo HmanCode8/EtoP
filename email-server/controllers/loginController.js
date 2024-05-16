@@ -44,7 +44,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { username: name, email: em, password: paswod, userId: id },
       SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "3h" }
     );
     // res.json({ token });
     // 如果用户名/邮箱和密码都匹配，则返回登录成功消息和用户信息

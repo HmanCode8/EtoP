@@ -5,11 +5,15 @@ import WebApi from "@/views/WebApi.vue";
 import WallpaperList from "@/components/Wallpaper/WallpaperList.vue";
 import News from "@/components/News/NewList.vue";
 import UpLoad from "@/views/UpLoad.vue";
+import MarkDown from "@/views/Markdowm.vue";
 import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { loginOut } from "@/services/userService";
 import { useUserStore } from "@/store";
+import useTheme from "@/hooks/useTheme.js";
+
+const { currentTheme, toggleTheme } = useTheme();
 
 const navList = reactive([
   {
@@ -36,6 +40,10 @@ const navList = reactive([
     navName: "上传",
     navPath: "/upload",
   },
+  {
+    navName: "编辑器",
+    navPath: "/markdowm",
+  },
 ]);
 // 注入gsap动画库
 // const { gsap } = inject("gsap");
@@ -57,6 +65,8 @@ const handleBack = async () => {
 };
 
 const onNavClick = (path: string) => {
+  // const index = navList.findIndex((item) => item.navPath === path);
+  // toggleTheme(index % 2 !== 0);
   userStore.setNavActive(path);
   if (path === "/email") {
     router.push(path);
@@ -122,11 +132,13 @@ onMounted(() => {
         />
         <News v-if="userStore.navActive === '/news'" />
         <UpLoad v-if="userStore.navActive === '/upload'" />
+        <MarkDown v-if="userStore.navActive === '/markdowm'" />
       </div>
       <div class="c-user ml-10 flex-grow">
         <!-- <HomeUser /> -->
       </div>
     </div>
+    
   </div>
   <div class="email-car-bg-color home-footer py-5 text-center">
     <!-- 行高：1.5rem; -->

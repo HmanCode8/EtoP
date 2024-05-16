@@ -57,5 +57,3 @@ const toggleThemeFn = () => {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 </style>
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'heshiheng'; ALTER USER
-'root'@'localhost' IDENTIFIED BY 'root';

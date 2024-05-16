@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 const uploadBox = ref(null)
 const fileInput = ref(null)
-const maxRequestNum = ref(2)
+const maxRequestNum = ref(6)
 const folderInput = ref(null)
 const uploadStatus = ref('')
 // const { chunks, createChunks } = useCutChunks();
@@ -17,8 +17,20 @@ const showTableData = reactive({
   data: [],
 })
 
-// 三种文件状态，未上传，上传中，已上传
-const statusMap = ['pendding', 'uploading', 'uploaded']
+// 4种文件状态，未上传，上传中，已上传['pendding', 'uploading', 'uploaded', 'failed']
+const statusMap = ['pendding', 'uploading', 'uploaded', 'failed']
+const mapAction = {
+  pendding: '未上传',
+  uploading: '上传中',
+  uploaded: '已上传',
+  failed: '上传失败',
+}
+const btnType = {
+  pendding: '',
+  uploading: 'primary',
+  uploaded: 'success',
+  failed: 'danger',
+}
 
 const handletMulterUploads = async () => {
   const res = await getMulterUploads()
@@ -27,16 +39,17 @@ const handletMulterUploads = async () => {
 handletMulterUploads()
 
 const readerFile = async (file) => {
-  const name = file.name
-  const type = file.type
+  const name = file.name || file.path.split('\\').pop()
+  const type = file.type || file.name.split('.').pop()
   const size = (file.size / 1024 / 1024).toFixed(2)
   const chunks = await webWOrkerChunks(file)
   const hash = await getHash(chunks)
-  const uploaded = _.some(showTableData.data, (item) => item.hash === hash)
-  const uploaded1 = _.some(tableData, (item) => item.hash === hash)
+  const uploaded = _.some(showTableData.data, (item) => item.hash === hash) //服务器上是否已经有
+  const isHave = _.some(tableData, (item) => item.hash === hash) //前端 界面上是否已经有
   // 如果文件已经上传过，则不再上传
-  if (uploaded1) {
-    return ElMessage.warning('文件已上传过')
+  if (isHave) {
+    //ElMessage.warning('文件已上传过')
+    return 
   }
   tableData.push({
     name,
@@ -53,21 +66,39 @@ const onFileChange = (e) => {
   const files = e.target.files
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
-    bigUpload(file)
+    readerFile(file)
   }
 }
 // 点击上传
-const bigUpload = async (file) => {
-  // 分块上传
-  const chunks = await webWOrkerChunks(file)
-  const res = await concurrentRequest(chunks, 3,file.name)
-  console.log('mergeRes', res)
-  if (_.every(res, (item) => item.code === 200)) {
-    const mergeRes = await mergeBigFile({ fileName: file.name })
-    if(mergeRes.code === 200){
-      ElMessage.success('上传成功')
+const bigUpload = (fileList) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // 分块上传
+      const update = (index, e, param) => {
+        const percentage = Math.round((e.loaded / e.total) * 100)
+      }
+      const chunks = await webWOrkerChunks(file)
+      const res = await concurrentRequest({
+        url: '/api/bigFileUpload',
+        requestSize: chunks,
+        maxNum: maxRequestNum.value,
+        fileName: file.name,
+        type: 'bigUpload',
+        callback: update,
+      })
+      console.log('mergeRes', res)
+      if (_.every(res, (item) => item.code === 200)) {
+        const mergeRes = await mergeBigFile({ fileName: file.name })
+        if (mergeRes.code === 200) {
+          resolve(mergeRes)
+        } else {
+          reject(mergeRes)
+        }
+      }
+    } catch (error) {
+      reject(error)
     }
-  }
+  })
 }
 
 const handleUpload = async () => {
@@ -85,12 +116,21 @@ const handleUpload = async () => {
         status: percentage < 100 ? statusMap[1] : statusMap[2],
       }
     }
-    const res = await concurrentRequest(peddingData, maxRequestNum.value, update)
+    const res = await concurrentRequest({
+      url: '/api/multerUploads',
+      requestSize: peddingData,
+      maxNum: maxRequestNum.value,
+      callback: update,
+    })
     if (_.every(res, (item) => item.code === 200)) {
       ElMessage.success('上传成功' + res.length + '个文件')
     }
     console.log('res===', res)
-    handletMulterUploads()
+    const hashs = _.map(res, (r) => r.data.hash)
+    // 上传成功后更新状态
+    tableData.forEach((item) => {
+      item.status = item.status === statusMap[2] ? statusMap[2] : _.includes(hashs, item.hash) ? statusMap[2] : statusMap[3]
+    })
   } catch (error) {
     console.log(error)
   }
@@ -168,15 +208,15 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
 
     <div class="mt-5">
       <el-table :data="tableData" height="400">
-        <!-- 居中 -->
-        <el-table-column label="文件名" prop="name" />
-        <el-table-column align="center" label="类型" prop="type" />
+        <!-- 居中,超出隐藏 -->
+        <el-table-column label="文件名" show-overflow-tooltip show prop="name" />
+        <el-table-column align="center" show-overflow-tooltip label="类型" prop="type" />
         <el-table-column align="center" label="大小/M" prop="size" />
         <el-table-column align="center" label="状态" prop="status">
           <template #default="scope">
             <el-progress v-if="scope.row.status === statusMap[1]" :percentage="scope.row.percentage"></el-progress>
-            <el-button v-else size="small" :type="scope.row.status === statusMap[0] ? '' : 'success'">
-              {{ scope.row.status === statusMap[0] ? '待上传' : '已上传' }}
+            <el-button v-else size="small" :type="btnType[scope.row.status]">
+              {{ mapAction[scope.row.status] }}
             </el-button>
           </template>
         </el-table-column>
@@ -187,9 +227,9 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
         </el-table-column>
       </el-table>
       <div class="flex my-5 text-sm">
-        <div class="p-1 mx-2">文件数量：{{ tableData.length }}</div>
-        <div class="p-1 mx-2">已上传：{{ successNum }} M</div>
-        <div class="p-1 mx-2">总大小：{{ fileSize }}</div>
+        <!-- <div class="p-1 mx-2">文件数量：{{ tableData.length }}个</div> -->
+        <div class="p-1 mx-2">已上传：{{ successNum }} / {{ tableData.length }} 个</div>
+        <div class="p-1 mx-2">总大小：{{ fileSize }}M</div>
       </div>
       <div class="flex items-center w-full">
         <el-button type="primary" class="" @click="handleUpload"> 开始上传 </el-button>
@@ -199,4 +239,3 @@ const successNum = computed(() => tableData.filter((item) => item.percentage ===
 </template>
 
 <style scoped></style>
-@/services/bigFileUpload

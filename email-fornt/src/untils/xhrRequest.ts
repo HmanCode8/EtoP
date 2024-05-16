@@ -2,19 +2,25 @@ import { ElMessage } from "element-plus";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL; // 基础 URL
 const token = localStorage.getItem("token");
-const xrhRequest = (params: any, callback: (e: any) => void) => {
+const xrhRequest = (url:string ,params: any, callback: (e: any) => void) => {
   return new Promise((resolve, reject) => {
     try {
       const xhr = new XMLHttpRequest();
       const formData = new FormData();
+      // 遍历对象，将对象中的数据添加到 formData 中 params 为对象
+      for (const key in params) {
+        if (params.hasOwnProperty(key)) {
+          formData.append(key, params[key]);
+        }
+      }
       // 添加要上传的文件数据
-      formData.append("file", params.file); // fileInput 是文件输入框的引用
+      // formData.append("file", params.file); // fileInput 是文件输入框的引用
       xhr.upload.addEventListener("progress", function (e) {
         if (e.lengthComputable) {
           callback(e);
         }
       });
-      xhr.open("POST", `${BASE_URL}/api/multerUploads`, true);
+      xhr.open("POST", `${BASE_URL}${url}`, true);
       // 添加对 Content-Type 的设置
       // xhr.setRequestHeader("Content-Type", "multipart/form-data");
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
