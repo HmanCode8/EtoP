@@ -19,7 +19,6 @@ const fileInput = ref(null);
 const maxRequestNum = ref(6);
 const folderInput = ref(null);
 const uploadStatus = ref("");
-const uploadTag = ref("");
 const tableData = reactive([]);
 const showTableData = reactive({
   data: [],
@@ -50,10 +49,8 @@ const readerFile = async (file) => {
   const name = file.name || file.path.split("\\").pop();
   const type = file.type || file.name.split(".").pop();
   const size = (file.size / 1024 / 1024).toFixed(2);
-  uploadTag.value = `计算${name}(${type},${size}M)`;
   const chunks = await webWOrkerChunks(file);
   const hash = await getHash(chunks);
-  uploadTag.value = "";
   const uploaded = _.some(showTableData.data, (item) => item.hash === hash); //服务器上是否已经有
   const isHave = _.some(tableData, (item) => item.hash === hash); //前端 界面上是否已经有
   // 如果文件已经上传过，则不再上传
@@ -82,8 +79,6 @@ const onFileChange = (e) => {
 };
 
 const bigUpload = async (file) => {
-  checkChunkData(file);
-
   try {
     const update = (index, e, param) => {
       const percentage = Math.round((e.loaded / e.total) * 100);
@@ -155,12 +150,6 @@ const normalUpload = async (file) => {
     console.log(error);
   }
 };
-const checkChunkData = async (file) => {
-  const res = await checkChunk(file.name);
-  if (res.code === 200) {
-    console.log("checkChunkData", res.data);
-  }
-};
 
 const handleUpload = async () => {
   try {
@@ -170,8 +159,14 @@ const handleUpload = async () => {
     }
 
     for (const file of peddingData) {
-      await bigUpload(file); // 调用大文件上传逻辑
-
+      if (file.file.size > 1 * 1024 * 1024 * 1024) {
+        // 文件大于1GB
+        file.status = statusMap[1]; // 设置状态为“上传中”
+        await bigUpload(file); // 调用大文件上传逻辑
+      } else {
+        // 小文件上传逻辑
+        await normalUpload(file); // 你可以复用已有的并发请求上传逻辑
+      }
     }
 
     ElMessage.success("上传成功");
@@ -263,7 +258,6 @@ const successNum = computed(
       </p>
       <p>将文件拖拽到此处，或点击选择文件</p>
       <p>目前支持任何文件类型，单文件测试通过3G，多文件测试通过10G</p>
-      <p>{{ uploadTag }}</p>
     </div>
 
     <div class="mt-5 text-sm w-full flex">

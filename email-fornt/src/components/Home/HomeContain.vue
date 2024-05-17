@@ -93,7 +93,7 @@ watch(english, () => {
       <div class="article">
         <!-- float-left -->
         <img
-          class="rounded-lg m-3 shadow-xl hover:scale-105 duration-300 h-60 float-left"
+          class="rounded-lg mr-3 mb-3 shadow-xl hover:scale-105 duration-300 h-60 float-left"
           :src="sixNews.banner"
           alt=""
         />
