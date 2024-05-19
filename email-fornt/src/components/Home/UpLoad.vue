@@ -1,16 +1,13 @@
 <script setup>
-import { ref, reactive, onMounted, computed, inject } from "vue";
+import { ref, reactive, onMounted, computed, watch, inject } from "vue";
 import concurrentRequest from "@/untils/concurrentRequest";
 import { webWOrkerChunks, getHash } from "@/hooks/useChunks";
-import {
-  checkChunk,
-  mergeBigFile,
-  getMulterUploads,
-} from "@/services/bigFileUpload";
+import { mergeBigFile, getMulterUploads } from "@/services/bigFileUpload";
 import xhrRequest from "@/untils/xhrRequest";
 import _ from "lodash";
 import { ElMessage } from "element-plus";
 
+//2G的上传限制
 const MAX_SIZE = 2 * 1024 * 1024 * 1024; // 2G
 const gsap = inject("gsap");
 const uploadBox = ref(null);
@@ -69,7 +66,6 @@ const readerFile = async (file) => {
     chunks,
   });
 };
-
 const onFileChange = (e) => {
   const files = e.target.files;
   for (let i = 0; i < files.length; i++) {
@@ -77,44 +73,45 @@ const onFileChange = (e) => {
     readerFile(file);
   }
 };
-
-const bigUpload = async (file) => {
-  try {
-    const update = (index, e, param) => {
-      const percentage = Math.round((e.loaded / e.total) * 100);
-      const k = tableData.findIndex((item) => item.hash === param.hash);
-      tableData[k] = {
-        ...tableData[k],
-        percentage,
-        status: percentage < 100 ? statusMap[1] : statusMap[2],
+// 点击上传
+const bigUpload = ({ chunks, file }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // 分块上传
+      const update = (index, e, param) => {
+        const percentage = Math.round((e.loaded / e.total) * 100);
       };
-    };
-
-    const res = await concurrentRequest({
-      url: "/api/bigFileUpload",
-      requestSize: file.chunks,
-      maxNum: maxRequestNum.value,
-      fileName: file.file.name,
-      type: "bigUpload",
-      callback: update,
-    });
-
-    if (_.every(res, (item) => item.code === 200)) {
-      const mergeRes = await mergeBigFile({ fileName: file.file.name });
-      if (mergeRes.code === 200) {
-        ElMessage.success(`文件 ${file.file.name} 合并成功`);
-      } else {
-        ElMessage.error(`文件 ${file.file.name} 合并失败`);
+      // const chunks = await webWOrkerChunks(file)
+      const res = await concurrentRequest({
+        url: "/api/bigFileUpload",
+        requestSize: chunks,
+        maxNum: maxRequestNum.value,
+        fileName: file.name,
+        type: "bigUpload",
+        callback: update,
+      });
+      console.log("mergeRes", res);
+      if (_.every(res, (item) => item.code === 200)) {
+        const mergeRes = await mergeBigFile({ fileName: file.name });
+        if (mergeRes.code === 200) {
+          resolve(mergeRes);
+        } else {
+          reject(mergeRes);
+        }
       }
+    } catch (error) {
+      reject(error);
     }
-  } catch (error) {
-    ElMessage.error(`文件 ${file.file.name} 上传失败`);
-    console.log(error);
-  }
+  });
 };
 
-const normalUpload = async (file) => {
+//列表删除
+const handleUpload = async () => {
   try {
+    const peddingData = _.filter(tableData, { status: "pendding" });
+    if (peddingData.length === 0) {
+      return alert("没有待上传文件");
+    }
     const update = (index, e, param) => {
       const percentage = Math.round((e.loaded / e.total) * 100);
       const k = tableData.findIndex((item) => item.hash === param.hash);
@@ -124,18 +121,16 @@ const normalUpload = async (file) => {
         status: percentage < 100 ? statusMap[1] : statusMap[2],
       };
     };
-
     const res = await concurrentRequest({
       url: "/api/multerUploads",
-      requestSize: [file],
+      requestSize: peddingData,
       maxNum: maxRequestNum.value,
       callback: update,
     });
-
     if (_.every(res, (item) => item.code === 200)) {
       ElMessage.success("上传成功" + res.length + "个文件");
     }
-
+    console.log("res===", res);
     const hashs = _.map(res, (r) => r.data.hash);
     // 上传成功后更新状态
     tableData.forEach((item) => {
@@ -151,37 +146,12 @@ const normalUpload = async (file) => {
   }
 };
 
-const handleUpload = async () => {
-  try {
-    const peddingData = _.filter(tableData, { status: "pendding" });
-    if (peddingData.length === 0) {
-      return alert("没有待上传文件");
-    }
-
-    for (const file of peddingData) {
-      if (file.file.size > 1 * 1024 * 1024 * 1024) {
-        // 文件大于1GB
-        file.status = statusMap[1]; // 设置状态为“上传中”
-        await bigUpload(file); // 调用大文件上传逻辑
-      } else {
-        // 小文件上传逻辑
-        await normalUpload(file); // 你可以复用已有的并发请求上传逻辑
-      }
-    }
-
-    ElMessage.success("上传成功");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 //单行上传
 const handleUploadSigeFile = async (row) => {
   console.log("handleUploadSigeFile", row);
   bigUpload(row);
 };
-
-//列表删除
+// 删除
 const handleDelete = (row) => {
   const index = tableData.indexOf(row);
   tableData.splice(index, 1);

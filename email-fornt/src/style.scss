@@ -6,6 +6,7 @@
 @import "start";
 @import "themes"; // 如果文件名是 themes.scss
 
+$count: 6; // 定义变量
 // 保留之前定义的全局样式
 html {
   height: auto;

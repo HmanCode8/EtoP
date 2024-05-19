@@ -116,7 +116,7 @@ onMounted(() => {
     class="login-page h-screen flex items-center justify-center"
   >
     <div
-      class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex email-box-shadow overflow-hidden"
+      class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex overflow-hidden"
     >
       <div
         class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
@@ -226,9 +226,10 @@ onMounted(() => {
 }
 .login-modal {
   // background-color: #112d25;
-  background: linear-gradient(90deg, #95cebe, #112d25);
-  color: #fff;
-  box-shadow: 2px 2px 6px #fff, -2px -2px 6px #f9f9f9;
+  background: linear-gradient(90deg, #e9f0ee, #ecf3f1);
+  color: #110f0f;
+  box-shadow: inset -2px -2px 6px #f9f9f9;
+  opacity: 0.8;
 }
 // button {
 //   box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;

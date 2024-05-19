@@ -5,13 +5,13 @@ const config = {
     port: 27017,
     name: "email",
   },
-  saveType:'local', //oss or local
+  saveType: "local", //oss or local
   oss: {
-    region: 'oss-cn-beijing',
-    accessKeyId: 'LTAI5tJ7jsngknwzpkTn8L6Z',
-    accessKeySecret: 'JMhCjwKGeCD8uVErFJ2vMVSRvSXEQu',
-    bucket: 'multerupload'
-  }
+    region: "oss-cn-beijing",
+    accessKeyId: "LTAI5tJ7jsngknwzpkTn8L6Z",
+    accessKeySecret: "JMhCjwKGeCD8uVErFJ2vMVSRvSXEQu",
+    bucket: "multerupload",
+  },
 };
 
 module.exports = config;

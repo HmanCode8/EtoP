@@ -1,6 +1,14 @@
 <script setup lang="ts">
+import { ossUploads } from "@/services/bigFileUpload";
 import { ref, defineProps, reactive } from "vue";
 
+const showTableData = reactive({ data: [] });
+const getoOssUploads = async () => {
+  const res = await ossUploads();
+  console.log(res);
+  showTableData.data = res.data.objects;
+};
+getoOssUploads();
 const carousel = [
   {
     imgUrl:
@@ -35,20 +43,17 @@ count.value++; // 修改 count 的值
 </script>
 
 <template>
-  <div class="carousel-list h-96 w-full relative">
-    <div class="pre absolute left-0 top-10"><</div>
-    <div class="next absolute right-0 top-0">></div>
-    <div
-      class="carousel-item border w-full h-full bg-slate-500 absolute"
-      v-for="(item, index) in carouselList.data"
-      :key="index"
-    >
-      <div class="carousel-item-content">
-        <h2>{{ item.title }}</h2>
-        <p>{{ item.desc }}</p>
-      </div>
-      <img :src="item.imgUrl" alt="" srcset="" />
-    </div>
+  <div class="h-96">
+    <el-carousel autoplay>
+      <el-carousel-item v-for="item in showTableData.data" :key="item">
+        <img
+          class="object-cover w-full h-full"
+          :src="item.url"
+          alt=""
+          srcset=""
+        />
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 

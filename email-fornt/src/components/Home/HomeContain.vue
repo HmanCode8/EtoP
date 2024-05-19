@@ -85,7 +85,7 @@ watch(english, () => {
 </script>
 
 <template>
-  <div class="p-2 my-5 flex">
+  <div class="p-2 flex">
     <div ref="newSixRef" class="homeReleft w-2/3">
       <h2 class="title mb-3 font-bold flex items-center text-lg">
         {{ sixNews.title }}
@@ -119,8 +119,8 @@ watch(english, () => {
     </div>
   </div>
   <!-- <div class="p-2 my-5 flex justify-center items-center" v-else>暂无数据</div> -->
-  <div class="flex">
-    <div ref="englishRef" class="h-96 w-1/3">
+  <div class="flex items-center">
+    <div ref="englishRef" class="w-1/3">
       <h2 class="title mb-3 font-bold flex items-center text-lg">每日英文</h2>
       <!-- <p>{{ english.content }}</p>
     <p>{{ english.note }}</p> -->
@@ -131,7 +131,7 @@ watch(english, () => {
         srcset=""
       />
     </div>
-    <div class="mx-10 mr-auto">
+    <div class="mx-10 h-80 mr-auto w-1/2">
       <h2 class="title mb-3 font-bold flex items-center text-lg">每日英文</h2>
       <Carousel />
     </div>

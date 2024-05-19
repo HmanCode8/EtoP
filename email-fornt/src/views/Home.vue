@@ -115,27 +115,22 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-  <div
-    class="home-content shadow-xl rounded-md clear-both p-5 mx-10 my-20 flex"
-  >
-    <div class="c-main w-calc-width">
-      <HomeContain v-if="userStore.navActive === '/home'" />
-      <WebApi v-if="userStore.navActive === '/webApis'" />
-      <WallpaperList
-        :userStore.navActivekey="userStore.navActive"
-        v-if="
-          userStore.navActive === '/wallpaper' ||
-          userStore.navActive === '/video'
-        "
-      />
-      <News v-if="userStore.navActive === '/news'" />
-      <UpLoad v-if="userStore.navActive === '/upload'" />
-      <MarkDown v-if="userStore.navActive === '/markdowm'" />
-    </div>
-    <!-- <div class="c-user ml-10 flex-grow">
+  <div class="home-content shadow-xl rounded-md p-5 mx-10 my-20">
+    <HomeContain v-if="userStore.navActive === '/home'" />
+    <WebApi v-if="userStore.navActive === '/webApis'" />
+    <WallpaperList
+      :userStore.navActivekey="userStore.navActive"
+      v-if="
+        userStore.navActive === '/wallpaper' || userStore.navActive === '/video'
+      "
+    />
+    <News v-if="userStore.navActive === '/news'" />
+    <UpLoad v-if="userStore.navActive === '/upload'" />
+    <MarkDown v-if="userStore.navActive === '/markdowm'" />
+  </div>
+  <!-- <div class="c-user ml-10 flex-grow">
       <HomeUser />
     </div> -->
-  </div>
   <div
     class="email-car-bg-color shadow-xl rounded-md clear-both p-5 mx-10 my-10 home-footer py-5 text-center"
   >
@@ -173,6 +168,10 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.home-content {
+  // box-shadow: inset 0 0 10px rgba(236, 210, 210, 0.5);
+}
+
 .logo {
   width: 200px;
   height: 40px;

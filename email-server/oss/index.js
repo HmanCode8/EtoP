@@ -1,5 +1,5 @@
-const OSS = require('ali-oss')
-const { oss } = require('../config')
+const OSS = require("ali-oss");
+const { oss } = require("../config");
 
 // 用户key和secret
 // region: 'oss-cn-beijing', //区域
@@ -14,19 +14,31 @@ const { oss } = require('../config')
 //   bucket: 'multerupload'
 // };
 
-const client = new OSS(oss)
+const client = new OSS(oss);
 
 //上传文件
 function uploadFile(file) {
   return new Promise(async (resolve, reject) => {
     try {
-      const result = await client.put(file.originalname, file.buffer)
+      const result = await client.put(file.originalname, file.buffer);
       // const result = await client.put('exampleobject.txt', path.normalize('D:\\localpath\\examplefile.txt'))
-      resolve(result)
+      resolve(result);
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
+  });
+}
+
+//获取文件列表
+async function listObjects() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await client.list();
+      resolve(result);
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
 
 // async function listBuckets() {
@@ -41,4 +53,5 @@ function uploadFile(file) {
 
 module.exports = {
   uploadFile,
-}
+  listObjects,
+};
