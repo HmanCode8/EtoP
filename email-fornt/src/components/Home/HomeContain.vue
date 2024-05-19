@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, inject, watch, nextTick, onMounted } from "vue";
+import { ref, reactive, inject, watch } from "vue";
+import { ossUploads } from "@/services/bigFileUpload";
 import { getApisCateNews } from "@/services/homeService";
 import Carousel from "@/components/Home/Carousel.vue";
 import _ from "lodash";
@@ -10,9 +11,11 @@ interface Message {
   banner: string;
 }
 
+const carouselList = reactive({ data: [] });
 const newSixRef = ref(null);
 const weatherRef = ref(null);
 const englishRef = ref(null);
+const carouselRef = ref(null);
 const sixNews = ref<Message>({ title: "", data: [], time: "", banner: "" });
 const weatherImg = ref("");
 const english = ref("");
@@ -55,6 +58,13 @@ const OneDayEnglish = async () => {
     // weatherImg.value = result.weatherImg
   } catch (error) {}
 };
+const getoOssUploads = async () => {
+  const res = await ossUploads();
+  console.log(res);
+  carouselList.data = res.data.objects;
+};
+
+getoOssUploads();
 handleGetNews();
 handleGetWeather();
 OneDayEnglish();
@@ -80,6 +90,14 @@ watch(english, () => {
     englishRef.value,
     { opacity: 0, y: 200 }, // 初始位置
     { opacity: 1, y: 0, duration: 3, ease: "bounce" } // 动画效果
+  );
+});
+
+watch(carouselList.data, () => {
+  gsap.fromTo(
+    carouselRef.value,
+    { opacity: 0, x: -200 },
+    { opacity: 1, x: 0, duration: 3, ease: "bounce" }
   );
 });
 </script>
@@ -131,9 +149,9 @@ watch(english, () => {
         srcset=""
       />
     </div>
-    <div class="mx-10 h-80 mr-auto w-1/2">
-      <h2 class="title mb-3 font-bold flex items-center text-lg">每日英文</h2>
-      <Carousel />
+    <div ref="carouselRef" class="mx-10 h-full mr-auto w-2/3">
+      <!-- <h2 class="title mb-3 font-bold flex items-center text-lg">每日英文</h2> -->
+      <Carousel :carouselList="carouselList.data" />
     </div>
   </div>
 </template>
