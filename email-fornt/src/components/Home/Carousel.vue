@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
 
-const slideTitle = ref("");
-const props = defineProps({
+const slideTitle = ref<any>("");
+const props = defineProps<any>({
   carouselList: {
     type: Array,
     required: true,

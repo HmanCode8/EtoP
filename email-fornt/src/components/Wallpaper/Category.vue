@@ -91,7 +91,8 @@ watch(categorys, () => {
     // --n: 8;
     --w: 100px;
     --s: calc((100% - 100px * var(--n)) / var(--n) / 2);
-    margin: 10px var(--s);
+    // margin: 10px var(--s);
+    margin: 10px ;
     width: 100px;
     // user-select: none;
     // white-space: nowrap;

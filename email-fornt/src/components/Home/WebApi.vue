@@ -139,11 +139,12 @@ onMounted(() => {
 
 .api-list .api-i,
 .api-i-reverse {
-  --n: $count;
+  // --n: 5;
   --w: 300px;
   --h: 120px;
   --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
-  margin: 10px var(--s);
+  // margin: 10px var(--s);
+  margin: 10px;
   width: var(--w);
   height: var(--h);
   box-shadow: 1px 1px 3px #1d4334;

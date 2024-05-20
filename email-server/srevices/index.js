@@ -9,6 +9,7 @@ const wallpaperController = require("../controllers/wallpaperController");
 const newsController = require("../controllers/newsController");
 const multerUploadController = require("../controllers/multerUploadController");
 const bigFileUploadController = require("../controllers/bigFileUploadController");
+const fruitsController = require("../controllers/fruitsController");
 
 module.exports = {
   emailController,
@@ -21,5 +22,6 @@ module.exports = {
   wallpaperController,
   newsController,
   multerUploadController,
-  bigFileUploadController
+  bigFileUploadController,
+  fruitsController
 };

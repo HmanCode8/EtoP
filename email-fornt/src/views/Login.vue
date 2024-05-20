@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, watchEffect } from "vue";
+import { ref, reactive, onMounted, watchEffect,inject, watch } from "vue";
 import CryptoJS from "crypto-js";
 import { ElMessage } from "element-plus";
 import { register, login } from "@/services/userService";
@@ -12,7 +12,10 @@ import { useUserStore } from "@/store";
 // VITE_LOGIN_PASSWORD = "123"
 const username = import.meta.env.VITE_LOGIN_USER ?? "";
 const password = import.meta.env.VITE_LOGIN_PASSWORD ?? "";
+const gsap = inject("gsap");
 const loginBG = ref(null);
+const loginTipBG = ref(null);
+const mingyan = ref('')
 const userStore = useUserStore();
 const labelPosition = ref("right");
 const router = useRouter();
@@ -86,6 +89,15 @@ const getImg = async () => {
     resolve(data.url);
   });
 };
+const getMingyan = async ()=>{
+  try {
+    const res = await fetch('https://api.vvhan.com/api/ian/rand')
+    const data = await res.text()
+    mingyan.value = data
+  } catch (error) {
+    console.log('error',error)
+  }
+}
 
 const randomLoginImg = async () => {
   let url = "";
@@ -103,10 +115,20 @@ const randomLoginImg = async () => {
     url = await getImg();
   } finally {
     loginBG.value.style.backgroundImage = `url(${url})`;
+    // loginTipBG.value.style.backgroundImage = `url(${url})`;
   }
 };
+
+watch(mingyan,()=>{
+  gsap.fromTo(
+    loginTipBG.value,
+    { opacity: 0, y: 200 }, // 初始位置
+    { opacity: 1, y: 0, duration: 3, ease: 'elastic.out(1, 0.3)' } // 动画效果
+  )
+})
 onMounted(() => {
   randomLoginImg();
+  getMingyan();
 });
 </script>
 
@@ -119,31 +141,13 @@ onMounted(() => {
       class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex overflow-hidden"
     >
       <div
+      
         class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
       >
         <div class="inner-t"></div>
         <div class="inner-b"></div>
-        <div class="l-title">
-          <!-- <div class="login-tip"></div> -->
-
-          <div class="font-bold text-center text-xl">welcome back!</div>
-          <!-- <div class="text-sm text-[#c2c6c9]">选择你喜欢的主题进入</div> -->
-        </div>
-        <div class="l-btn text-white w-full flex justify-center m-10">
-          <!-- <el-button
-            class="shadow-inner rounded-3xl text-sm w-1/2 h-10 text-white"
-            type="primary"
-            @click="onLogin"
-            >SING IN</el-button
-          > -->
-          <!-- <el-switch
-            class="absolute right-0 p-5"
-            @change="toggleThemeFn"
-            :model-value="swithVal"
-            active-text="dark"
-            inactive-text="light"
-          /> -->
-        </div>
+       <div ref="loginTipBG" class="p-4 font-extralight "> {{mingyan}}</div>
+        <!-- <img class="h-full w-full object-cover" :src="mingyan.url" alt="" srcset=""> -->
       </div>
       <div class="m-r w-2/3 flex flex-col justify-center items-center">
         <div class="font-bold text-center text-xl">
@@ -159,16 +163,16 @@ onMounted(() => {
               <input
                 class="email-form-item w-full"
                 v-model="form.username"
-                placeholder="username"
+                placeholder="用户"
               />
-              <div class="prixt emial-prefix">@hsh.com</div>
+              <!-- <div class="prixt emial-prefix">@hsh.com</div> -->
             </div>
             <div class="password flex relative">
               <!-- 可显示可隐藏密码 -->
               <input
                 class="email-form-item w-full"
                 v-model="form.password"
-                placeholder="password"
+                placeholder="密码"
                 :type="isShowPasswork ? 'text' : 'password'"
               />
               <div
@@ -178,27 +182,33 @@ onMounted(() => {
                 }`"
               ></div>
             </div>
-            <div v-if="isRegister" class="confirm-password flex">
+            <div v-if="isRegister" class="confirm-password flex relative">
               <input
                 class="email-form-item w-full"
                 v-model="form.confirmPassword"
-                placeholder="confirmPassword"
-                type="password"
+                placeholder="确认密码"
+                :type="isShowPasswork ? 'text' : 'password'"
               />
+              <div
+                @click="isShowPasswork = !isShowPasswork"
+                :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
+                  isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'
+                }`"
+              ></div>
             </div>
             <div class="flex justify-between pt-4">
               <el-button
                 class="shadow-inner rounded-3xl text-sm w-1/2 h-10"
                 native-type="submit"
                 type="primary"
-                >{{ isRegister ? "SING UP" : "SING IN" }}</el-button
+                >{{ isRegister ? "注册" : "登录" }}</el-button
               >
               <div
                 @click="isRegister = !isRegister"
                 class="switch-form flex hover:cursor-pointer justify-center items-center"
               >
                 <div class="text-sm">
-                  {{ isRegister ? "Login" : "Register" }}
+                  {{ isRegister ? "登录" : "注册" }}
                 </div>
                 <el-icon class="text-lg"> <Right /></el-icon>
               </div>
@@ -244,7 +254,7 @@ onMounted(() => {
   border-radius: 50%;
   background-color: #ecf0f3;
   box-shadow: inset 8px 8px 12px #b8bec7, inset -8px -8px 12px #fff;
-  top: -36%;
+  top: -16%;
   right: -11px;
   transition: 1.25s;
 }
@@ -287,19 +297,7 @@ input {
     ::after {
       width: 100%;
       padding: 0 10px;
-      content: "Go";
     }
-  }
-  ::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    width: 0%;
-    background-color: #dba4f5;
-    transition: all 0.3s ease-in-out;
   }
 }
 </style>

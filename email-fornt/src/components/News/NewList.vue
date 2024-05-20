@@ -4,7 +4,7 @@ import { getApisCateNews } from "@/services/homeService";
 import { newBases } from "@/assets/base64";
 import _ from "lodash";
 
-const gsap = inject("gsap");
+const gsap:any = inject("gsap");
 const hotAllnews = ref<any>([]);
 const handleGetNews = async () => {
   try {
@@ -139,11 +139,12 @@ const openUrl = (url: string) => {
 .new-list {
   font-size: 12px;
   .new-item, .new-item-reverse {
-    --n: 4;
+    // --n: 4;
     --w: 330px;
     --h: 300px;
     --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
-    margin: 10px var(--s);
+    // margin: 10px var(--s);
+    margin: 10px ;
     width: var(--w);
     height: var(--h);
     // transform: translateY(-2px);

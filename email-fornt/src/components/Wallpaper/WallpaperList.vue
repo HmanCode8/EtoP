@@ -8,7 +8,7 @@ import Category from "./Category.vue";
 import Panination from "@/components/Until/Panination.vue";
 // import { useLazyLoad } from "@/hooks/useIntersectionObserver";
 
-const gsap = inject("gsap");
+const gsap:any = inject("gsap");
 const SOURCE_PREFIX = "heshiheng";
 const TARGET_PREFIX = "pixabay";
 const base64 =
@@ -221,7 +221,8 @@ const puts = computed(() => {
     --w: 300px;
     --h: 200px;
     --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
-    margin: 10px var(--s);
+    // margin: 10px var(--s);
+    margin: 10px;
     width: var(--w);
     height: var(--h);
     background-color: rgba(255, 255, 255, 0.08);
