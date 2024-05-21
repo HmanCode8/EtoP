@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, inject, nextTick } from 'vue'
-import { addFruit, getFruits, deleteFruit,updateFruit } from '@/services/fruitsServices'
+import { addFruit, getFruits, deleteFruit, updateFruit } from '@/services/fruitsServices'
 import _ from 'lodash'
 interface FruitItem {
   name: string
@@ -15,7 +15,6 @@ const initialFruits: FruitItem = {
   description: '',
   color: '',
 }
-  
 
 const gsap: any = inject('gsap')
 
@@ -27,7 +26,7 @@ const fTotal = ref(0)
 const fruitRef = ref(null)
 const searchKeyword = ref('')
 const currentPage = ref<number>(1)
-const pageSize = 5
+const pageSize = 8
 
 const filteredFruits = computed(() => {
   // Filter the fruits based on the search keyword
@@ -95,18 +94,53 @@ onMounted(() => {
 
 watch(fruits, () => {
   nextTick(() => {
-    gsap.fromTo(fruitRef.value, { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 1.5, ease: 'bounce' })
+    gsap.fromTo('.item-even', { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 1.5, ease: 'bounce' })
+  })
+  nextTick(() => {
+    gsap.fromTo('.item-odd', { opacity: 0, y: -200 }, { opacity: 1, y: 0, duration: 1.5, ease: 'bounce' })
   })
 })
 </script>
 
 <template>
-  <div class="markdown" ref="fruitRef">
+  <div class="markdown min-h-36">
     <div class="flex justify-between items-center mb-4">
       <a-input-search v-model:value="searchKeyword" placeholder="input search text" style="width: 200px" @search="onSearchFruit" />
-      <div @click="modalType = 'add'; editingFruit = initialFruits; visibleModal = true" class="text-sm text-gray-400 hover:text-gray-600 cursor-pointer">随机新增一个水果</div>
+      <div
+        @click="
+          modalType = 'add';
+          editingFruit = initialFruits;
+          visibleModal = true
+        "
+        class="text-sm text-gray-400 hover:text-gray-600 cursor-pointer"
+      >
+        随机新增一个水果
+      </div>
     </div>
-    <a-list item-layout="horizontal" :data-source="filteredFruits">
+    <div class="list-container min-h-128">
+      <div :class="`item-${index % 2 === 0 ? 'even' : 'odd'} flex  my-1 justify-between items-center  p-2`" v-for="fruit,index in filteredFruits" :key="fruit._id">
+        <div class="flex items-center">
+          <img class="w-8 h-8 rounded-full" :src="fruit.imgUrl || getAvatarUrl(fruit.color)" alt="avatar"></img>
+        <div class="flex flex-col ml-4">
+          <div>{{ fruit.name }}</div>
+          <div class="description text-sm text-gray-400">{{ fruit.description }}</div>
+        </div>
+        </div>
+        <div class="actions">
+          <a-popconfirm title="确认删除？" @confirm="() => handleDeleteFruit(fruit._id)"><span class="hover:text-red-500 cursor-pointer"> 删除</span> </a-popconfirm>
+          <a-icon
+            type="edit"
+            class="hover:text-blue-500 px-4 cursor-pointer"
+            @click="
+              visibleModal = true;
+              editingFruit = fruit;
+              modalType = 'edit'
+            "
+            >编辑</a-icon
+          >
+        </div>
+      </div>
+      <!-- <a-list item-layout="horizontal" :data-source="filteredFruits">
       <template #renderItem="{ item }">
         <a-list-item>
           <a-list-item-meta :description="item.description">
@@ -117,10 +151,7 @@ watch(fruits, () => {
               <a-avatar :src="item.imgUrl||getAvatarUrl(item.color)" />
             </template>
           </a-list-item-meta>
-          <!-- 删除 -->
           <a-popconfirm title="确认删除？" @confirm="() => handleDeleteFruit(item._id)"><span class="hover:text-red-500 cursor-pointer"> 删除</span> </a-popconfirm>
-          <!-- 编辑 -->
-
           <a-icon
             type="edit"
             class="hover:text-blue-500 px-4 cursor-pointer"
@@ -128,8 +159,12 @@ watch(fruits, () => {
           >编辑</a-icon>
         </a-list-item>
       </template>
-    </a-list>
-    <a-pagination v-model:current="currentPage" :total="fTotal" :show-less-items="true" :page-size="pageSize" />
+    </a-list> -->
+    </div>
+    <div class="flex items-center mt-4">
+      <span>共 {{ fTotal }} 个水果</span>
+      <a-pagination v-model:current="currentPage" :total="fTotal" :show-less-items="true" :page-size="pageSize" />
+    </div>
   </div>
   <a-modal v-model:visible="visibleModal" :title="modalType === 'edit' ? '编辑水果' : '新增水果'" width="50%" :footer="null">
     <a-form :model="editingFruit">

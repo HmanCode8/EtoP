@@ -6,7 +6,7 @@ import WallpaperList from '@/components/Wallpaper/WallpaperList.vue'
 import News from '@/components/News/NewList.vue'
 import UpLoad from '@/components/Home/UpLoad.vue'
 import MarkDown from '@/components/Home/Markdowm.vue'
-import { ref,reactive, onMounted, watchEffect } from 'vue'
+import { ref, reactive, onMounted, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { loginOut } from '@/services/userService'
@@ -16,6 +16,7 @@ const navList = reactive([
   {
     navName: '首页',
     navPath: '/home',
+    desc:'flex布局'
   },
   // {
   //   navName: "邮箱",
@@ -24,22 +25,27 @@ const navList = reactive([
   {
     navName: 'api',
     navPath: '/webApis',
+    desc:'封装BFF层数据加工'
   },
   {
     navName: '壁纸',
     navPath: '/wallpaper',
+    desc:'长列表渲染，分页获取数据渲染'
   },
   {
     navName: '今日热点',
     navPath: '/news',
+    desc:'封装BFF层数据加工'
   },
   {
     navName: '上传',
     navPath: '/upload',
+    desc:'大文件分片上传，并发上传'
   },
   {
     navName: '水果列表',
     navPath: '/markdowm',
+    desc:'数据列表的增删改查功能'
   },
 ])
 // 注入gsap动画库
@@ -71,10 +77,8 @@ const onNavClick = (path: string) => {
   }
 }
 
-
-
-watchEffect(()=>{
-  console.log('navRef',navRef.value)
+watchEffect(() => {
+  console.log('navRef', navRef.value)
 })
 onMounted(() => {
   // gsap.to(".nav-items", { rotation: 360, duration: 2, ease: "bounce.out" });
@@ -89,15 +93,17 @@ onMounted(() => {
         <span class="text-sm">blog</span>
       </a>
       <div ref="navRef" class="nav-list flex">
-        <div
-          :class="['nav-item group mx-5 py-3  hover:text-[#9999ff] hover:scale-110 relative  text-center  hover:cursor-pointer', userStore.navActive === item.navPath ? 'active' : '']"
-          @click="onNavClick(item.navPath)"
-          v-for="item in navList"
-          :key="item.navName"
-        >
-          {{ item.navName }}
-          <div :class="`nav-bar w-13 h-0.5 rounded-br-xl rounded-bl-xl scale-0 group-hover:scale-100 ${userStore.navActive === item.navPath ? 'active' : ''}`"></div>
-        </div>
+        <el-popover placement="top-start" :width="200" trigger="hover" :content="`技术凸显：${item.desc}`" v-for="item in navList" :key="item.navName">
+          <template #reference>
+            <div
+              @click="onNavClick(item.navPath)"
+              :class="['nav-item group mx-5 py-3  hover:text-[#9999ff] hover:scale-110 relative  text-center  hover:cursor-pointer', userStore.navActive === item.navPath ? 'active' : '']"
+            >
+              {{ item.navName }}
+              <div :class="`nav-bar w-13 h-0.5 rounded-br-xl rounded-bl-xl scale-0 group-hover:scale-100 ${userStore.navActive === item.navPath ? 'active' : ''}`"></div>
+            </div>
+          </template>
+        </el-popover>
       </div>
     </div>
     <div class="group relative">
