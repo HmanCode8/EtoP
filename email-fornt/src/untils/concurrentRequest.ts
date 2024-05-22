@@ -1,7 +1,16 @@
 import xhrRequest from "./xhrRequest";
 
-export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> {
-  const { url = '', requestSize = [], maxNum = 0, callback = () => { }, fileName = '', type = 'normal' } = xhrRequestParam;
+export default function concurrentRequest(
+  xhrRequestParam: any
+): Promise<any[]> {
+  const {
+    url = "",
+    requestSize = [],
+    maxNum = 0,
+    callback = () => {},
+    fileName = "",
+    type = "normal",
+  } = xhrRequestParam;
   return new Promise((resolve) => {
     let index = 0; // 记录当前请求的索引
     let result: any = []; // 记录请求结果
@@ -9,19 +18,26 @@ export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> 
     async function _request() {
       let i = index; // 记录之前的请求的索引
       let params = requestSize[index]; // 取出当前请求的文件
-      params.file = requestSize[index]?.file || requestSize[index]?.blob
+      params.file = requestSize[index]?.file || requestSize[index]?.blob;
       index++; // 取出第一个后需要将索引+1
       try {
-        const paramList = type === 'bigUpload' ? {
-          index: i,
-          total: requestSize.length,
-          fileName: fileName,
-          file: params.file,
-        } : params
-        const res = await xhrRequest(url, paramList, (e) => callback(i, e, params),type);
+        const paramList =
+          type === "bigUpload"
+            ? {
+                index: i,
+                total: requestSize.length,
+                fileName: fileName,
+                file: params.file,
+              }
+            : params;
+        const res = await xhrRequest(
+          url,
+          paramList,
+          (e) => callback(i, e, params),
+          type
+        );
 
         result[i] = res;
-
       } catch (error) {
         result[i] = error;
       } finally {
@@ -32,7 +48,6 @@ export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> 
         }
         // 整体的请求什么时候结束
         if (count === requestSize.length) {
-          debugger
           resolve(result);
         }
       }

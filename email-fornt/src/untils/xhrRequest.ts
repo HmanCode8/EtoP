@@ -1,14 +1,18 @@
 import { ElMessage } from "element-plus";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL; // 基础 URL
-const token = localStorage.getItem("token");
-const xrhRequest = (url: string, params: any, callback: (e: any) => void, reqType: string) => {
+const xrhRequest = (
+  url: string,
+  params: any,
+  callback: (e: any) => void,
+  reqType: string
+) => {
   return new Promise((resolve, reject) => {
     try {
       const xhr = new XMLHttpRequest();
       const formData = new FormData();
       // 遍历对象，将对象中的数据添加到 formData 中 params 为对象
-      const keys = reqType === 'bigUpload'? params : {file: params.file}
+      const keys = reqType === "bigUpload" ? params : { file: params.file };
       for (const key in keys) {
         if (params.hasOwnProperty(key)) {
           formData.append(key, params[key]);
@@ -23,6 +27,7 @@ const xrhRequest = (url: string, params: any, callback: (e: any) => void, reqTyp
       });
       xhr.open("POST", `${BASE_URL}${url}`, true);
       // 添加对 Content-Type 的设置
+      const token = localStorage.getItem("token");
       // xhr.setRequestHeader("Content-Type", "multipart/form-data");
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
       // 文件hash
