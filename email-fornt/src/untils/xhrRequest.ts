@@ -2,13 +2,14 @@ import { ElMessage } from "element-plus";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL; // 基础 URL
 const token = localStorage.getItem("token");
-const xrhRequest = (url:string ,params: any, callback: (e: any) => void) => {
+const xrhRequest = (url: string, params: any, callback: (e: any) => void, reqType: string) => {
   return new Promise((resolve, reject) => {
     try {
       const xhr = new XMLHttpRequest();
       const formData = new FormData();
       // 遍历对象，将对象中的数据添加到 formData 中 params 为对象
-      for (const key in params) {
+      const keys = reqType === 'bigUpload'? params : {file: params.file}
+      for (const key in keys) {
         if (params.hasOwnProperty(key)) {
           formData.append(key, params[key]);
         }
@@ -28,7 +29,12 @@ const xrhRequest = (url:string ,params: any, callback: (e: any) => void) => {
 
       xhr.setRequestHeader("fileHash", params.hash);
       // 发送表单数据
-      xhr.send(formData);
+      try {
+        xhr.send(formData);
+      } catch (error) {
+        reject(error);
+      }
+
       xhr.onload = function () {
         if (xhr.status === 200) {
           resolve({ ...JSON.parse(xhr.responseText) });

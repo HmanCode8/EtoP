@@ -87,7 +87,7 @@ router.post(
       // 返回文件ID或其他自定义ID供客户端查询状态
       res.success(uploadRecord);
     } catch (err) {
-      return res.error({ message: err.message });
+      return res.error({statusCode: 401, message: "请先登录"});
     }
   }
 );

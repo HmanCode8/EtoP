@@ -91,13 +91,14 @@ const bigUpload = ({ chunks, name, hash, file, size }) => {
         //每一个分块的进度
         let p = 0
         const chunkPercentage = Math.round((e.loaded / e.total) * 100)
-        if (chunkPercentage === 100) {
+        if (chunkPercentage >= 100) {
           p++
         }
         const k = tableData.findIndex((item) => item.hash === hash)
+        const percentage = (p / chunks.length) * 100
         tableData[k] = {
           ...tableData[k],
-          percentage: (p / chunks.length) * 100,
+          percentage,
           status: percentage < 100 ? statusMap[1] : statusMap[2],
         }
       }
@@ -131,38 +132,47 @@ const handleUpload = async () => {
       return alert('没有待上传文件')
     }
     const update = (index, e, param) => {
+      console.log('update', e)
       const percentage = Math.round((e.loaded / e.total) * 100)
       const k = tableData.findIndex((item) => item.hash === param.hash)
       tableData[k] = {
         ...tableData[k],
         percentage,
-        status: percentage < 100 ? statusMap[1] : statusMap[2],
+        status: (percentage < 100 ? statusMap[1] : statusMap[2]) || statusMap[3],
       }
     }
     //希望的是超过MAX_SIZE的文件，单个上传
     let allRes = []
+    let smallRes = []
     const peddingBigData = _.filter(peddingData, (item) => Number(item.file.size) > MAX_SIZE)
     const smallData = _.filter(peddingData, (item) => Number(item.file.size) <= MAX_SIZE)
-    const smallRes = await concurrentRequest({
-      url: '/api/multerUploads',
-      requestSize: smallData,
-      maxNum: maxRequestNum.value,
-      callback: update,
-    })
-    allRes = [...smallRes]
+    // 小文件上传
+    if (!_.isEmpty(peddingBigData)) {
+      smallRes = await concurrentRequest({
+        url: '/api/multerUploads',
+        requestSize: smallData,
+        maxNum: maxRequestNum.value,
+        callback: update,
+      })
+      allRes = [...smallRes]
+    }
+
+    console.log('smallRes', smallRes)
     // 大文件上传
-    for (const item of peddingBigData) {
-      allRes.push(await bigUpload(item))
+    if (!_.isEmpty(peddingBigData)) {
+      for (const item of peddingBigData) {
+        allRes.push(await bigUpload(item))
+      }
     }
-    if (_.every(allRes, (item) => item.code === 200)) {
-      ElMessage.success('上传成功' + allRes.length + '个文件')
-    }
-    const hashs = _.map(allRes, (r) => r.data.hash)
-    // 上传成功后更新状态
+    const successNum = _.filter(allRes, (item) => item.code === 200).length
+    const failedNum = allRes.length - successNum
+    ElMessage.success('上传成功' + successNum + '个文件, 失败 ' + failedNum + '个文件')
+    // const hashs = _.map(allRes, (r) => r.data.hash)
+    // // 上传成功后更新状态
     tableData.forEach((item) => {
-      item.status = item.status === statusMap[2] ? statusMap[2] : _.includes(hashs, item.hash) ? statusMap[2] : statusMap[3]
+      item.status = item.status === statusMap[2] ? statusMap[2] : statusMap[3]
     })
-    console.log('tableData',tableData)
+    console.log('tableData', tableData)
   } catch (error) {
     console.log(error)
   }

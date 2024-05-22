@@ -18,7 +18,7 @@ export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> 
           fileName: fileName,
           file: params.file,
         } : params
-        const res = await xhrRequest(url, paramList, (e) => callback(i, e, params));
+        const res = await xhrRequest(url, paramList, (e) => callback(i, e, params),type);
 
         result[i] = res;
 
@@ -32,6 +32,7 @@ export default function concurrentRequest(xhrRequestParam: any): Promise<any[]> 
         }
         // 整体的请求什么时候结束
         if (count === requestSize.length) {
+          debugger
           resolve(result);
         }
       }
