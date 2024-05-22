@@ -6,7 +6,7 @@ import WallpaperList from '@/components/Wallpaper/WallpaperList.vue'
 import News from '@/components/News/NewList.vue'
 import UpLoad from '@/components/Home/UpLoad.vue'
 import MarkDown from '@/components/Home/Markdowm.vue'
-import { ref, reactive, onMounted, watchEffect } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { loginOut } from '@/services/userService'
@@ -77,9 +77,6 @@ const onNavClick = (path: string) => {
   }
 }
 
-watchEffect(() => {
-  console.log('navRef', navRef.value)
-})
 onMounted(() => {
   // gsap.to(".nav-items", { rotation: 360, duration: 2, ease: "bounce.out" });
 })

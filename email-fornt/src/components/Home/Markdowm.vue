@@ -36,7 +36,6 @@ const filteredFruits = computed(() => {
 
 const onSearchFruit = () => {
   // Perform search logic based on searchKeyword
-  console.log('Searching for fruit: ' + searchKeyword.value)
   currentPage.value = 1 // Reset current page to 1 when performing a new search
 }
 

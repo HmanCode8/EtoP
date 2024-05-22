@@ -60,7 +60,6 @@ const OneDayEnglish = async () => {
 }
 const getoOssUploads = async () => {
   const res = await ossUploads()
-  console.log(res)
   carouselList.data = res.data.objects
 }
 

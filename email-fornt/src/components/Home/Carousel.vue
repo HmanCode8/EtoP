@@ -9,7 +9,6 @@ const props = defineProps<any>({
   },
 });
 const handleSlideChange = (index: number) => {
-  console.log(index);
   slideTitle.value = props.carouselList[index].name;
 };
 </script>
