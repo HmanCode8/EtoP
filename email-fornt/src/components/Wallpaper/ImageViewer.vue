@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRef, watch,PropType } from 'vue'
+import { onMounted, ref, toRef, watch,PropType, watchEffect } from 'vue'
 import _ from 'lodash'
 
 interface ImageItem {
@@ -18,13 +18,25 @@ const timer = ref<any>(null)
 const currentUrl = ref()
 const currentIndex = ref(-1)
 const isPlay = ref(false)
-const urlList = toRef<ImageItem[]>(props.images as ImageItem[])
+const urlList = toRef<ImageItem[]>([])
 const imgView = ref(null)
 const emits = defineEmits(['onClose', 'nextPage'])
-const showImg = (index: number) => {
-  isPlay.value = false
+const showImg = (index: number,play:boolean = false) => {
+  isPlay.value = play
   currentIndex.value = index
 }
+
+watchEffect(() => {
+  if(_.isEmpty(props.images)){
+    urlList.value = []
+    return
+  }
+  urlList.value = props.images as ImageItem[]
+  if(isPlay.value){
+    showImg(currentIndex.value,true)
+  }
+  console.log('props.images',props.images)
+})
 
 const onPreOnchage = () => {
   isPlay.value = false
@@ -133,7 +145,8 @@ const onPlay = () => {
     currentIndex.value++
     if (currentIndex.value > urlList.value.length - 1) {
       emits('nextPage')
-      currentIndex.value = 0
+      currentIndex.value = -1
+      isPlay.value = true
     }
   }, 3000)
 }
@@ -232,7 +245,7 @@ onMounted(() => {
 .image-viewer {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 9999;
 }
 </style>
