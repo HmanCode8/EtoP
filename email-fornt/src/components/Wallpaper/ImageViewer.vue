@@ -2,6 +2,8 @@
 import { onMounted, ref, toRef, watch,PropType, watchEffect } from 'vue'
 import _ from 'lodash'
 
+const DURATION = 4000
+
 interface ImageItem {
   url: string
   defaultUrl: string
@@ -42,15 +44,16 @@ const onPreOnchage = () => {
   isPlay.value = false
   currentIndex.value--
   if (currentIndex.value < 0) {
-    currentIndex.value = urlList.value.length - 1
+    emits('nextPage',-1)
+    currentIndex.value = urlList.value.length
   }
 }
 const onNextOnchage = () => {
   isPlay.value = false
-
   currentIndex.value++
   if (currentIndex.value >= urlList.value.length) {
-    currentIndex.value = 0
+    emits('nextPage',1)
+    currentIndex.value = -1
   }
 }
 
@@ -144,11 +147,11 @@ const onPlay = () => {
   timer.value = setInterval(() => {
     currentIndex.value++
     if (currentIndex.value > urlList.value.length - 1) {
-      emits('nextPage')
+      emits('nextPage',1)
       currentIndex.value = -1
       isPlay.value = true
     }
-  }, 3000)
+  }, DURATION)
 }
 
 const midCurrent = urlList.value.length / 2
