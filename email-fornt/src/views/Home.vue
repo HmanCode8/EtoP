@@ -8,7 +8,7 @@ import UpLoad from '@/components/Home/UpLoad.vue'
 import MarkDown from '@/components/Home/Markdowm.vue'
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage,ElMessageBox } from 'element-plus'
 import { loginOut } from '@/services/userService'
 import { useUserStore } from '@/store'
 
@@ -67,14 +67,28 @@ const handleBack = async () => {
   }
 }
 
-const onNavClick = (path: string) => {
-  // const index = navList.findIndex((item) => item.navPath === path);
-  // toggleTheme(index % 2 !== 0);
+const done = (path: string) => {
   userStore.setNavActive(path)
   if (path === '/email') {
     router.push(path)
+  }
+}
+
+const onNavClick = (path: string) => {
+  // const index = navList.findIndex((item) => item.navPath === path);
+  // toggleTheme(index % 2 !== 0);
+  if(userStore.uploadState === 'uploading'){
+    ElMessageBox.confirm('文件正在上传，是否确认退出?')
+    .then(() => {
+      done(path)
+      userStore.setUploadState('done')
+    })
+    .catch(() => {
+      // catch error
+    })
     return
   }
+  done(path)
 }
 
 onMounted(() => {
@@ -111,10 +125,10 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-  <div class="home-content shadow-xl rounded-md p-5 mx-10 my-20">
+  <div class="home-content  rounded-md p-5 mx-10 my-20">
     <HomeContain v-if="userStore.navActive === '/home'" />
     <WebApi v-if="userStore.navActive === '/webApis'" />
-    <WallpaperList :userStore.navActivekey="userStore.navActive" v-if="userStore.navActive === '/wallpaper' || userStore.navActive === '/video'" />
+    <WallpaperList v-if="userStore.navActive === '/wallpaper'" />
     <News v-if="userStore.navActive === '/news'" />
     <UpLoad v-if="userStore.navActive === '/upload'" />
     <MarkDown v-if="userStore.navActive === '/markdowm'" />

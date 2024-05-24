@@ -102,7 +102,7 @@ watch(wallpaperList, () => {
 const puts = computed(() => {
   return {
     pageTotal: Math.ceil(wallpaperTotal.value / pageSize.value),
-    images: wallpaperList.value.map((w) => w.webformatURL),
+    images: wallpaperList.value.map((w) => ({defaultUrl: w.webformatURL, url: w.largeImageURL})),
   }
 })
 
@@ -113,7 +113,7 @@ const puts = computed(() => {
     <div class="wallpaper-h h-10 border-b"></div>
     <Category @onCategoryClick="handleCategoryClick" />
   </div>
-  <ImageViewer @onClose="() => (dialogVisible = false)" v-if="dialogVisible" :url="imgDetail.largeImageURL" :images="puts.images" />
+  <ImageViewer @onClose="() => (dialogVisible = false)" @nextPage="() => (page = page + 1)" v-if="dialogVisible" :url="imgDetail.largeImageURL" :images="puts.images" />
   <div v-if="wallpaperList.length > 0" class="wallpaper-list relative flex flex-wrap mt-5">
     <div
       :class="`wallpaper-${index % 3 === 0 ? 'item' : 'item-reverse'} group bg-white relative hover:cursor-pointer rounded-lg hover:shadow-lg`"

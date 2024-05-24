@@ -108,7 +108,6 @@ router.get("/multerUploads", verifyTokenMiddleWare, async (req, res) => {
 router.get("/ossUploads", verifyTokenMiddleWare, async (req, res) => {
   try {
     const result = await oss.listObjects();
-    console.log(result, "result");
     res.success(result);
   } catch (err) {
     return res.error({ message: err.message });

@@ -1,159 +1,227 @@
 <script setup lang="ts">
-import { onMounted, ref, toRef, watch } from "vue";
+import { onMounted, ref, toRef, watch,PropType } from 'vue'
+import _ from 'lodash'
+
+interface ImageItem {
+  url: string
+  defaultUrl: string
+}
 const props = defineProps({
   visible: Boolean,
   url: String,
   images: {
-    type: Array,
+    type: Array as PropType<ImageItem[]>,
   },
-});
-
-const currentUrl = toRef(props.url);
-const currentIndex = ref(0);
-const urlList = toRef<any>(props.images);
-const imgView = ref(null);
-const emits = defineEmits(["onClose"]);
+})
+const imgListRef = ref<any>(null)
+const timer = ref<any>(null)
+const currentUrl = ref()
+const currentIndex = ref(-1)
+const isPlay = ref(false)
+const urlList = toRef<ImageItem[]>(props.images as ImageItem[])
+const imgView = ref(null)
+const emits = defineEmits(['onClose', 'nextPage'])
 const showImg = (index: number) => {
-  currentIndex.value = index;
-};
+  isPlay.value = false
+  currentIndex.value = index
+}
 
 const onPreOnchage = () => {
-  currentIndex.value--;
+  isPlay.value = false
+  currentIndex.value--
   if (currentIndex.value < 0) {
-    currentIndex.value = urlList.value.length - 1;
+    currentIndex.value = urlList.value.length - 1
   }
-};
+}
 const onNextOnchage = () => {
-  currentIndex.value++;
+  isPlay.value = false
+
+  currentIndex.value++
   if (currentIndex.value >= urlList.value.length) {
-    currentIndex.value = 0;
+    currentIndex.value = 0
   }
-};
-watch(currentIndex, (index) => {
-  if (index < 0 || index >= urlList.value.length) {
-    return;
-  }
-  currentUrl.value = urlList.value[index];
-});
+}
+
 const onClose = () => {
-  emits("onClose");
-  document.body.style.overflow = "auto";
-};
+  isPlay.value = false
+
+  emits('onClose')
+  document.body.style.overflow = 'auto'
+}
 const zoomIn = () => {
-  const img: any = imgView.value;
-  let currentScale = null;
+  isPlay.value = false
+
+  const img: any = imgView.value
+  let currentScale = null
   try {
-    currentScale = img.style.transform.split("scale(")[1].split(")")[0];
+    currentScale = img.style.transform.split('scale(')[1].split(')')[0]
   } catch (error) {
-    currentScale = 1;
+    currentScale = 1
   }
-  if (Number(currentScale) < 1.6) {
-    img.style.transform = `scale(${currentScale * 1.1})`;
+  if (Number(currentScale) < 1.5) {
+    img.style.transform = `scale(${currentScale * 1.1})`
   }
-};
+}
 const zoomOut = () => {
-  const img: any = imgView.value;
-  let currentScale = null;
+  isPlay.value = false
+
+  const img: any = imgView.value
+  let currentScale = null
   try {
-    currentScale = img.style.transform.split("scale(")[1].split(")")[0];
+    currentScale = img.style.transform.split('scale(')[1].split(')')[0]
   } catch (error) {
-    currentScale = 1;
+    currentScale = 1
   }
   if (Number(currentScale) > 1) {
-    img.style.transform = `scale(${currentScale * 0.9})`;
+    img.style.transform = `scale(${currentScale * 0.9})`
   }
-};
+}
+
+const rotateIn = () => {
+  isPlay.value = false
+
+  const img: any = imgView.value
+  let currentRotate = null
+  try {
+    currentRotate = img.style.transform.split('rotate(')[1].split(')')[0]
+  } catch (error) {
+    currentRotate = '0deg'
+  }
+  img.style.transform = `rotate(${Number(currentRotate.split('deg')[0]) + 90}deg)`
+}
+
+const cleanTranlate = () => {
+  isPlay.value = false
+
+  const img: any = imgView.value
+  img.style.transform = 'none'
+}
+
+const dowLoad = () => {
+  isPlay.value = false
+  const img: any = imgView.value
+  fetch(img.src)
+    .then((response) => response.blob())
+    .then((blob) => {
+      // 创建一个对象URL
+      var url = URL.createObjectURL(blob)
+
+      // 创建一个隐藏的<a>元素
+      var link = document.createElement('a')
+      link.href = url
+      link.download = `downloaded_image.${img.src.split('.').pop()}` // 设置下载的文件名
+
+      // 将<a>元素添加到DOM并触发点击事件
+      document.body.appendChild(link)
+      link.click()
+
+      // 移除<a>元素并释放对象URL
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    })
+    .catch((err) => console.error('Error fetching image', err))
+}
 
 const onPlay = () => {
-  const timeer = setInterval(() => {
-    const index = urlList.value.indexOf(currentUrl.value);
-    if (index < urlList.value.length - 1) {
-      showImg(index + 1);
-    } else {
-      clearInterval(timeer);
+  if (isPlay.value) {
+    isPlay.value = false
+    return
+  }
+  isPlay.value = true
+
+  timer.value = setInterval(() => {
+    currentIndex.value++
+    if (currentIndex.value > urlList.value.length - 1) {
+      emits('nextPage')
+      currentIndex.value = 0
     }
-  }, 3000);
-};
+  }, 3000)
+}
+
+const midCurrent = urlList.value.length / 2
+watch(currentIndex, (index) => {
+  if (index < 0 || index >= urlList.value.length) {
+    return
+  }
+  if (midCurrent < index) {
+    imgListRef.value.scrollTop = (index - midCurrent) * 200
+  } else {
+    imgListRef.value.scrollTop = 0
+  }
+  currentUrl.value = urlList.value[index].url
+})
+
+onMounted(() => {
+  console.log(props.url)
+  const findIndex = _.findIndex(urlList.value, (item) => item.url === props.url)
+  currentIndex.value = findIndex
+})
+
+watch(isPlay, (val) => {
+  if (!val) {
+    clearInterval(timer.value)
+  }
+})
+
 watch(
   () => props.visible,
   (visible) => {
     if (visible) {
-      showImg(0);
+      showImg(0)
     } else {
-      onClose();
+      onClose()
     }
   }
-);
+)
 onMounted(() => {
-  document.body.style.overflow = "hidden";
-});
+  document.body.style.overflow = 'hidden'
+})
 </script>
 
 <template>
   <div class="image-viewer relative h-full">
     <div class="h-full w-full flex flex-col justify-center items-center">
-      <!-- 顺序播放 -->
-      <div>
-        <div
-          @click="onPlay"
-          class="text-white hover:cursor-pointer flex justify-center items-center absolute top-10 left-10"
-        >
-          播放
+      <!-- 工具盒 -->
+      <div class="tools">
+        <div @click="onClose" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[5%] left-10">
+          <el-icon><CircleClose /></el-icon>
         </div>
-      </div>
-      <div
-        @click="onClose"
-        class="rounded-full text-white text-3xl hover:cursor-pointer absolute top-10 right-10"
-      >
-        <el-icon><CircleClose /></el-icon>
-      </div>
-      <div
-        @click.stop="onPreOnchage"
-        class="pre text-white text-3xl hover:cursor-pointer absolute left-10"
-      >
-        <el-icon><ArrowLeftBold /></el-icon>
-      </div>
-      <div
-        @click.stop="onNextOnchage"
-        class="next text-white text-3xl hover:cursor-pointer absolute hover:scale-150 right-10"
-      >
-        <el-icon><ArrowRightBold /></el-icon>
-      </div>
-
-      <div
-        ref="imgView"
-        class="viewer-contain h-96 flex justify-center duration-300 items-center"
-      >
-        <img
-          class="w-full h-full object-cover"
-          :src="currentUrl"
-          alt=""
-          srcset=""
-        />
-      </div>
-
-      <div class="flex mt-1 w-1/3 justify-center items-center">
-        <div @click="zoomIn" class="zoom-out text-3xl hover:cursor-pointer">
+        <div @click="onPlay" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[10%] left-10">
+          <el-icon><VideoPlay v-if="isPlay" /> <VideoPause v-else /></el-icon>
+        </div>
+        <div @click.stop="onPreOnchage" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[15%] left-10">
+          <el-icon><ArrowUpBold /></el-icon>
+        </div>
+        <div @click.stop="onNextOnchage" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[20%] left-10">
+          <el-icon><ArrowDownBold /></el-icon>
+        </div>
+        <div @click.stop="zoomIn" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[25%] left-10">
           <el-icon><ZoomIn /></el-icon>
         </div>
-
-        <div @click="zoomOut" class="zoom-in text-3xl hover:cursor-pointer">
+        <div @click.stop="zoomOut" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[30%] left-10">
           <el-icon><ZoomOut /></el-icon>
         </div>
+        <div @click.stop="rotateIn" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[35%] left-10">
+          <el-icon><RefreshRight /></el-icon>
+        </div>
+        <div @click.stop="dowLoad" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[40%] left-10">
+          <el-icon><Download /></el-icon>
+        </div>
+        <div @click.stop="cleanTranlate" class="text-white text-3xl hover:text-amber-300 hover:cursor-pointer flex justify-center items-center absolute top-[45%] left-10">
+          <el-icon><Refresh /></el-icon>
+        </div>
       </div>
-      <div
-        ref="imgListRef"
-        class="img-list h-full mt-4 absolute bottom-10 right-0"
-      >
+
+      <img ref="imgView" :src="currentUrl" alt="" srcset="" class="viewer-contain shadow-sm rounded-lg h-2/3 w-1/2 flex justify-center duration-300 items-center object-cover" />
+
+      <div ref="imgListRef" class="img-list h-full absolute duration-300 overflow-hidden right-2">
         <div
-          :class="`${
-            url === currentUrl ? 'scale-150 border-2 border-blue-500' : ''
-          }  w-20 h-20 img-item mx-1 hover:cursor-pointer hover:scale-125 duration-300`"
+          :class="`${u.url === currentUrl ? 'scale-110 border-2 border-blue-500' : ''}  w-40 h-20 shadow-sm rounded-lg img-item mx-1 hover:cursor-pointer hover:scale-125 duration-300`"
           @click="showImg(index)"
-          v-for="(url, index) in urlList"
+          v-for="(u, index) in urlList"
           :key="index"
         >
-          <img class="w-full h-full object-cover" :src="url" alt="" srcset="" />
+          <img class="w-full h-full object-cover shadow-sm rounded-lg" :src="u.defaultUrl" alt="" srcset="" />
         </div>
       </div>
     </div>

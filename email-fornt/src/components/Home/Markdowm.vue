@@ -23,7 +23,6 @@ const editingFruit = ref<FruitItem | any>(null)
 const visibleModal = ref(false)
 const modalType = ref('add')
 const fTotal = ref(0)
-const fruitRef = ref(null)
 const searchKeyword = ref('')
 const currentPage = ref<number>(1)
 const pageSize = 8

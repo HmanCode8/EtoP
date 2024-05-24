@@ -103,7 +103,7 @@ async function request(url: string, options: any = {}): Promise<any> {
       });
       setTimeout(() => {
         if (response.status === 302) {
-          location.href = "/login";
+          location.href = "/";
           localStorage.removeItem("token");
         }
       }, 1000);

@@ -12,6 +12,7 @@ declare module 'vue' {
     Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
     Diolog: typeof import('./src/components/Until/Diolog.vue')['default']
     Drafts: typeof import('./src/components/Email/Drafts.vue')['default']
+    ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -23,11 +24,8 @@ declare module 'vue' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    ElSpace: typeof import('element-plus/es')['ElSpace']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTour: typeof import('element-plus/es')['ElTour']
-    ElTourStep: typeof import('element-plus/es')['ElTourStep']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
     HomeUser: typeof import('./src/components/Home/HomeUser.vue')['default']
     ImageViewer: typeof import('./src/components/Wallpaper/ImageViewer.vue')['default']
@@ -44,5 +42,8 @@ declare module 'vue' {
     UserCenter: typeof import('./src/components/Email/UserCenter.vue')['default']
     WallpaperList: typeof import('./src/components/Wallpaper/WallpaperList.vue')['default']
     WebApi: typeof import('./src/components/Home/WebApi.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

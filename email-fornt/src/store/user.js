@@ -4,10 +4,14 @@ import { defineStore } from "pinia";
 export default defineStore("user", {
   state: () => ({
     navActive: "/home",
+    uploadState:''
   }),
   actions: {
     setNavActive(value) {
       this.navActive = value;
     },
+    setUploadState(value) {
+      this.uploadState = value;
+    }
   },
 });
