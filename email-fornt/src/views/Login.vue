@@ -1,11 +1,12 @@
 <script setup>
-import { ref, reactive, onMounted, watchEffect,inject, watch } from "vue";
+import { ref, reactive, onMounted, watchEffect, inject, watch } from "vue";
 import CryptoJS from "crypto-js";
 import { ElMessage } from "element-plus";
-import { register, login } from "@/services/userService";
+import { register, captcha, login } from "@/services/userService";
 import { getRandomLoginImg } from "@/services/wallpaperService";
 import { useRouter } from "vue-router";
 import _ from "lodash";
+import defaultBgImg from "@/assets/images/sky.jpeg";
 import { useUserStore } from "@/store";
 
 // VITE_LOGIN_USER = "my123"
@@ -14,8 +15,9 @@ const username = import.meta.env.VITE_LOGIN_USER ?? "";
 const password = import.meta.env.VITE_LOGIN_PASSWORD ?? "";
 const gsap = inject("gsap");
 const loginBG = ref(null);
+const svgCode = ref("");
 const loginTipBG = ref(null);
-const mingyan = ref('')
+const mingyan = ref("");
 const userStore = useUserStore();
 const labelPosition = ref("right");
 const router = useRouter();
@@ -24,6 +26,7 @@ const isShowPasswork = ref(false);
 const form = reactive({
   username,
   password,
+  code: "",
   confirmPassword: "",
 });
 
@@ -35,6 +38,19 @@ function sha256(message) {
   return hash;
 }
 
+const onCaptcha = async () => {
+  try {
+    const res = await captcha();
+    if (res.code === 200) {
+      console.log(res.data);
+      svgCode.value = res.data;
+    }
+    // img.src = `data:image/png;base64,${captcha}`;
+  } catch (error) {
+    console.log(error);
+  }
+};
+onCaptcha();
 const onRegister = async () => {
   const { username, password, confirmPassword } = form;
   if (password !== confirmPassword) {
@@ -65,11 +81,12 @@ const onRegister = async () => {
 };
 
 const onchageLogin = async () => {
-  const { username, password, confirmPassword } = form;
+  const { username, password, confirmPassword, code } = form;
   const hashedPassword = await sha256(password);
   const res = await login({
     username: username,
     password: hashedPassword,
+    code: code,
   });
   if (res.code === 200) {
     const { email, username } = res.data;
@@ -89,43 +106,36 @@ const getImg = async () => {
     resolve(data.url);
   });
 };
-const getMingyan = async ()=>{
+const getMingyan = async () => {
   try {
-    const res = await fetch('https://api.vvhan.com/api/ian/rand')
-    const data = await res.text()
-    mingyan.value = data
+    const res = await fetch("https://api.vvhan.com/api/ian/rand");
+    const data = await res.text();
+    mingyan.value = data;
   } catch (error) {
-    console.log('error',error)
+    console.log("error", error);
   }
-}
+};
 
 const randomLoginImg = async () => {
   let url = "";
   try {
     const res = await getRandomLoginImg();
-    if (res.code === 200) {
-      url = res.data.url;
-      if (!_.isEmpty(url)) {
-        url = await getImg();
-      }
-    } else {
-      url = await getImg();
-    }
+    url = res.data.url || defaultBgImg;
   } catch (error) {
-    url = await getImg();
+    url = defaultBgImg;
   } finally {
     loginBG.value.style.backgroundImage = `url(${url})`;
     // loginTipBG.value.style.backgroundImage = `url(${url})`;
   }
 };
 
-watch(mingyan,()=>{
+watch(mingyan, () => {
   gsap.fromTo(
     loginTipBG.value,
     { opacity: 0, y: 200 }, // 初始位置
-    { opacity: 1, y: 0, duration: 3, ease: 'elastic.out(1, 0.3)' } // 动画效果
-  )
-})
+    { opacity: 1, y: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
+  );
+});
 onMounted(() => {
   randomLoginImg();
   getMingyan();
@@ -141,12 +151,11 @@ onMounted(() => {
       class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex overflow-hidden"
     >
       <div
-      
         class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
       >
         <div class="inner-t"></div>
         <div class="inner-b"></div>
-       <div ref="loginTipBG" class="p-4 font-extralight "> {{mingyan}}</div>
+        <div ref="loginTipBG" class="p-4 font-extralight">{{ mingyan }}</div>
         <!-- <img class="h-full w-full object-cover" :src="mingyan.url" alt="" srcset=""> -->
       </div>
       <div class="m-r w-2/3 flex flex-col justify-center items-center">
@@ -180,6 +189,18 @@ onMounted(() => {
                 :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
                   isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'
                 }`"
+              ></div>
+            </div>
+            <div class="password flex relative">
+              <input
+                class="email-form-item w-full"
+                v-model="form.code"
+                placeholder="验证码"
+              />
+              <div
+                class="hover:cursor-pointer"
+                v-html="svgCode"
+                @click="onCaptcha"
               ></div>
             </div>
             <div v-if="isRegister" class="confirm-password flex relative">

@@ -1,4 +1,5 @@
 const config = {
+  tokenSecret: "heshiheng",
   port: 3000,
   db: {
     host: "127.0.0.1",
@@ -11,6 +12,11 @@ const config = {
     accessKeyId: "LTAI5tJ7jsngknwzpkTn8L6Z",
     accessKeySecret: "JMhCjwKGeCD8uVErFJ2vMVSRvSXEQu",
     bucket: "multerupload",
+  },
+  redis: {
+    host: "127.0.0.1",
+    port: 6379,
+    redis_secretKey: 0,
   },
 };
 

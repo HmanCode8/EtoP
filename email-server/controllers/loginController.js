@@ -1,19 +1,57 @@
 const express = require("express");
+const svgCaptcha = require("svg-captcha");
 const router = express.Router();
 const Register = require("../models/register");
 const LoginCount = require("../models/loginCount");
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../constants/config");
+const Redis = require("ioredis");
+const {
+  tokenSecret,
+  redis: { host: redisHost, port: redisPort },
+} = require("../config");
 // 用户名正则表达式
 const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/;
 
 // 邮箱正则表达式
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+// Redis 客户端
+const redisClient = new Redis({
+  host: redisHost,
+  port: redisPort,
+});
+
+// 验证码验证函数
+function verifyCode(req, res, next) {
+  // 从请求中获取验证码
+  const { code } = req.body;
+  const captchaKey = `captcha_${req.sessionID}`;
+  // 从 Redis 中获取保存的验证码
+  redisClient.get(captchaKey, (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else if (!data) {
+      res.status(401).send({
+        code: 401,
+        message: "验证码已过期",
+      });
+    } else if (data.toUpperCase() !== code.toUpperCase()) {
+      res.status(401).send({
+        code: 401,
+        message: "验证码不正确",
+      });
+    } else {
+      // 验证通过，调用 next 函数继续执行后续代码
+      next();
+    }
+  });
+}
+
 // 密码正则表达式
 // 包含特殊字符、数字和字母的密码正则表达式（长度6到20个字符）
 const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*\W)(?!.*\s).{6,20}$/;
-router.post("/login", async (req, res) => {
+router.post("/login", verifyCode, async (req, res) => {
   try {
     // 从请求体中获取用户提供的信息
     const { username, password } = req.body;
@@ -43,7 +81,7 @@ router.post("/login", async (req, res) => {
     // 用户验证成功，生成 Token
     const token = jwt.sign(
       { username: name, email: em, password: paswod, userId: id },
-      SECRET_KEY,
+      tokenSecret,
       { expiresIn: "3h" }
     );
     // res.json({ token });
@@ -87,6 +125,26 @@ router.post("/logout", (req, res) => {
   // res.redirect("http://localhost:5173/#/login");
   // 返回登出成功的响应
   res.success({ data: {} }, "登出成功");
+});
+
+// 图片验证码路由
+router.get("/captcha", (req, res) => {
+  const captcha = svgCaptcha.create({
+    size: 4, // 验证码长度
+    ignoreChars: "0oO1iIlL", // 排除相似字符
+    noise: 2, // 干扰线数量
+    color: true, // 随机颜色
+    background: "#f0f0f0", // 背景颜色
+  });
+
+  // 将验证码文本存储在Redis中，并设置过期时间（例如5分钟）
+  const captchaText = captcha.text;
+  const captchaKey = `captcha_${req.sessionID}`;
+  redisClient.setex(captchaKey, 60, captchaText);
+
+  // 返回验证码图片
+  res.type("svg");
+  res.success(captcha.data);
 });
 
 module.exports = router;

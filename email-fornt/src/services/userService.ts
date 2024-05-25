@@ -22,6 +22,9 @@ const register = (params: Register) => {
 const login = (params: Register) => {
   return request.post("/api/login", params);
 };
+const captcha = () => {
+  return request.get("/api/captcha");
+};
 /**
  * 登出
  * @param params
@@ -58,4 +61,12 @@ const getAvatar = () => {
   return request.get("/api/getAvatar");
 };
 
-export { register, login, loginsum, loginOut, uploadAvatar, getAvatar };
+export {
+  register,
+  login,
+  captcha,
+  loginsum,
+  loginOut,
+  uploadAvatar,
+  getAvatar,
+};
