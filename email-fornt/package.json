@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@bytemd/vue-next": "^1.21.0",
+    "aieditor": "^1.0.3",
     "ant-design-vue": "^4.2.1",
     "crypto-js": "^4.2.0",
     "echarts": "^5.5.0",

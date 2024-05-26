@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AiEditor: typeof import('./src/components/Home/AiEditor.vue')['default']
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
     Carousel: typeof import('./src/components/Home/Carousel.vue')['default']
     Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
@@ -24,11 +25,8 @@ declare module 'vue' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    ElSpace: typeof import('element-plus/es')['ElSpace']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTour: typeof import('element-plus/es')['ElTour']
-    ElTourStep: typeof import('element-plus/es')['ElTourStep']
     HomeContain: typeof import('./src/components/Home/HomeContain.vue')['default']
     HomeUser: typeof import('./src/components/Home/HomeUser.vue')['default']
     ImageViewer: typeof import('./src/components/Wallpaper/ImageViewer.vue')['default']

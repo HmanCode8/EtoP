@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref,watch,inject,nextTick } from "vue";
+import { ref, watch, inject, nextTick } from "vue";
 import { getApisCateNews } from "@/services/homeService";
 import { newBases } from "@/assets/base64";
 import _ from "lodash";
 
-const gsap:any = inject("gsap");
+const gsap: any = inject("gsap");
 const hotAllnews = ref<any>([]);
 const handleGetNews = async () => {
   try {
@@ -37,10 +37,18 @@ handleGetNews();
 
 watch(hotAllnews, () => {
   nextTick(() => {
-    gsap.fromTo('.new-item', { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 3, ease: 'bounce' })
-    gsap.fromTo('.new-item-reverse', { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 3, ease: 'back' })
-  })
-})
+    gsap.fromTo(
+      ".new-item",
+      { opacity: 0, x: 200 },
+      { opacity: 1, x: 0, duration: 3, ease: "bounce" }
+    );
+    gsap.fromTo(
+      ".new-item-reverse",
+      { opacity: 0, y: 200 },
+      { opacity: 1, y: 0, duration: 3, ease: "back" }
+    );
+  });
+});
 
 const openUrl = (url: string) => {
   window.open(url, "_blank", "width=800,height=600,toolbar=no,location=no");
@@ -55,10 +63,15 @@ const openUrl = (url: string) => {
   >
     今日热点
   </div>
-  <div v-if="hotAllnews.length > 0" class="new-list text-sm flex flex-wrap">
+  <div
+    v-if="hotAllnews.length > 0"
+    class="new-list text-sm flex justify-between flex-wrap"
+  >
     <div
-      :class="`new-${ index % 3 === 0? 'item' : 'item-reverse' } flex flex-col email-car-bg-color rounded-md items-center`"
-      v-for="item,index in hotAllnews"
+      :class="`new-${
+        index % 3 === 0 ? 'item' : 'item-reverse'
+      } flex flex-col email-car-bg-color rounded-md items-center`"
+      v-for="(item, index) in hotAllnews"
       :key="item.name"
     >
       <div
@@ -138,13 +151,14 @@ const openUrl = (url: string) => {
 
 .new-list {
   font-size: 12px;
-  .new-item, .new-item-reverse {
+  .new-item,
+  .new-item-reverse {
     // --n: 4;
     --w: 330px;
     --h: 300px;
     --s: calc((100% - var(--w) * var(--n)) / var(--n) / 2);
     // margin: 10px var(--s);
-    margin: 10px ;
+    margin: 10px;
     width: var(--w);
     height: var(--h);
     // transform: translateY(-2px);

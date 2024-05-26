@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getWebApis, insertWebApis } from "@/services/webApiService";
 import { ElMessageBox } from "element-plus";
-import { ref, watch, inject, onMounted, nextTick } from "vue";
+import { ref, watch, inject, onMounted, nextTick, computed } from "vue";
 import _ from "lodash";
 
 interface Api {
@@ -14,7 +14,6 @@ interface Api {
 const gsap: any = inject("gsap");
 const apiItemList = ref<HTMLDivElement>();
 const webApis = ref<Api[]>([]);
-const filterApis = ref<Api[]>([]);
 const newWindow = ref<Window>();
 const searchVal = ref<string>("");
 // 调用接口获取数据
@@ -65,13 +64,16 @@ const openUrl = (router: string) => {
     "width=800,height=600,toolbar=no,location=no"
   ) as any;
 };
-const apis = webApis.value;
-watch(searchVal, (val) => {
-  filterApis.value = _.isEmpty(val)
-    ? apis
-    : _.filter(apis, (i) => _.includes(i.name, val));
-});
-
+// watch(searchVal, (val) => {
+//   filterApis.value = _.isEmpty(val)
+//     ? apis
+//     : _.filter(apis, (i) => _.includes(i.name, val));
+// });
+const filterApis = computed(() =>
+  _.filter(webApis.value, (i) =>
+    _.includes(i.name.toLocaleLowerCase(), searchVal.value.toLocaleLowerCase())
+  )
+);
 watch(webApis, () => {
   nextTick(() => {
     gsap.fromTo(
@@ -118,7 +120,7 @@ onMounted(() => {
         :class="`${
           index % 3 === 0 ? 'api-i' : 'api-i-reverse'
         } p-3 text-sm relative flex flex-col hover:cursor-pointer rounded-lg shadow-xl`"
-        v-for="(api, index) in webApis"
+        v-for="(api, index) in filterApis"
         :key="api.Id"
       >
         <div class="api-contain flex items-center h-10">

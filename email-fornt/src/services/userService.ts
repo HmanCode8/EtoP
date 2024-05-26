@@ -60,6 +60,14 @@ const uploadAvatar = (params: Register) => {
 const getAvatar = () => {
   return request.get("/api/getAvatar");
 };
+/**
+ * 获取头像
+ * @param params
+ * @returns
+ */
+const sendMessageToAi = () => {
+  return request.post("/api/sendMessageToAi");
+};
 
 export {
   register,
@@ -69,4 +77,5 @@ export {
   loginOut,
   uploadAvatar,
   getAvatar,
+  sendMessageToAi,
 };

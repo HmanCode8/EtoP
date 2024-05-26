@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted, watchEffect, inject, watch } from "vue";
 import CryptoJS from "crypto-js";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 import { register, captcha, login } from "@/services/userService";
 import { getRandomLoginImg } from "@/services/wallpaperService";
 import { useRouter } from "vue-router";
@@ -23,6 +23,7 @@ const labelPosition = ref("right");
 const router = useRouter();
 const isRegister = ref(false);
 const isShowPasswork = ref(false);
+const isShowConfirmPassword = ref(false);
 const form = reactive({
   username,
   password,
@@ -42,7 +43,6 @@ const onCaptcha = async () => {
   try {
     const res = await captcha();
     if (res.code === 200) {
-      console.log(res.data);
       svgCode.value = res.data;
     }
     // img.src = `data:image/png;base64,${captcha}`;
@@ -51,12 +51,24 @@ const onCaptcha = async () => {
   }
 };
 onCaptcha();
+
+const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/;
+
 const onRegister = async () => {
   const { username, password, confirmPassword } = form;
+
+  if (passwordRegex.test(password) === false) {
+    ElNotification({
+      title: "提示",
+      message: "密码必须包含数字、大小写字母且长度在6-20之间",
+      type: "warning",
+    });
+    return;
+  }
   if (password !== confirmPassword) {
     ElMessage({
       message: "密码与确认密码不一致",
-      type: "error",
+      type: "warning",
     });
     return;
   }
@@ -72,6 +84,7 @@ const onRegister = async () => {
       message: "注册成功",
       type: "success",
     });
+    isRegister.value = false;
   } else {
     ElMessage({
       message: "注册失败",
@@ -136,9 +149,33 @@ watch(mingyan, () => {
     { opacity: 1, y: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
   );
 });
+
+watch(isRegister, (val) => {
+  if (val) {
+    gsap.fromTo(
+      ".m-r",
+      { opacity: 0, x: 200 }, // 初始位置
+      { opacity: 0.8, x: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
+    );
+  } else {
+    gsap.fromTo(
+      ".m-r",
+      { opacity: 0, x: -200 }, // 初始位置
+      { opacity: 0.8, x: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
+    );
+  }
+});
 onMounted(() => {
   randomLoginImg();
   getMingyan();
+});
+
+onMounted(() => {
+  gsap.fromTo(
+    ".m-r",
+    { opacity: 0, y: 200 }, // 初始位置
+    { opacity: 0.8, y: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
+  );
 });
 </script>
 
@@ -191,7 +228,7 @@ onMounted(() => {
                 }`"
               ></div>
             </div>
-            <div class="password flex relative">
+            <div class="password flex relative" v-if="!isRegister">
               <input
                 class="email-form-item w-full"
                 v-model="form.code"
@@ -208,12 +245,12 @@ onMounted(() => {
                 class="email-form-item w-full"
                 v-model="form.confirmPassword"
                 placeholder="确认密码"
-                :type="isShowPasswork ? 'text' : 'password'"
+                :type="isShowConfirmPassword ? 'text' : 'password'"
               />
               <div
-                @click="isShowPasswork = !isShowPasswork"
+                @click="isShowConfirmPassword = !isShowConfirmPassword"
                 :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
-                  isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'
+                  isShowConfirmPassword ? 'ishowpasswork' : 'isnohowpasswork'
                 }`"
               ></div>
             </div>
@@ -268,6 +305,15 @@ onMounted(() => {
 .m-l {
   position: relative;
 }
+// .m-r {
+//   position: relative;
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     background-color: rgba(0, 0, 0, 0.5);
+//   }
+// }
 .inner-t {
   position: absolute;
   width: 150px;

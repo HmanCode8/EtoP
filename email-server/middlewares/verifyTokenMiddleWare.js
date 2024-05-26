@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../constants/config");
+const { tokenSecret } = require("../config");
 
 function verifyToken(req, res, next) {
   const token = req.headers.authorization;
@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
   // 匹配 JWT Token 的正则表达式
   // const jwtRegex = /Bearer\s(.+)\./;
   const jwtToken = token.split(" ")[1];
-  jwt.verify(jwtToken, SECRET_KEY, (err, decoded) => {
+  jwt.verify(jwtToken, tokenSecret, (err, decoded) => {
     if (err) {
       return res
         .status(302)

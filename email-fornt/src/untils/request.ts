@@ -97,7 +97,7 @@ async function request(url: string, options: any = {}): Promise<any> {
 
     if (!response.ok) {
       ElNotification({
-        title: "Error",
+        title: "提示",
         message: "" + data.message || response.statusText + "",
         type: "warning",
       });
