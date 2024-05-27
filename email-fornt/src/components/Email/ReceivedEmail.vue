@@ -40,6 +40,7 @@ const handleChooseEmailId = async (id) => {
   }
 };
 const computers = computed(() => {
+  console.log(_.find(messages.value, { _id: emailId.value }));
   return {
     emailContent: _.find(messages.value, { _id: emailId.value }) || {},
     msgDate: (date, format) => {

@@ -121,6 +121,8 @@ const editRoot = () => {
 
   function highlightCode() {
     const highlighted = hljs.highlightAuto(code.value).value;
+    console.log(highlighted, "code");
+
     highlightedCode.value = highlighted;
   }
 

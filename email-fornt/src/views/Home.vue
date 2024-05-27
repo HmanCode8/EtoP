@@ -151,7 +151,7 @@ onMounted(() => {
       </ul>
     </div>
   </div>
-  <div class="home-content rounded-md p-5 mx-10 my-20">
+  <div class="home-content rounded-md mx-5 my-20">
     <HomeContain v-if="userStore.navActive === '/home'" />
     <WebApi v-if="userStore.navActive === '/webApis'" />
     <WallpaperList v-if="userStore.navActive === '/wallpaper'" />
