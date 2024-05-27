@@ -3,8 +3,9 @@ import { ref } from "vue";
 const starts = document.querySelectorAll(".start");
 
 //持久化存储主题
-const theme = localStorage.getItem("theme") || "dark";
+let theme = localStorage.getItem("theme") || "dark";
 document.documentElement.dataset.theme = theme;
+const currentTheme = ref(theme);
 
 const chromeTheme = (newTheme) => {
   const transition = document.startViewTransition((e) => {
@@ -31,6 +32,7 @@ const ortherTheme = (newTheme) => {
 
 // 切换主题
 const toggleTheme = (status = false) => {
+  console.log(status)
   const newTheme = status ? "dark" : "light";
   // if (newTheme === "light") {
   //   starts.forEach((item) => {
@@ -42,18 +44,16 @@ const toggleTheme = (status = false) => {
   //   });
   // }
   localStorage.setItem("theme", newTheme);
+  currentTheme.value = newTheme;
+
   if (navigator.userAgent.includes("Chrome")) {
     chromeTheme(newTheme);
   } else {
     ortherTheme(newTheme);
   }
-  // theme.value = newTheme;
 };
 
-export default function useTheme() {
-  const currentTheme = ref(theme);
-  return {
-    currentTheme,
-    toggleTheme,
-  };
+export  {
+  currentTheme,
+  toggleTheme,
 }
