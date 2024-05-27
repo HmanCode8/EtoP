@@ -2,7 +2,8 @@
 import { AiEditor } from 'aieditor'
 import 'aieditor/dist/style.css'
 import { onMounted, onUnmounted, ref} from 'vue'
-
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
 
 
 const divRef = ref()
