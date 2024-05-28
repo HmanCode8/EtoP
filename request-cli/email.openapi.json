@@ -1,0 +1,122 @@
+{
+  "getUser": {
+    "url": "/user",
+    "method": "POST",
+    "description": "Create a new user",
+    "body": {
+      "type": "object",
+      "properties": {
+        "name313": {
+          "type": "string",
+          "description": "Name of the user"
+        },
+        "email313": {
+          "type": "string",
+          "description": "Email of the user"
+        },
+        "password3131": {
+          "type": "string",
+          "description": "Password of the user"
+        }
+      },
+      "required": ["name", "email", "password"]
+    }
+  },
+  "updateUser": {
+    "url": "/user",
+    "method": "PUT",
+    "description": "Update an existing user",
+    "body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user"
+        }
+      },
+      "required": ["name", "email", "password"]
+    }
+  },
+  "deleteUser": {
+    "url": "/user",
+    "method": "DELETE",
+    "description": "Delete an existing user",
+    "body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user"
+        }
+      },
+      "required": ["name", "email", "password"]
+    }
+  },
+  "getUsers": {
+    "url": "/users",
+    "method": "GET",
+    "description": "Get all users",
+    "body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user"
+        }
+      },
+      "required": ["name", "email", "password"]
+    }
+  },
+  "sendEmail": {
+    "url": "/email",
+    "method": "POST",
+    "description": "Send an email",
+    "body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of the user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user"
+        }
+      },
+      "required": ["name", "email", "password"]
+    }
+  },
+  "getEmails": {
+    "url": "/emails11",
+    "method": "GET",
+    "description": "Get all emails"
+  }
+}

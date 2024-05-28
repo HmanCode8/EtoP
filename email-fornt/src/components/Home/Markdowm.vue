@@ -112,7 +112,7 @@ watch(fruits, () => {
         "
         class="text-sm text-gray-400 hover:text-gray-600 cursor-pointer"
       >
-        随机新增一个水果
+        新增
       </div>
     </div>
     <div class="list-container min-h-128">
@@ -160,11 +160,11 @@ watch(fruits, () => {
     </a-list> -->
     </div>
     <div class="flex items-center mt-4">
-      <span>共 {{ fTotal }} 个水果</span>
+      <span>共 {{ fTotal }} 个</span>
       <a-pagination v-model:current="currentPage" :total="fTotal" :show-less-items="true" :page-size="pageSize" />
     </div>
   </div>
-  <a-modal v-model:visible="visibleModal" :title="modalType === 'edit' ? '编辑水果' : '新增水果'" width="50%" :footer="null">
+  <a-modal v-model:visible="visibleModal" :title="modalType === 'edit' ? '编辑' : '新增'" width="50%" :footer="null">
     <a-form :model="editingFruit">
       <a-form-item label="名称">
         <a-input v-model:value="editingFruit.name" />

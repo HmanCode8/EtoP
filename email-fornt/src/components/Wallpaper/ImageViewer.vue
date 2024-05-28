@@ -37,7 +37,6 @@ watchEffect(() => {
   if (isPlay.value) {
     showImg(currentIndex.value, true);
   }
-  console.log("props.images", props.images);
 });
 
 const onPreOnchage = () => {
@@ -170,7 +169,6 @@ watch(currentIndex, (index) => {
 });
 
 onMounted(() => {
-  console.log(props.url);
   const findIndex = _.findIndex(
     urlList.value,
     (item) => item.url === props.url

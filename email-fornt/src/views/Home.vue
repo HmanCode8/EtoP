@@ -44,7 +44,7 @@ const navList = reactive([
     desc: "大文件分片上传，并发上传",
   },
   {
-    navName: "水果列表",
+    navName: "数据列表",
     navPath: "/markdowm",
     desc: "数据列表的增删改查功能",
   },
