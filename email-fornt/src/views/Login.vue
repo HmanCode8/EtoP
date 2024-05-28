@@ -367,4 +367,14 @@ input {
     }
   }
 }
+input {
+  transition: all 0.3s ease-in-out;
+  &:focus {
+    // color: #b8bec7;
+    border-bottom: 2px solid darkcyan;
+
+    /* 在输入框获取焦点时应用的样式 */
+    outline: transparent; /* 举例：添加蓝色的边框 */
+  }
+}
 </style>

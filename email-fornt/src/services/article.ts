@@ -13,4 +13,13 @@ const getArticleList = () => {
   return request.get("/api/getArticleList");
 };
 
-export { saveArticle, getArticleList };
+/**
+ * eidtor 发送消息给ai
+ * @param params
+ * @returns
+ */
+const sendMessageToAi = (params:any) => {
+  return request.post("/api/sendMessageToAi",params);
+};
+
+export { saveArticle, getArticleList,sendMessageToAi };
