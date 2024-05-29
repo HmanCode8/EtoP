@@ -124,6 +124,7 @@ const onAddPhone = async () => {
     phone: form.phone,
     code: form.phoneCode,
     userId: loginUserId.value,
+    username: form.username,
     codeType: "sms",
   });
   if (res.code === 200) {

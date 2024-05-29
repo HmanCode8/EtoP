@@ -6935,3 +6935,43 @@
 2024-05-29T14:11:50.287Z - GET-/randomLoginImg - 200 - Success - ""
 2024-05-29T14:11:52.041Z - GET-/randomLoginImg - 500 - 获取随机图片失败，请稍后重试 - {"message":"connect ETIMEDOUT 129.154.218.95:443","name":"Error","stack":"Error: connect ETIMEDOUT 129.154.218.95:443\n    at AxiosError.from (/Users/heshiheng/Desktop/project/email/email-server/node_modules/axios/dist/node/axios.cjs:836:14)\n    at RedirectableRequest.handleRequestError (/Users/heshiheng/Desktop/project/email/email-server/node_modules/axios/dist/node/axios.cjs:3086:25)\n    at RedirectableRequest.emit (node:events:513:28)\n    at eventHandlers.<computed> (/Users/heshiheng/Desktop/project/email/email-server/node_modules/follow-redirects/index.js:38:24)\n    at ClientRequest.emit (node:events:513:28)\n    at TLSSocket.socketErrorListener (node:_http_client:490:9)\n    at TLSSocket.emit (node:events:513:28)\n    at emitErrorNT (node:internal/streams/destroy:151:8)\n    at emitErrorCloseNT (node:internal/streams/destroy:116:3)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)\n    at Axios.request (/Users/heshiheng/Desktop/project/email/email-server/node_modules/axios/dist/node/axios.cjs:3876:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async /Users/heshiheng/Desktop/project/email/email-server/controllers/wallpaperController.js:85:22","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{},"headers":{"Accept":"application/json, text/plain, */*","User-Agent":"axios/1.6.8","Accept-Encoding":"gzip, compress, deflate, br"},"method":"get","url":"https://api.vvhan.com/api/wallpaper/views?type=json"},"code":"ETIMEDOUT","status":null}
 2024-05-29T14:12:00.920Z - POST-/sendSmsCode - 200 - Success - ""
+2024-05-29T14:14:01.552Z - GET-/captcha - 200 - Success - ""
+2024-05-29T14:14:07.412Z - GET-/randomLoginImg - 200 - Success - ""
+2024-05-29T14:37:32.565Z - POST-/login - 500 - 手机号格式不正确 - null
+2024-05-29T14:37:36.320Z - POST-/login - 500 - 手机号格式不正确 - null
+2024-05-29T14:38:09.196Z - POST-/login - 500 - 手机号格式不正确 - null
+2024-05-29T14:39:03.337Z - GET-/captcha - 200 - Success - ""
+2024-05-29T14:39:12.444Z - POST-/login - 200 - 登录成功 - ""
+2024-05-29T14:39:40.537Z - POST-/sendSmsCode - 500 - 验证码发送失败 - null
+2024-05-29T14:40:33.568Z - POST-/sendSmsCode - 500 - 验证码发送失败 - null
+2024-05-29T14:41:10.554Z - POST-/sendSmsCode - 500 - isv.BUSINESS_LIMIT_CONTROLError: 触发小时级流控Permits:5, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI4Fq7X6yv5SHKGQH77zk6&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=%E6%BD%AE%E6%B5%81%E5%A5%B3%E8%A3%85&SignatureMethod=HMAC-SHA1&SignatureNonce=ac989fa1674327037657eb3b1d3e4080&SignatureVersion=1.0&TemplateCode=SMS_186945863&TemplateParam=%7B%22code%22%3A%22406377%22%7D&Timestamp=2024-05-29T14%3A41%3A10Z&Version=2017-05-25&Signature=T6Lxc%2F5MsSvj5sfCxr1mifGY9aY%3D验证码发送失败 - null
+2024-05-29T14:41:26.624Z - POST-/sendSmsCode - 500 - isv.BUSINESS_LIMIT_CONTROLError: 触发小时级流控Permits:5, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI4Fq7X6yv5SHKGQH77zk6&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=%E6%BD%AE%E6%B5%81%E5%A5%B3%E8%A3%85&SignatureMethod=HMAC-SHA1&SignatureNonce=cd3d95a66116900e977e7a5443d42f61&SignatureVersion=1.0&TemplateCode=SMS_186945863&TemplateParam=%7B%22code%22%3A%22390944%22%7D&Timestamp=2024-05-29T14%3A41%3A24Z&Version=2017-05-25&Signature=UNgEhoNT3b2CrU0UWjXYB3GkgGM%3D验证码发送失败 - null
+2024-05-29T14:58:37.545Z - POST-/sendSmsCode - 500 - SignatureDoesNotMatchError: Specified signature is not matched with our calculation. server string to sign is:GET&%2F&AccessKeyId%3DLTAI5tQVgesoXNVKXFo1V1kn%26Action%3DSendSms%26Format%3DJSON%26PhoneNumbers%3D13737841650%26RegionId%3D127497975%26SignName%3DHSHblob%26SignatureMethod%3DHMAC-SHA1%26SignatureNonce%3Dd7b4f580b90794f27258dbbe9827fd56%26SignatureVersion%3D1.0%26TemplateCode%3DSMS_467380314%26TemplateParam%3D%257B%2522code%2522%253A%2522527757%2522%257D%26Timestamp%3D2024-05-29T14%253A58%253A36Z%26Version%3D2017-05-25, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI5tQVgesoXNVKXFo1V1kn&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=HSHblob&SignatureMethod=HMAC-SHA1&SignatureNonce=d7b4f580b90794f27258dbbe9827fd56&SignatureVersion=1.0&TemplateCode=SMS_467380314&TemplateParam=%7B%22code%22%3A%22527757%22%7D&Timestamp=2024-05-29T14%3A58%3A36Z&Version=2017-05-25&Signature=qYR6a37YzPirkPaVezoTzBU%2FU4c%3D验证码发送失败 - null
+2024-05-29T14:59:16.721Z - POST-/sendSmsCode - 500 - isp.RAM_PERMISSION_DENYError: RAM权限不足,请为当前使用的AccessKey对应RAM用户进行授权, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI5tJ7jsngknwzpkTn8L6Z&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=HSHblob&SignatureMethod=HMAC-SHA1&SignatureNonce=d3aa304bd9393d4009bdb1a72d04c08b&SignatureVersion=1.0&TemplateCode=SMS_467380314&TemplateParam=%7B%22code%22%3A%22575908%22%7D&Timestamp=2024-05-29T14%3A59%3A15Z&Version=2017-05-25&Signature=bznUjyH7O%2FB8hjDKNNRP%2FS9g%2BuM%3D验证码发送失败 - null
+2024-05-29T15:01:38.959Z - GET-/captcha - 200 - Success - ""
+2024-05-29T15:01:39.996Z - GET-/randomLoginImg - 200 - Success - ""
+2024-05-29T15:01:48.580Z - POST-/sendSmsCode - 500 - isv.SMS_SIGNATURE_ILLEGALError: 该账号下找不到对应签名, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI5t7T9wPa1dXzqvvAPJw5&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=HSHblob&SignatureMethod=HMAC-SHA1&SignatureNonce=4976296586c4ec0b7df5507fcc249e56&SignatureVersion=1.0&TemplateCode=SMS_467380314&TemplateParam=%7B%22code%22%3A%22204334%22%7D&Timestamp=2024-05-29T15%3A01%3A47Z&Version=2017-05-25&Signature=J2mMb3ARLM2%2FsvO8YRTbCUebFxg%3D验证码发送失败 - null
+2024-05-29T15:01:59.949Z - POST-/sendSmsCode - 500 - isv.SMS_SIGNATURE_ILLEGALError: 该账号下找不到对应签名, URL: http://dysmsapi.aliyuncs.com/?AccessKeyId=LTAI5t7T9wPa1dXzqvvAPJw5&Action=SendSms&Format=JSON&PhoneNumbers=13737841650&RegionId=127497975&SignName=HSHblob&SignatureMethod=HMAC-SHA1&SignatureNonce=16a0f84ad4eec05bcf57b0b9bd99914b&SignatureVersion=1.0&TemplateCode=SMS_467380314&TemplateParam=%7B%22code%22%3A%22239535%22%7D&Timestamp=2024-05-29T15%3A01%3A59Z&Version=2017-05-25&Signature=WLJ11%2FO6gdbE4fmBcMjvYhFKU4I%3D验证码发送失败 - null
+2024-05-29T15:02:35.869Z - POST-/login - 500 - 验证码不能为空 - null
+2024-05-29T15:02:38.535Z - POST-/sendSmsCode - 200 - Success - ""
+2024-05-29T15:03:13.746Z - POST-/login - 500 - 手机号还没绑定 - null
+2024-05-29T15:03:18.865Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:03:26.183Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:03:34.703Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:04:19.465Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:09:07.687Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:14:43.432Z - POST-/sendSmsCode - 200 - Success - ""
+2024-05-29T15:15:02.561Z - POST-/addPhone - 500 - 用户名或手机号不能为空 - null
+2024-05-29T15:15:17.050Z - POST-/addPhone - 500 - 更新失败，请稍后重试 - null
+2024-05-29T15:15:31.012Z - POST-/addPhone - 500 - TypeError: Cannot read properties of null (reading '_id')更新失败，请稍后重试 - null
+2024-05-29T15:15:40.754Z - POST-/addPhone - 500 - TypeError: Cannot read properties of null (reading 'id')更新失败，请稍后重试 - null
+2024-05-29T15:16:15.231Z - POST-/addPhone - 500 - 更新失败，请稍后重试 - null
+2024-05-29T15:16:36.346Z - POST-/addPhone - 500 - 更新失败，请稍后重试 - null
+2024-05-29T15:16:47.152Z - POST-/addPhone - 500 - 更新失败，请稍后重试 - null
+2024-05-29T15:17:06.408Z - POST-/addPhone - 500 - TypeError: Assignment to constant variable.更新失败，请稍后重试 - null
+2024-05-29T15:17:22.226Z - POST-/addPhone - 200 - 更新成功 - ""
+2024-05-29T15:17:23.092Z - POST-/cateNews - 200 - Success - ""
+2024-05-29T15:17:23.145Z - GET-/ossUploads - 200 - Success - ""
+2024-05-29T15:18:34.379Z - POST-/logout - 200 - 登出成功 - ""
+2024-05-29T15:18:34.427Z - GET-/captcha - 200 - Success - ""
+2024-05-29T15:18:35.276Z - GET-/randomLoginImg - 200 - Success - ""

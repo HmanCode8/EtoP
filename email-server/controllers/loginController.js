@@ -26,7 +26,7 @@ function verifyCode(req, res, next) {
   if (codeType === "sms" && phone === "") {
     return res.error({ message: "手机号不能为空" });
   }
-  if (phoneRegex.test(phone) === false) {
+  if (codeType === "sms" && phoneRegex.test(phone) === false) {
     return res.error({ message: "手机号格式不正确" });
   }
   if (code === "") {
@@ -210,7 +210,7 @@ router.post("/sendSmsCode", (req, res) => {
       })
       .catch((err) => {
         res.error({
-          message: "验证码发送失败",
+          message: err + "验证码发送失败",
         });
       });
   } else {
@@ -221,9 +221,9 @@ router.post("/sendSmsCode", (req, res) => {
 // 更新用户信息，绑定手机号
 router.post("/addPhone", verifyCode, async (req, res) => {
   try {
-    const { username, phone, userId } = req.body;
+    let { username, phone, userId } = req.body;
     // 检查用户名和密码是否为空
-    if (!userId || !phone) {
+    if (!phone) {
       return res.error({ message: "用户名或手机号不能为空" });
     }
     // 检查是否存在相同的用户名
@@ -231,6 +231,14 @@ router.post("/addPhone", verifyCode, async (req, res) => {
     // if (existingUser && existingUser._id.toString()!== req.user._id.toString()) {
     //   return res.error({ message: '用户名已存在' })
     // }
+
+    if (userId === "") {
+      const existingUser = await Register.findOne({
+        $and: [{ username }],
+      });
+      console.log(existingUser);
+      userId = existingUser._id.toString();
+    }
     // 更新用户信息
     const updatedUser = await Register.findByIdAndUpdate(
       userId,
@@ -239,7 +247,7 @@ router.post("/addPhone", verifyCode, async (req, res) => {
     );
     res.success(updatedUser, "更新成功");
   } catch (error) {
-    res.error({ message: "更新失败，请稍后重试" });
+    res.error({ message: error + "更新失败，请稍后重试" });
   }
 });
 

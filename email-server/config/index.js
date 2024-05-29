@@ -13,12 +13,15 @@ const config = {
     accessKeySecret: "JMhCjwKGeCD8uVErFJ2vMVSRvSXEQu",
     bucket: "multerupload",
   },
+  //   LTAI5t7T9wPa1dXzqvvAPJw5
+  // lQ5cSYZWtPZVKNQHGH52w7hIPQ3Zsm
+
   aliyun: {
     regionId: "127497975",
-    accessKeyId: "LTAI4Fq7X6yv5SHKGQH77zk6",
-    accessKeySecret: "N2hZShu9WlAKbzxhHwuFOUro6Lz8oY",
-    signName: "潮流女装", //签名名称
-    templateCode: "SMS_186945863", //模板CODE
+    accessKeyId: "LTAI5t7T9wPa1dXzqvvAPJw5",
+    accessKeySecret: "lQ5cSYZWtPZVKNQHGH52w7hIPQ3Zsm",
+    signName: "useSystem", //签名名称
+    templateCode: "SMS_467380314", //模板CODE
   },
   redis: {
     host: "127.0.0.1",
