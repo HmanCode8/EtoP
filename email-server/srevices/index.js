@@ -11,6 +11,7 @@ const multerUploadController = require("../controllers/multerUploadController");
 const bigFileUploadController = require("../controllers/bigFileUploadController");
 const fruitsController = require("../controllers/fruitsController");
 const aiController = require("../controllers/aiController");
+const apiCliController = require("../controllers/apiCliController");
 
 module.exports = {
   emailController,
@@ -26,4 +27,5 @@ module.exports = {
   bigFileUploadController,
   fruitsController,
   aiController,
+  apiCliController,
 };

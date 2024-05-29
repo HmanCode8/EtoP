@@ -1,9 +1,13 @@
 import request from "@/untils/request";
 
 interface Register {
-  username: string;
-  password: string;
-  email: string;
+  username?: string;
+  password?: string;
+  email?: string;
+  code?: string;
+  phone?: string;
+  phoneCode?: string;
+  codeType?: string;
 }
 
 /**
@@ -22,9 +26,32 @@ const register = (params: Register) => {
 const login = (params: Register) => {
   return request.post("/api/login", params);
 };
+/**
+ * 获取图片验证码
+ * @param params
+ * @returns
+ */
 const captcha = () => {
   return request.get("/api/captcha");
 };
+
+/**
+ * 发送短信验证码
+ * @param params
+ * @returns
+ */
+const sendSmsCode = (params: { phone: string, codeType: string }) => {
+  return request.post("/api/sendSmsCode", params);
+};
+/**
+ * 发送短信验证码
+ * @param params
+ * @returns
+ */
+const addPhone = (params: { userId: string, phone: string, codeType: string }) => {
+  return request.post("/api/addPhone", params);
+};
+
 /**
  * 登出
  * @param params
@@ -65,6 +92,8 @@ export {
   register,
   login,
   captcha,
+  sendSmsCode,
+  addPhone,
   loginsum,
   loginOut,
   uploadAvatar,

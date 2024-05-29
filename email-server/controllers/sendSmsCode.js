@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const SMSClient = require("@alicloud/sms-sdk");
-const config = require("../../config");
 const { redis, aliyun } = require("../config");
 const Redis = require("ioredis");
 
 const redis = new Redis(redis);
 
 router.post("/sendSmsCode", (req, res) => {
-  const phone = req.body.phone;
+  const {phone} = req.body;
   const type = req.body.type || "sms";
   const code = Math.floor(Math.random() * 900000 + 100000).toString();
 
@@ -22,7 +21,6 @@ router.post("/sendSmsCode", (req, res) => {
       accessKeyId: aliyun.accessKeyId,
       secretAccessKey: aliyun.accessKeySecret,
     });
-    console.log("redis", redis);
     const params = {
       RegionId: aliyun.regionId,
       PhoneNumbers: phone,
