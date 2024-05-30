@@ -26,13 +26,13 @@ function apiStatusResponse(req, res, next) {
     res
       .status(SUCCESS_CODE)
       .json({ success: true, message, code: SUCCESS_CODE, data });
-      logRequest(req, SUCCESS_CODE, message); // 记录日志
+      // logRequest(req, SUCCESS_CODE, message); // 记录日志
   };
 
   // 错误响应
-  res.error = function ({ statusCode = ERROR_CODE, message,data }) {
+  res.error = function ({ statusCode = ERROR_CODE, message,data=[] }) {
     res.status(statusCode).json({ success: false, code: statusCode, message });
-    logRequest(req, statusCode, message, data || null);  
+    // logRequest(req, statusCode, message, data || null);  
   };
 
   
@@ -41,8 +41,8 @@ function apiStatusResponse(req, res, next) {
     statusCode = NOT_FOUND_CODE,
     message = "Not Found",
   }) {
-    res.status(statusCode).json({ success: false, code: statusCode, message,data });
-    logRequest(req, statusCode, message, data || null);  
+    res.status(statusCode).json({ success: false, code: statusCode, message,dat });
+    // logRequest(req, statusCode, message, data || null);  
   };
 
   next();

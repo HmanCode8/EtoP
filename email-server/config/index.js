@@ -20,8 +20,8 @@ const config = {
     regionId: "127497975",
     accessKeyId: "LTAI5t7T9wPa1dXzqvvAPJw5",
     accessKeySecret: "lQ5cSYZWtPZVKNQHGH52w7hIPQ3Zsm",
-    signName: "useSystem", //签名名称
-    templateCode: "SMS_467380314", //模板CODE
+    signName: "潮流女装", //签名名称
+    templateCode: "SMS_186945863", //模板CODE
   },
   redis: {
     host: "127.0.0.1",
