@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       Components({
-        resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
+        resolvers: [ElementPlusResolver()],
       }),
     ],
     server: {
