@@ -107,7 +107,7 @@ async function request(url: string, options: any = {}): Promise<any> {
           localStorage.removeItem("token");
         }
       }, 1000);
-      return;
+      return data;
       // throw new Error(`HTTP error! status: ${response.status}`);
     }
     const { status, ok } = response;

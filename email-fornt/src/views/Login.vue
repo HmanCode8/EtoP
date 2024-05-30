@@ -1,323 +1,337 @@
 <script setup>
-import { ref, reactive, onMounted, watchEffect, inject, watch } from "vue";
-import CryptoJS from "crypto-js";
-import { ElMessage, ElNotification, ElMessageBox } from "element-plus";
-import {
-  register,
-  captcha,
-  sendSmsCode,
-  addPhone,
-  login,
-} from "@/services/userService";
-import { getRandomLoginImg } from "@/services/wallpaperService";
-import { useRouter } from "vue-router";
-import _ from "lodash";
-import defaultBgImg from "@/assets/images/sky.jpeg";
-import { useUserStore } from "@/store";
+import { ref, reactive, onMounted, watchEffect, inject, watch } from 'vue'
+import CryptoJS from 'crypto-js'
+import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
+import { register, captcha, sendSmsCode, addPhone, login, updatePassword } from '@/services/userService'
+import { getRandomLoginImg } from '@/services/wallpaperService'
+import { useRouter } from 'vue-router'
+import _ from 'lodash'
+import defaultBgImg from '@/assets/images/sky.jpeg'
+import { useUserStore } from '@/store'
 
 const tabs = [
   {
-    label: "账号密码",
-    value: "account",
+    label: '账号密码',
+    value: 'account',
   },
   {
-    label: "手机短信",
-    value: "captcha",
+    label: '手机短信',
+    value: 'captcha',
   },
-];
-const ROUND_LOGIN_IMG = "https://api.vvhan.com/api/wallpaper/views?type=json";
-const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/;
+]
+const ROUND_LOGIN_IMG = 'https://api.vvhan.com/api/wallpaper/views?type=json'
+const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/
 
-const username = import.meta.env.VITE_LOGIN_USER ?? "";
-const password = import.meta.env.VITE_LOGIN_PASSWORD ?? "";
-const loginUserId = ref("");
-const codeTimeOut = ref(0);
-const intervalId = ref(null);
-const gsap = inject("gsap");
-const loginBG = ref(null);
-const loginTabs = ref(tabs);
-const activeTab = ref(tabs[0].value);
-const svgCode = ref("");
-const loginTipBG = ref(null);
-const mingyan = ref("");
-const userStore = useUserStore();
-const labelPosition = ref("right");
-const router = useRouter();
-const isRegister = ref(false);
-const isShowPasswork = ref(false);
-const phoneVisible = ref(false);
-const isShowConfirmPassword = ref(false);
+const username = import.meta.env.VITE_LOGIN_USER ?? ''
+const password = import.meta.env.VITE_LOGIN_PASSWORD ?? ''
+const loginUserId = ref('')
+const codeTimeOut = ref(0)
+const intervalId = ref(null)
+const gsap = inject('gsap')
+const loginBG = ref(null)
+const loginTabs = ref(tabs)
+const activeTab = ref(tabs[0].value)
+const svgCode = ref('')
+const loginTipBG = ref(null)
+const mingyan = ref('')
+const userStore = useUserStore()
+const labelPosition = ref('right')
+const router = useRouter()
+const isRegister = ref(false)
+const isUpdatePassword = ref(false)
+const isShowPasswork = ref(false)
+const phoneVisible = ref(false)
+const isShowConfirmPassword = ref(false)
 const form = reactive({
   username,
   password,
-  code: "",
-  confirmPassword: "",
-  phone: "",
-  phoneCode: "",
-});
+  code: '',
+  confirmPassword: '',
+  phone: '',
+  phoneCode: '',
+})
+
+function myMessageInfo(message, type) {
+  ElNotification({
+    title: '提示',
+    message,
+    type,
+  })
+}
 
 function sha256(message) {
   if (_.isEmpty(message)) {
-    return null;
+    return null
   }
-  let hash = CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
-  return hash;
+  let hash = CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex)
+  return hash
 }
 
 const onCaptcha = async () => {
   try {
-    const res = await captcha();
+    const res = await captcha()
     if (res.code === 200) {
-      svgCode.value = res.data;
+      svgCode.value = res.data
     }
     // img.src = `data:image/png;base64,${captcha}`;
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
-onCaptcha();
+}
+onCaptcha()
 
 const onSendCode = async () => {
   if (!form.phone) {
-    ElMessage({
-      message: "请输入手机号",
-      type: "warning",
-    });
-    return;
+    myMessageInfo('请输入手机号', 'warning')
+    return
   }
   const res = await sendSmsCode({
     phone: form.phone,
-    codeType: "sms",
-  });
+    codeType: 'sms',
+  })
   if (res.code === 200) {
-    ElNotification({
-      title: "提示",
-      message: "验证码发送成功",
-      type: "success",
-    });
+    myMessageInfo('验证码发送成功', 'success')
   }
-  codeTimeOut.value = 60;
+  codeTimeOut.value = 60
   intervalId.value = setInterval(() => {
-    codeTimeOut.value--;
+    codeTimeOut.value--
     if (codeTimeOut.value === 0) {
-      clearInterval(intervalId.value);
+      clearInterval(intervalId.value)
     }
-  }, 1000);
-};
+  }, 1000)
+}
 
 const onAddPhone = async () => {
+  if (!form.username) {
+    return myMessageInfo('请输入用户名', 'warning')
+  }
+
   if (!form.phone) {
-    ElMessage({
-      message: "请输入手机号",
-      type: "warning",
-    });
-    return;
+    return myMessageInfo('请输入手机号', 'warning')
   }
   if (!form.phoneCode) {
-    ElMessage({
-      message: "请输入验证码",
-      type: "warning",
-    });
-    return;
+    return myMessageInfo('请输入验证码', 'warning')
   }
   const res = await addPhone({
     phone: form.phone,
     code: form.phoneCode,
     userId: loginUserId.value,
     username: form.username,
-    codeType: "sms",
-  });
+    codeType: 'sms',
+  })
   if (res.code === 200) {
-    ElNotification({
-      title: "提示",
-      message: "绑定手机号成功",
-      type: "success",
-    });
-    phoneVisible.value = false;
-    loginUserId.value = res.data.userId;
-    router.push("/home");
+    myMessageInfo('绑定手机号成功', 'success')
+    phoneVisible.value = false
+    loginUserId.value = res.data.userId
+    router.push('/home')
   } else {
-    ElMessage({
-      message: "绑定手机号失败",
-      type: "error",
-    });
+    myMessageInfo('绑定手机号失败', 'error')
   }
-};
+}
+
+const checkPhone = (callback) => {
+    ElMessageBox.confirm('还未绑定手机号，是否立即绑定?')
+      .then(() => {
+        phoneVisible.value = true
+        loginUserId.value = userId
+      })
+      .catch(() => callback())
+  }
+
 
 const onRegister = async () => {
-  const { username, password, confirmPassword } = form;
+  const { username, password, confirmPassword } = form
 
   if (passwordRegex.test(password) === false) {
-    ElNotification({
-      title: "提示",
-      message: "密码必须包含数字、大小写字母且长度在6-20之间",
-      type: "warning",
-    });
-    return;
+    myMessageInfo('密码必须包含数字、大小写字母且长度在6-20之间', 'warning')
+    return
   }
   if (password !== confirmPassword) {
-    ElMessage({
-      message: "密码与确认密码不一致",
-      type: "warning",
-    });
-    return;
+    myMessageInfo('密码与确认密码不一致', 'warning')
+    return
   }
 
-  const hashedPassword = await sha256(password);
+
+  const hashedPassword = await sha256(password)
   const res = await register({
     username: form.username,
     password: hashedPassword,
     confirmPassword: hashedPassword,
-  });
+  })
   if (res.code === 200) {
-    ElMessage({
-      message: "注册成功",
-      type: "success",
-    });
-    isRegister.value = false;
+    myMessageInfo('注册成功', 'success')
+    checkPhone(() => (isRegister.value = false))
+    return
   } else {
-    ElMessage({
-      message: "注册失败",
-      type: "error",
-    });
+    myMessageInfo('注册失败', 'error')
   }
-};
+}
 
 const onchageLogin = async () => {
-  const { username, password, confirmPassword, code, phone, phoneCode } = form;
-  const hashedPassword = await sha256(password);
+  const { username, password, confirmPassword, code, phone, phoneCode } = form
+  const hashedPassword = await sha256(password)
   const params =
-    activeTab.value === "account"
+    activeTab.value === 'account'
       ? {
           username: username,
           password: hashedPassword,
           code: code,
-          codeType: "captcha",
+          codeType: 'captcha',
         }
-      : { phone, code: phoneCode, codeType: "sms" };
-  const res = await login(params);
+      : { phone, code: phoneCode, codeType: 'sms' }
+  const res = await login(params)
   if (res.code === 200) {
-    const { email, username, isPhone, userId } = res.data;
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("userInfo", JSON.stringify({ email, username }));
-    userStore.setNavActive("/home");
+    const { email, username, isPhone, userId } = res.data
+    localStorage.setItem('token', res.data.token)
+    localStorage.setItem('userInfo', JSON.stringify({ email, username }))
+    userStore.setNavActive('/home')
     if (!isPhone) {
-      ElMessageBox.confirm("还未绑定手机号，是否立即绑定?")
-        .then(() => {
-          phoneVisible.value = true;
-          loginUserId.value = userId;
-        })
-        .catch(() => {
-          router.push("/home");
-        });
-      return;
+      checkPhone(() => router.push('/home'))
+      return
     }
-    router.push("/home");
+    router.push('/home')
   } else {
-    ElMessage.error("登录失败");
+    myMessageInfo('登录失败', 'error')
   }
-};
+}
+const onchagePassword = async () => {
+  const { password, confirmPassword, phone, phoneCode } = form
+  if (password !== confirmPassword) {
+    myMessageInfo('密码与确认密码不一致', 'warning')
+    return
+  }
+  const hashedPassword = await sha256(password)
+
+  const res = await updatePassword({ phone, code: phoneCode, password: hashedPassword, codeType: 'sms' })
+  if (res.code === 200) {
+    myMessageInfo('修改密码成功', 'success')
+  } else {
+    myMessageInfo('修改密码失败', 'error')
+  }
+}
 const getImg = async () => {
   return new Promise(async (resolve) => {
-    const res = await fetch(ROUND_LOGIN_IMG);
-    const data = await res.json();
-    resolve(data.url);
-  });
-};
+    const res = await fetch(ROUND_LOGIN_IMG)
+    const data = await res.json()
+    resolve(data.url)
+  })
+}
 const getMingyan = async () => {
   try {
-    const res = await fetch("https://api.vvhan.com/api/ian/rand");
-    const data = await res.text();
-    mingyan.value = data;
+    const res = await fetch('https://api.vvhan.com/api/ian/rand')
+    const data = await res.text()
+    mingyan.value = data
   } catch (error) {
-    console.log("error", error);
+    myMessageInfo('获取名句失败', 'error')
   }
-};
+}
 
 const randomLoginImg = async () => {
-  let url = "";
+  let url = ''
   try {
-    const res = await getRandomLoginImg();
-    url = res.data.url || defaultBgImg;
+    const res = await getRandomLoginImg()
+    url = res.data.url || defaultBgImg
   } catch (error) {
-    url = defaultBgImg;
+    url = defaultBgImg
   } finally {
-    loginBG.value.style.backgroundImage = `url(${url})`;
+    loginBG.value.style.backgroundImage = `url(${url})`
     // loginTipBG.value.style.backgroundImage = `url(${url})`;
   }
-};
+}
+
+const dblclick = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  randomLoginImg()
+  getMingyan()
+}
 
 watch(mingyan, () => {
-  gsap.fromTo(
-    loginTipBG.value,
-    { opacity: 0, y: 200 }, // 初始位置
-    { opacity: 1, y: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
-  );
-});
-
-watch(isRegister, (val) => {
-  if (val) {
+  const romdomNum = Math.floor(Math.random() * 10)
+  if (romdomNum > 5) {
     gsap.fromTo(
-      ".m-r",
-      { opacity: 0, x: 200 }, // 初始位置
-      { opacity: 0.8, x: 0, duration: 3, ease: "elastic(1, 0.3)" } // 动画效果
-    );
+      loginTipBG.value,
+      { opacity: 0, y: -100, x: -50 }, // 初始位置
+      { opacity: 1, y: 0, x: 0, duration: 3, ease: 'bounce.out(1, 0.3)' } // 动画效果
+    )
   } else {
     gsap.fromTo(
-      ".m-r",
-      { opacity: 0, x: -200 }, // 初始位置
-      { opacity: 0.8, x: 0, duration: 3, ease: "elastic(1, 0.3)" } // 动画效果
-    );
+      loginTipBG.value,
+      { opacity: 0, x: 200 }, // 初始位置
+      { opacity: 1, x: 0, duration: 3, ease: 'elastic.out(1, 0.3)' } // 动画效果
+    )
   }
-});
+})
+
+watch([isRegister, isUpdatePassword], (val) => {
+  if (val) {
+    gsap.fromTo(
+      '.m-r',
+      { opacity: 0, x: 200 }, // 初始位置
+      { opacity: 0.95, x: 0, duration: 3, ease: 'elastic(1, 0.3)' } // 动画效果
+    )
+  } else {
+    gsap.fromTo(
+      '.m-r',
+      { opacity: 0, x: -200 }, // 初始位置
+      { opacity: 0.95, x: 0, duration: 3, ease: 'elastic(1, 0.3)' } // 动画效果
+    )
+  }
+})
+watch(activeTab, (val) => {
+  if (val === 'captcha') {
+    gsap.fromTo(
+      '.forms',
+      { opacity: 0, x: 200 }, // 初始位置
+      { opacity: 0.95, x: 0, duration: 3, ease: 'elastic(1, 0.3)' } // 动画效果
+    )
+  } else {
+    gsap.fromTo(
+      '.forms',
+      { opacity: 0, x: -200 }, // 初始位置
+      { opacity: 0.95, x: 0, duration: 3, ease: 'elastic(1, 0.3)' } // 动画效果
+    )
+  }
+})
 
 watch([activeTab, phoneVisible], (val) => {
   if (intervalId.value) {
-    clearInterval(intervalId.value);
-    codeTimeOut.value = 0;
+    clearInterval(intervalId.value)
+    codeTimeOut.value = 0
   }
-});
+})
 onMounted(() => {
-  randomLoginImg();
-  getMingyan();
-});
+  randomLoginImg()
+  getMingyan()
+})
 
 onMounted(() => {
   gsap.fromTo(
-    ".m-r",
+    '.m-r',
     { opacity: 0, y: 200 }, // 初始位置
-    { opacity: 0.8, y: 0, duration: 3, ease: "elastic.out(1, 0.3)" } // 动画效果
-  );
-});
+    { opacity: 0.95, y: 0, duration: 3, ease: 'elastic.out(1, 0.3)' } // 动画效果
+  )
+})
 </script>
 
 <template>
-  <div
-    ref="loginBG"
-    class="login-page h-screen flex items-center justify-center"
-  >
-    <div
-      class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex overflow-hidden"
-    >
-      <div
-        class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center"
-      >
+  <div ref="loginBG" class="login-page h-screen flex items-center justify-center">
+    <div class="login-modal shadow-2xl rounded-lg w-1/2 h-1/2 flex overflow-hidden">
+      <div @dblclick="dblclick" class="m-l relative w-1/3 border-r-4 flex flex-col items-center justify-center">
+        <!-- <div @click="getMingyan" class="absolute left-1 top-0">
+          <el-icon><Search /></el-icon>
+        </div> -->
         <div class="inner-t"></div>
         <div class="inner-b"></div>
         <div ref="loginTipBG" class="p-4 font-extralight">{{ mingyan }}</div>
         <!-- <img class="h-full w-full object-cover" :src="mingyan.url" alt="" srcset=""> -->
       </div>
-      <div class="m-r w-2/3 flex flex-col justify-center items-center">
-        <div
-          v-if="!isRegister"
-          class="tabs relative h-20 flex items-center justify-center"
-        >
-          <div
-            v-for="t in loginTabs"
-            :key="t.value"
-            :class="`tab-item mx-2 ${t.value === activeTab ? 'active' : ''}`"
-            @click="activeTab = t.value"
-          >
+      <div class="m-r w-2/3 relative flex flex-col justify-center items-center">
+        <div class="bg-white inner-title rounded-full w-20 h-20 text-sm shadow-lg absolute left-4 top-4 flex justify-center items-center">
+          {{ isRegister ? '注册' : isUpdatePassword ? '修改密码' : '登录' }}
+        </div>
+        <div v-if="!isRegister && !isUpdatePassword" class="tabs relative h-20 flex items-center justify-center">
+          <div v-for="t in loginTabs" :key="t.value" :class="`tab-item mx-2 ${t.value === activeTab ? 'active' : ''}`" @click="activeTab = t.value">
             {{ t.label }}
           </div>
         </div>
@@ -326,125 +340,70 @@ onMounted(() => {
         </div> -->
         <!-- <div class="icons"></div> -->
         <div class="forms m-auto w-2/3 p-3">
-          <form
-            class=""
-            action="#"
-            @submit.prevent="isRegister ? onRegister() : onchageLogin()"
-          >
+          <form class="" action="#" @submit.prevent="isRegister ? onRegister() : isUpdatePassword ? onchagePassword() : onchageLogin()">
             <template v-if="activeTab === 'account'">
+              <template v-if="isUpdatePassword">
+                <div class="phone flex relative">
+                  <input class="email-form-item w-full" v-model="form.phone" placeholder="手机号" />
+                </div>
+                <div class="captcha flex items-center relative">
+                  <input class="email-form-item w-full" v-model="form.phoneCode" placeholder="验证码" />
+                  <el-button :disabled="codeTimeOut > 0" class="hover:cursor-pointer" @click="onSendCode"
+                    >{{ codeTimeOut === 0 ? '发送' : '' }}<span v-if="codeTimeOut > 0">{{ codeTimeOut }}{{ codeTimeOut > 0 ? '秒后重发' : '' }}</span></el-button
+                  >
+                </div>
+              </template>
               <!-- 用户名： -->
-              <div class="username flex items-center">
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.username"
-                  placeholder="用户"
-                />
+              <div class="username flex items-center" v-if="!isUpdatePassword">
+                <input class="email-form-item w-full" v-model="form.username" placeholder="用户" />
                 <!-- <div class="prixt emial-prefix">@hsh.com</div> -->
               </div>
               <!-- 密码： -->
               <div class="password flex relative">
                 <!-- 可显示可隐藏密码 -->
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.password"
-                  placeholder="密码"
-                  :type="isShowPasswork ? 'text' : 'password'"
-                />
-                <div
-                  @click="isShowPasswork = !isShowPasswork"
-                  :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
-                    isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'
-                  }`"
-                ></div>
+                <input class="email-form-item w-full" v-model="form.password" placeholder="密码" :type="isShowPasswork ? 'text' : 'password'" />
+                <div @click="isShowPasswork = !isShowPasswork" :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${isShowPasswork ? 'ishowpasswork' : 'isnohowpasswork'}`"></div>
               </div>
               <!-- 验证码： -->
-              <div class="captcha flex relative" v-if="!isRegister">
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.code"
-                  placeholder="验证码"
-                />
-                <div
-                  class="hover:cursor-pointer"
-                  v-html="svgCode"
-                  @click="onCaptcha"
-                ></div>
+              <div class="captcha flex relative" v-if="!isRegister && !isUpdatePassword">
+                <input class="email-form-item w-full" v-model="form.code" placeholder="验证码" />
+                <div class="hover:cursor-pointer" v-html="svgCode" @click="onCaptcha"></div>
               </div>
               <!-- 确认密码： -->
-              <div v-if="isRegister" class="confirm-password flex relative">
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.confirmPassword"
-                  placeholder="确认密码"
-                  :type="isShowConfirmPassword ? 'text' : 'password'"
-                />
+              <div v-if="isRegister || isUpdatePassword" class="confirm-password flex relative">
+                <input class="email-form-item w-full" v-model="form.confirmPassword" placeholder="确认密码" :type="isShowConfirmPassword ? 'text' : 'password'" />
                 <div
                   @click="isShowConfirmPassword = !isShowConfirmPassword"
-                  :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${
-                    isShowConfirmPassword ? 'ishowpasswork' : 'isnohowpasswork'
-                  }`"
+                  :class="`absolute hover:cursor-pointer translate-y-1/2 right-0 h-6 w-6 ${isShowConfirmPassword ? 'ishowpasswork' : 'isnohowpasswork'}`"
                 ></div>
               </div>
             </template>
 
             <template v-if="activeTab === 'captcha'">
               <div class="phone flex relative">
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.phone"
-                  placeholder="手机号"
-                />
+                <input class="email-form-item w-full" v-model="form.phone" placeholder="手机号" />
               </div>
               <div class="captcha flex items-center relative">
-                <input
-                  class="email-form-item w-full"
-                  v-model="form.phoneCode"
-                  placeholder="验证码"
-                />
-                <el-button
-                  :disabled="codeTimeOut > 0"
-                  class="hover:cursor-pointer"
-                  @click="onSendCode"
-                  >{{ codeTimeOut === 0 ? "发送" : ""
-                  }}<span v-if="codeTimeOut > 0"
-                    >{{ codeTimeOut
-                    }}{{ codeTimeOut > 0 ? "秒后重发" : "" }}</span
-                  ></el-button
+                <input class="email-form-item w-full" v-model="form.phoneCode" placeholder="验证码" />
+                <el-button :disabled="codeTimeOut > 0" class="hover:cursor-pointer" @click="onSendCode"
+                  >{{ codeTimeOut === 0 ? '发送' : '' }}<span v-if="codeTimeOut > 0">{{ codeTimeOut }}{{ codeTimeOut > 0 ? '秒后重发' : '' }}</span></el-button
                 >
               </div>
             </template>
             <!-- 右下角的注册切换表单 -->
             <div class="flex justify-between items-center pt-4">
-              <el-button
-                class="shadow-inner rounded-3xl text-sm w-1/2 h-10"
-                native-type="submit"
-                type="primary"
-                >{{ isRegister ? "注册" : "登录" }}</el-button
-              >
-              <div
-                v-if="activeTab === 'account'"
-                @click="isRegister = !isRegister"
-                class="switch-form flex hover:cursor-pointer justify-center items-center"
-              >
+              <el-button class="shadow-inner rounded-3xl text-sm w-1/2 h-10" native-type="submit" type="primary">{{ isRegister ? '注册' : isUpdatePassword ? '修改密码' : '登录' }}</el-button>
+              <div v-if="activeTab === 'account' && !isUpdatePassword" @click="isRegister = !isRegister" class="switch-form flex hover:cursor-pointer justify-center items-center">
                 <div class="text-sm">
-                  {{ isRegister ? "登录" : "注册" }}
+                  {{ isRegister ? '登录' : '注册' }}
                 </div>
-                <el-icon class="text-lg"> <Right /> </el-icon>
+                <el-icon class="text-lg"> <Right v-if="!isRegister" /> <Back v-else /> </el-icon>
               </div>
-              <div
-                v-else
-                @click="phoneVisible = true"
-                class="switch-form flex hover:cursor-pointer justify-center items-center"
-              >
+              <div v-if="activeTab !== 'account' && !isUpdatePassword" @click="phoneVisible = true" class="switch-form flex hover:cursor-pointer justify-center items-center">
                 <div class="text-sm">绑定手机号</div>
               </div>
               <!-- 忘记密码 -->
-              <div
-                v-if="activeTab === 'account' && !isRegister"
-                class="text-sm forget-passwor"
-              >
-                忘记密码?
-              </div>
+              <div v-if="activeTab === 'account' && !isRegister" @click="isUpdatePassword = !isUpdatePassword" class="text-sm forget-passwor hover:cursor-pointer">{{ isUpdatePassword ? '返回登录' : '忘记密码?' }}</div>
             </div>
             <!-- 右下角的注册切换表单 -->
           </form>
@@ -456,32 +415,17 @@ onMounted(() => {
       <form class="phone-form">
         <div class="phone flex items-center relative">
           用户名：
-          <input
-            class="email-form-item w-1/2"
-            v-model="form.username"
-            placeholder="用户名"
-            :disabled="!!form.username"
-          />
+          <input class="email-form-item w-1/2" v-model="form.username" placeholder="用户名" />
         </div>
         <div class="phone flex items-center relative">
           手机号：
-          <input
-            class="email-form-item w-1/2"
-            v-model="form.phone"
-            placeholder="手机号"
-          />
+          <input class="email-form-item w-1/2" v-model="form.phone" placeholder="手机号" />
         </div>
         <div class="phone flex items-center relative">
           验证码：
-          <input
-            class="email-form-item w-1/2"
-            v-model="form.phoneCode"
-            placeholder="验证码"
-          />
-          <el-button
-            class="hover:cursor-pointer items-center"
-            @click="onSendCode"
-            >发送</el-button
+          <input class="email-form-item w-1/2" v-model="form.phoneCode" placeholder="验证码" />
+          <el-button :disabled="codeTimeOut > 0" class="hover:cursor-pointer" @click="onSendCode"
+            >{{ codeTimeOut === 0 ? '发送' : '' }}<span v-if="codeTimeOut > 0">{{ codeTimeOut }}{{ codeTimeOut > 0 ? '秒后重发' : '' }}</span></el-button
           >
         </div>
       </form>
@@ -502,33 +446,19 @@ onMounted(() => {
 .login-tip {
   width: 100%;
   height: 100%;
-  // margin: 20px;
-  // border: 1px solid #ccc;
-  background-image: url("@/assets/images/login-tip.png");
+  background-image: url('@/assets/images/login-tip.png');
   background-size: 100% 100%;
 }
 .login-modal {
-  // background-color: #112d25;
   background: linear-gradient(90deg, #e9f0ee, #ecf3f1);
   color: #110f0f;
   box-shadow: inset -2px -2px 6px #f9f9f9;
-  opacity: 0.8;
+  opacity: 0.95;
 }
-// button {
-//   box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
-// }
+
 .m-l {
   position: relative;
 }
-// .m-r {
-//   position: relative;
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     background-color: rgba(0, 0, 0, 0.5);
-//   }
-// }
 .inner-t {
   position: absolute;
   width: 150px;
@@ -551,17 +481,20 @@ onMounted(() => {
   left: -18px;
   transition: 1.25s;
 }
+.inner-title {
+  box-shadow: inset 8px 8px 12px #b8bec7, inset -8px -8px 12px #fff;
+}
 
 @mixin bgImg {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 .ishowpasswork {
-  background-image: url("@/assets/images/ico-eye.png");
+  background-image: url('@/assets/images/ico-eye.png');
   @include bgImg;
 }
 .isnohowpasswork {
-  background-image: url("@/assets/images/ico-eye-disabled.png");
+  background-image: url('@/assets/images/ico-eye-disabled.png');
   @include bgImg;
 }
 .switch-form {
@@ -588,7 +521,7 @@ onMounted(() => {
     }
     padding: 10px 20px;
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
       left: 0;

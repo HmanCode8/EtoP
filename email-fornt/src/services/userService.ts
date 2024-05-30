@@ -87,6 +87,14 @@ const uploadAvatar = (params: Register) => {
 const getAvatar = () => {
   return request.get("/api/getAvatar");
 };
+/**
+ * 获取头像
+ * @param params
+ * @returns
+ */
+const updatePassword = (params:Register) => {
+  return request.post("/api/updatePassword",params);
+};
 
 export {
   register,
@@ -98,4 +106,5 @@ export {
   loginOut,
   uploadAvatar,
   getAvatar,
+  updatePassword,
 };
