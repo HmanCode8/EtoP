@@ -1,27 +1,33 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import path from "path";
-import AutoImport from "unplugin-auto-import/vite";
-import Components from "unplugin-vue-components/vite";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import path from 'path'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver,AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig(({ mode }) => {
   return {
-    envDir: "env",
-    transpileDependencies: ["vuetify"],
+    envDir: 'env',
+    transpileDependencies: ['vuetify'],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "src"),
+        '@': path.resolve(__dirname, 'src'),
       },
     },
     build: {
       // 根据环境加载不同的配置
-      sourcemap: process.env.NODE_ENV === "production" ? false : true,
-    },
-    define: {
-      // 定义环境变量
-      __VUE_OPTIONS_API__: JSON.stringify(true),
-      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      sourcemap: process.env.NODE_ENV === 'production' ? false : true,
+      rollupOptions: {
+        output: {
+          // entryFileNames: `js/[name].[hash].js`,
+          // chunkFileNames: `js/[name].[hash].js`,
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id.toString().split('node_modules/')[1].split('/')[0].toString()
+            }
+          },
+        },
+      },
     },
     plugins: [
       [vue()],
@@ -29,17 +35,17 @@ export default defineConfig(({ mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
       }),
     ],
     server: {
       proxy: {
-        "/api": {
-          target: "https://aip.baidubce.com", // 目标基础路径
+        '/api': {
+          target: 'https://aip.baidubce.com', // 目标基础路径
           changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
-          rewrite: (path) => path.replace(/^\/api/, ""), // 重写路径：如果请求路径以 /api 开头，则替换为 ''
+          rewrite: (path) => path.replace(/^\/api/, ''), // 重写路径：如果请求路径以 /api 开头，则替换为 ''
         },
       },
     },
-  };
-});
+  }
+})

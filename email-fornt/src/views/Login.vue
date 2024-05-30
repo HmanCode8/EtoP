@@ -69,6 +69,9 @@ function sha256(message) {
 
 const onCaptcha = async () => {
   try {
+    if(!_.isEmpty(form.code)){
+      form.code = ''
+    }
     const res = await captcha()
     if (res.code === 200) {
       svgCode.value = res.data
@@ -91,14 +94,14 @@ const onSendCode = async () => {
   })
   if (res.code === 200) {
     myMessageInfo('验证码发送成功', 'success')
+    codeTimeOut.value = 60 * 5
+    intervalId.value = setInterval(() => {
+      codeTimeOut.value--
+      if (codeTimeOut.value === 0) {
+        clearInterval(intervalId.value)
+      }
+    }, 1000)
   }
-  codeTimeOut.value = 60
-  intervalId.value = setInterval(() => {
-    codeTimeOut.value--
-    if (codeTimeOut.value === 0) {
-      clearInterval(intervalId.value)
-    }
-  }, 1000)
 }
 
 const onAddPhone = async () => {
@@ -130,14 +133,13 @@ const onAddPhone = async () => {
 }
 
 const checkPhone = (callback) => {
-    ElMessageBox.confirm('还未绑定手机号，是否立即绑定?')
-      .then(() => {
-        phoneVisible.value = true
-        loginUserId.value = userId
-      })
-      .catch(() => callback())
-  }
-
+  ElMessageBox.confirm('还未绑定手机号，是否立即绑定?')
+    .then(() => {
+      phoneVisible.value = true
+      loginUserId.value = userId
+    })
+    .catch(() => callback())
+}
 
 const onRegister = async () => {
   const { username, password, confirmPassword } = form
@@ -151,7 +153,6 @@ const onRegister = async () => {
     return
   }
 
-
   const hashedPassword = await sha256(password)
   const res = await register({
     username: form.username,
@@ -160,11 +161,19 @@ const onRegister = async () => {
   })
   if (res.code === 200) {
     myMessageInfo('注册成功', 'success')
-    checkPhone(() => (isRegister.value = false))
+    ElMessageBox.confirm('还未绑定手机号，是否立即绑定?')
+      .then(() => {
+        phoneVisible.value = true
+        loginUserId.value = userId
+      })
+      .catch(() => {
+        isRegister.value = false
+      })
     return
-  } else {
-    myMessageInfo('注册失败', 'error')
   }
+  //  else {
+  //   myMessageInfo('注册失败', 'error')
+  // }
 }
 
 const onchageLogin = async () => {
@@ -186,13 +195,23 @@ const onchageLogin = async () => {
     localStorage.setItem('userInfo', JSON.stringify({ email, username }))
     userStore.setNavActive('/home')
     if (!isPhone) {
-      checkPhone(() => router.push('/home'))
+      ElMessageBox.confirm('还未绑定手机号，是否立即绑定?', {
+        cancelButtonText: '稍后再说',
+      })
+        .then(() => {
+          phoneVisible.value = true
+          loginUserId.value = userId
+        })
+        .catch(() => {
+          router.push('/home')
+        })
       return
     }
     router.push('/home')
-  } else {
-    myMessageInfo('登录失败', 'error')
   }
+  //  else {
+  //   myMessageInfo('登录失败', 'error')
+  // }
 }
 const onchagePassword = async () => {
   const { password, confirmPassword, phone, phoneCode } = form
@@ -323,14 +342,14 @@ onMounted(() => {
         </div> -->
         <div class="inner-t"></div>
         <div class="inner-b"></div>
-        <div ref="loginTipBG" class="p-4 font-extralight">{{ mingyan }}</div>
+        <div ref="loginTipBG" class="famole p-4 font-extralight">{{ mingyan }}</div>
         <!-- <img class="h-full w-full object-cover" :src="mingyan.url" alt="" srcset=""> -->
       </div>
       <div class="m-r w-2/3 relative flex flex-col justify-center items-center">
-        <div class="bg-white inner-title rounded-full w-20 h-20 text-sm shadow-lg absolute left-4 top-4 flex justify-center items-center">
+        <div class="bg-white famole inner-title rounded-full w-20 h-20 text-sm shadow-lg absolute left-4 top-4 flex justify-center items-center">
           {{ isRegister ? '注册' : isUpdatePassword ? '修改密码' : '登录' }}
         </div>
-        <div v-if="!isRegister && !isUpdatePassword" class="tabs relative h-20 flex items-center justify-center">
+        <div v-if="!isRegister && !isUpdatePassword" class="tabs famole-t relative h-20 flex items-center justify-center">
           <div v-for="t in loginTabs" :key="t.value" :class="`tab-item mx-2 ${t.value === activeTab ? 'active' : ''}`" @click="activeTab = t.value">
             {{ t.label }}
           </div>
@@ -355,7 +374,7 @@ onMounted(() => {
               </template>
               <!-- 用户名： -->
               <div class="username flex items-center" v-if="!isUpdatePassword">
-                <input class="email-form-item w-full" v-model="form.username" placeholder="用户" />
+                <input class="email-form-item w-full" v-model="form.username" placeholder="用户名" />
                 <!-- <div class="prixt emial-prefix">@hsh.com</div> -->
               </div>
               <!-- 密码： -->
@@ -392,18 +411,20 @@ onMounted(() => {
             </template>
             <!-- 右下角的注册切换表单 -->
             <div class="flex justify-between items-center pt-4">
-              <el-button class="shadow-inner rounded-3xl text-sm w-1/2 h-10" native-type="submit" type="primary">{{ isRegister ? '注册' : isUpdatePassword ? '修改密码' : '登录' }}</el-button>
-              <div v-if="activeTab === 'account' && !isUpdatePassword" @click="isRegister = !isRegister" class="switch-form flex hover:cursor-pointer justify-center items-center">
-                <div class="text-sm">
+              <el-button class="login-btn shadow-inner rounded-3xl text-sm w-1/2 h-10" native-type="submit" type="primary">{{ isRegister ? '注册' : isUpdatePassword ? '修改密码' : '登录' }}</el-button>
+              <div v-if="activeTab === 'account' && !isUpdatePassword" @click="isRegister = !isRegister" class="switch-form flex hover:cursor-pointer justify-center items-center hover:text-[#1f9594]">
+                <div class="text-sm ">
                   {{ isRegister ? '登录' : '注册' }}
                 </div>
                 <el-icon class="text-lg"> <Right v-if="!isRegister" /> <Back v-else /> </el-icon>
               </div>
-              <div v-if="activeTab !== 'account' && !isUpdatePassword" @click="phoneVisible = true" class="switch-form flex hover:cursor-pointer justify-center items-center">
-                <div class="text-sm">绑定手机号</div>
+              <div v-if="activeTab !== 'account' && !isUpdatePassword" @click="phoneVisible = true" class="switch-form flex hover:cursor-pointer justify-center items-center hover:text-[#1f9594]">
+                <div class="text-sm ">绑定手机号</div>
               </div>
               <!-- 忘记密码 -->
-              <div v-if="activeTab === 'account' && !isRegister" @click="isUpdatePassword = !isUpdatePassword" class="text-sm forget-passwor hover:cursor-pointer">{{ isUpdatePassword ? '返回登录' : '忘记密码?' }}</div>
+              <div v-if="activeTab === 'account' && !isRegister" @click="isUpdatePassword = !isUpdatePassword" class="text-sm forget-passwor hover:cursor-pointer hover:text-[#1f9594]">
+                {{ isUpdatePassword ? '返回登录' : '忘记密码?' }}
+              </div>
             </div>
             <!-- 右下角的注册切换表单 -->
           </form>
@@ -481,6 +502,33 @@ onMounted(() => {
   left: -18px;
   transition: 1.25s;
 }
+.famole{
+  /* 清除默认的文本颜色 */  
+  color: transparent;  
+    
+  /* 使用渐变作为背景 */  
+  background: linear-gradient(to right, red, blue, green, yellow);  
+    
+  /* 使用背景色作为文本颜色（剪裁背景到文本区域） */  
+  -webkit-background-clip: text;  
+  background-clip: text;  
+    
+  /* 为了更好地显示渐变效果，可能需要设置文本为粗体或添加一些文本阴影 */  
+  font-weight: bold;  
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);  
+     /* 添加文字阴影 */  
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  
+  /* 为了确保渐变在所有浏览器中都能正确显示，你可能需要添加浏览器前缀 */  
+  /* （这里只展示了WebKit前缀）*/  
+}
+.famole-t{
+  background: linear-gradient(to right, red, blue, green, yellow);  
+  -webkit-background-clip: text;  
+  background-clip: text;  
+  font-weight: bold;  
+  text-shadow: 0px 10px 8px rgba(0, 0, 0, 0.1);  
+  
+}
 .inner-title {
   box-shadow: inset 8px 8px 12px #b8bec7, inset -8px -8px 12px #fff;
 }
@@ -533,12 +581,15 @@ onMounted(() => {
     }
     &.active {
       color: darkcyan;
+      box-shadow: inset 8px 8px 12px #f1ecec, inset -8px -8px 12px #fff;
+
       // border-bottom: #110f0f 2px solid;
     }
   }
 }
 .forms {
   input {
+    font-size: 14px;
     margin: 2px 0;
     transition: all 0.3s ease-in-out;
     border-bottom: 1px solid rgb(170, 221, 221);
@@ -562,5 +613,13 @@ onMounted(() => {
       outline: transparent; /* 举例：添加蓝色的边框 */
     }
   }
+}
+.login-btn{
+  cursor: pointer;
+  transition: 0.5s;
+&:hover {
+  border: 1px solid rgba(255,255,255,1);
+  transform: scale(0.98);
+}
 }
 </style>
