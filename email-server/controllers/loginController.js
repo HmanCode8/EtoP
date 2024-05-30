@@ -141,7 +141,6 @@ router.get('/captcha', (req, res) => {
     ignoreChars: '0oO1iIlL', // 排除相似字符
     noise: 2, // 干扰线数量
     color: true, // 随机颜色
-    background: '#f0f0f0', // 背景颜色
   })
 
   // 将验证码文本存储在Redis中，并设置过期时间（例如5分钟）
@@ -164,7 +163,7 @@ router.post('/sendSmsCode', (req, res) => {
   const code = Math.floor(Math.random() * 900000 + 100000).toString()
 
   // 存储验证码到 Redis 中，设置过期时间为 5 分钟/300min
-  redisClient.setex(`verification_code:${phone}`, 600, code)
+  redisClient.setex(`verification_code:${phone}`, 300, code)
   // LTAI4Fq7X6yv5SHKGQH77zk6
   // N2hZShu9WlAKbzxhHwuFOUro6Lz8oY
   // 阿里云的key：地址：https://ram.console.aliyun.com/manage/ak?spm=5176.20180516001.top-nav.dak.14094babFQpLrx
