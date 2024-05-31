@@ -20,9 +20,21 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           entryFileNames: `js/[name].[hash].js`,
-          chunkFileNames: `js/[name].[hash].js`,
+          chunkFileNames(){
+            if (process.env.NODE_ENV === 'production') {
+              return `js/[name].[hash].js`
+            } else {
+              return `js/[name].js`
+            }
+          },
           manualChunks(id) {
             if (id.includes('node_modules')) {
+              if (id.includes('element-plus')) {
+                return 'element-plus'
+              }
+              if (id.includes('ant-design-vue')) {
+                return 'ant-design-vue'
+              }
               return 'vendor'
             }
           },
