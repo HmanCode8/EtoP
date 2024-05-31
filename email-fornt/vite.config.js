@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver,AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver, AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig(({ mode }) => {
   return {
@@ -19,11 +19,11 @@ export default defineConfig(({ mode }) => {
       sourcemap: process.env.NODE_ENV === 'production' ? false : true,
       rollupOptions: {
         output: {
-          // entryFileNames: `js/[name].[hash].js`,
-          // chunkFileNames: `js/[name].[hash].js`,
+          entryFileNames: `js/[name].[hash].js`,
+          chunkFileNames: `js/[name].[hash].js`,
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString()
+              return 'vendor'
             }
           },
         },
@@ -35,7 +35,12 @@ export default defineConfig(({ mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [
+          ElementPlusResolver(),
+          AntDesignVueResolver({
+            importStyle: false, //不单独导入样式，对样式进行全局引入
+          }),
+        ],
       }),
     ],
     server: {
