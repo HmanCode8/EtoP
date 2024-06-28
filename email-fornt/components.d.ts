@@ -44,6 +44,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDiv: typeof import('./src/components/Until/ScrollDiv.vue')['default']
+    ScrollWallpaper: typeof import('./src/components/Wallpaper/scrollWallpaper.vue')['default']
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
     Theme: typeof import('./src/components/Theme/index.vue')['default']
     UpLoad: typeof import('./src/components/Home/UpLoad.vue')['default']
@@ -52,6 +53,7 @@ declare module 'vue' {
     WebApi: typeof import('./src/components/Home/WebApi.vue')['default']
   }
   export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
