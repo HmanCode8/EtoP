@@ -464,12 +464,6 @@ onMounted(() => {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
-.login-tip {
-  width: 100%;
-  height: 100%;
-  background-image: url('@/assets/images/login-tip.png');
-  background-size: 100% 100%;
-}
 .login-modal {
   background: linear-gradient(90deg, #e9f0ee, #ecf3f1);
   color: #110f0f;

@@ -8,6 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AiEditor: typeof import('./src/components/Home/AiEditor.vue')['default']
+    AInput: typeof import('ant-design-vue/es')['Input']
+    AModal: typeof import('ant-design-vue/es')['Modal']
+    APagination: typeof import('ant-design-vue/es')['Pagination']
+    APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
     Carousel: typeof import('./src/components/Home/Carousel.vue')['default']
     Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
@@ -37,6 +41,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDiv: typeof import('./src/components/Until/ScrollDiv.vue')['default']
+    ScrollWallpaper: typeof import('./src/components/Wallpaper/scrollWallpaper.vue')['default']
     SendEmail: typeof import('./src/components/Email/SendEmail.vue')['default']
     Theme: typeof import('./src/components/Theme/index.vue')['default']
     UpLoad: typeof import('./src/components/Home/UpLoad.vue')['default']
@@ -45,6 +50,7 @@ declare module 'vue' {
     WebApi: typeof import('./src/components/Home/WebApi.vue')['default']
   }
   export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

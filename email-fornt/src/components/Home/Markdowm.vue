@@ -103,7 +103,7 @@ watch(fruits, () => {
 <template>
   <div class="markdown min-h-36">
     <div class="flex justify-between items-center mb-4">
-      <a-input-search v-model:value="searchKeyword" placeholder="input search text" style="width: 200px" @search="onSearchFruit" />
+      <InputSearch v-model:value="searchKeyword" placeholder="input search text" style="width: 200px" @search="onSearchFruit" />
       <div
         @click="
           modalType = 'add';

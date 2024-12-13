@@ -1,6 +1,6 @@
 <script setup>
 //引入主题hook
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useUserStore } from "@/store";
 
 const userStore = useUserStore()
@@ -28,16 +28,25 @@ const ortherTheme = () => {
   document.documentElement.style.transition = "background-color 0.5s ease"; // 添加过渡效果
 };
 
-// 切换主题
-const toggleTheme = () => {
-  localStorage.setItem("theme", userStore.theme);
-  userStore.toggleTheme(userStore.theme === "dark" ? "light" : "dark")
+const changeTheme = () => {
   if (navigator.userAgent.includes("Chrome")) {
     chromeTheme();
   } else {
     ortherTheme();
   }
 };
+
+// 切换主题
+const toggleTheme = () => {
+  const theme = userStore.theme === "light"? "dark" : "light";
+  localStorage.setItem("theme",theme);
+  userStore.toggleTheme(theme)
+  changeTheme()
+};
+
+onMounted(() => {
+  changeTheme()
+})
 
 </script>
 
@@ -63,6 +72,6 @@ const toggleTheme = () => {
 <style scoped>
 .email-theme-color {
   background-color: aqua;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 5px 20px rgba(0, 0, 0, 0.2) ;
 }
 </style>

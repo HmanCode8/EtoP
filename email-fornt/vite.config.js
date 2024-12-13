@@ -45,7 +45,12 @@ export default defineConfig(({ mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [
+          ElementPlusResolver(),
+          AntDesignVueResolver({
+            importStyle: false, //不单独导入样式，对样式进行全局引入
+          }),
+        ],
       }),
     ],
     server: {
