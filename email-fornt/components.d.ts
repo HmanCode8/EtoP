@@ -7,15 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AButton: typeof import('ant-design-vue/es')['Button']
-    AForm: typeof import('ant-design-vue/es')['Form']
-    AFormItem: typeof import('ant-design-vue/es')['FormItem']
     AiEditor: typeof import('./src/components/Home/AiEditor.vue')['default']
-    AInput: typeof import('ant-design-vue/es')['Input']
-    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
-    AModal: typeof import('ant-design-vue/es')['Modal']
-    APagination: typeof import('ant-design-vue/es')['Pagination']
-    APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     AvatarUpload: typeof import('./src/components/Upload/AvatarUpload.vue')['default']
     Carousel: typeof import('./src/components/Home/Carousel.vue')['default']
     Category: typeof import('./src/components/Wallpaper/Category.vue')['default']
